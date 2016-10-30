@@ -1,0 +1,39 @@
+/*NAVBAR*/
+/*-------------------------------------------*/
+.navbar-testfield {
+    background-color: #5A159A;
+    border-radius: 0px;
+}
+
+.navbar-testfield .navbar-brand {
+    color: #B97200;
+    padding-top: 3px;
+}
+
+.navbar-testfield .navbar-brand:nth-child(2) {
+    font-size: 15px;
+}
+
+.navbar-testfield .navbar-nav li a {
+    color: #FFBD52;
+} 
+
+.navbar-testfield .navbar-nav li a:hover, .navbar-testfield .navbar-nav li a:focus,
+.navbar-testfield .navbar-nav .dropdown-menu li a:hover, .navbar-testfield .navbar-nav .dropdown-menu li a:focus {
+    background-image: initial;
+    background-color: #FFAB22;
+    color: #34055F;
+}
+
+.navbar-testfield .navbar-nav .dropdown-menu {
+    background-color: #5A159A;
+}
+
+.navbar-testfield .navbar-toggle:hover {
+    background-color: #6F34A4;
+}
+
+.navbar-testfield .navbar-toggle .icon-bar {
+    background-color: #FFBD52;
+}
+/*-------------------------------------------*/
