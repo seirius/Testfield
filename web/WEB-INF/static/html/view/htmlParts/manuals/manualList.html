@@ -1,0 +1,9 @@
+<div class="row" ng-controller="manualListCtrl">
+    <div class="col-xs-12">
+        
+        <div class="list-group" ng-repeat="manual in manuals">
+            <a href="#" class="list-group-item" ng-click="openManual(manual.id)">{{manual.title}}</a>
+        </div>
+        
+    </div>
+</div>

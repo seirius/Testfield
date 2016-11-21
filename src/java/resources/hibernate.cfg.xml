@@ -10,8 +10,22 @@
     <property name="hibernate.show_sql">true</property>
     <property name="hibernate.current_session_context_class">thread</property>
     <property name="hibernate.query.factory_class">org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory</property>
-    <mapping class="model.bean.ConnectionsId"/>
-    <mapping class="model.bean.Connections"/>
+    <mapping class="model.bean.UserTestfield"/>
+    <mapping class="model.bean.UserInfo"/>
+    <mapping class="model.bean.Tag"/>
+    <mapping class="model.bean.Manual"/>
+    <mapping class="model.bean.ManualPage"/>
+    <mapping class="model.bean.ManualRow"/>
+    <mapping class="model.bean.ManualBlock"/>
+    <mapping class="model.bean.BlockWidthType"/>
+    <mapping class="model.bean.Manual"/>
+    <mapping class="model.bean.ManualPage"/>
+    <mapping class="model.bean.BlockWidthTypeId"/>
+    <mapping class="model.bean.ManualBlock"/>
+    <mapping class="model.bean.UserInfo"/>
+    <mapping class="model.bean.Tag"/>
+    <mapping class="model.bean.WidthType"/>
+    <mapping class="model.bean.ManualRow"/>
     <mapping class="model.bean.UserTestfield"/>
   </session-factory>
 </hibernate-configuration>

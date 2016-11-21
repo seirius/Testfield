@@ -21,7 +21,7 @@
        <property name="suffix" value=".jsp" />
     </bean>-->
    
-    <mvc:annotation-driven enable-matrix-variables="true" />
+    <mvc:annotation-driven/>
 <!--    <mvc:resources mapping="/resources/**" location="/resources/**"/>-->
 
 </beans>

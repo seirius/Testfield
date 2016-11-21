@@ -23,7 +23,18 @@
         <script src="/Testfield/resources/testfield_general/js/login.js"></script>
         
     </head>
-    <body class="background-congruent">
-        <div ng-include="'part/login'"></div>
+    <body class="background-congruent" ng-controller="mainLogin">
+        <div class="container orbitron-font">
+            
+            <div class="row">
+                <div class="col-xs-12 text-center color-white">
+                    <h2>Testfield</h2>
+                </div>
+            </div>
+            
+            <div class="mainLoginContainer" ng-init="loginView = 'part/login'">
+                <div ng-include="loginView"></div>
+            </div>
+        </div>
     </body>
 </html>

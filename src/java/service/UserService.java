@@ -1,11 +1,10 @@
 package service;
 
-import dao.ConnectionsDAO;
 import dao.UserDAO;
-import java.util.HashMap;
-import model.bean.Connections;
 import model.bean.UserTestfield;
 import util.ServiceReturn;
+import util.dummys.UserDummy;
+import util.exceptions.DAOException;
 import util.exceptions.ServiceException;
 
 /**
@@ -31,7 +30,9 @@ public class UserService extends Service {
         UserTestfield user = null;
         
         try {
-            user = new UserTestfield(userId, password);
+            user = new UserTestfield();
+            user.setUserNick(userId);
+            user.setPassword(password);
             
             MANAGER.beginTransaction();
             MANAGER.getUserDAO().saveUser(user);
@@ -64,7 +65,7 @@ public class UserService extends Service {
             UserDAO userDAO = MANAGER.getUserDAO();
             UserTestfield user = userDAO.login(userId, password);
             if (user == null) {
-                throw new ServiceException("User or Passowrd incorrect.");
+                throw new ServiceException("User or Password incorrect.");
             }
             
             result.addItem("user", user);
@@ -79,31 +80,29 @@ public class UserService extends Service {
         return result;
     }
     
-    public HashMap<String, Object> login(String userId, String password, int maxConnections) throws Exception {
-        HashMap<String, Object> result = new HashMap<>();
+    /**
+     * Check if the user exists in the Database by userNick and password 
+     * 
+     * @param user
+     * @return ServiceReturn {
+     *      UserTestfield user
+     * }
+     * @throws Exception 
+     */
+    public ServiceReturn login(UserTestfield user) throws Exception {
+        ServiceReturn result = new ServiceReturn();
         
         try {
             MANAGER.beginTransaction();
             UserDAO userDAO = MANAGER.getUserDAO();
-            
-            UserTestfield user = userDAO.login(userId, password);
-            Connections connection = null;
-            if (user != null) {
-                ConnectionsDAO connectionsDAO = MANAGER.getConnectionsDAO();
-                int numConnections = connectionsDAO.getNumberConnections(user.getUserNick());
-                if (numConnections < maxConnections) {
-                    connection = connectionsDAO.save(user.getUserNick());
-                } else {
-                    throw new ServiceException("You reached the maximum amount of connections at the same time.");
-                }
-            } else {
-                throw new ServiceException("User or password incorrect.");
+            user = userDAO.login(user);
+            if (user == null) {
+                throw new ServiceException("User or Password incorrect.");
             }
             
-            result.put("user", user);
-            result.put("connection", connection);
+            result.addItem("user", user);
             MANAGER.commit();
-        } catch(Exception e) {
+        } catch(DAOException | ServiceException e) {
             MANAGER.rollback();
             throw treatException("Couldn't login, try again later.", e);
         } finally {
@@ -113,5 +112,28 @@ public class UserService extends Service {
         return result;
     }
     
+    public ServiceReturn createUser(String userNick, String password, String email) throws Exception {
+        ServiceReturn result = new ServiceReturn();
+        
+        try {
+            MANAGER.beginTransaction();
+            UserDAO userDAO = MANAGER.getUserDAO();
+            UserTestfield user = userDAO.createUser(userNick, password, email);
+            result.addItem("user", user);
+            
+            MANAGER.commit();
+        } catch(DAOException e) {
+            MANAGER.rollback();
+            throw treatException("An error has ocurred creating the user, try again later.", e);
+        } finally {
+            MANAGER.close();
+        }
+        
+        return result;
+    }
+    
+    public ServiceReturn createUser(UserDummy user) throws Exception {
+        return createUser(user.userNick, user.password, user.email);
+    }
     
 }

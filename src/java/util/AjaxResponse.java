@@ -22,6 +22,7 @@ public class AjaxResponse {
     }
     
     public void setError(Exception e) {
+        System.err.println("-- ERROR: " + e.getMessage());
         errorCode = -1;
         errorMsg = e.getMessage();
     }
@@ -34,7 +35,7 @@ public class AjaxResponse {
         return data;
     }
 
-    public void setData2(HashMap<String, Object> data) {
+    public void setData(HashMap<String, Object> data) {
         this.data = data;
     }
 
@@ -50,12 +51,17 @@ public class AjaxResponse {
         this.errorMsg = errorMsg;
     }
     
-    public void setErrorMsg() {
+    public void setErrorMsg(Exception e) {
+        System.err.println("-- ERROR: " + e.getMessage());
         this.errorMsg = ErrorMsgs.DEFAULT_MSG;
     }
     
     public void add(String elementName, Object element) {
         this.data.put(elementName, element);
+    }
+    
+    public void digest(ServiceReturn result) {
+        setData(result.getResult());
     }
 
 }

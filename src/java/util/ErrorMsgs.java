@@ -11,7 +11,9 @@ package util;
  */
 public class ErrorMsgs {
     
+    public final static String NO_SESSION = "You must be logged in.";
     public final static String DEFAULT_MSG = "An error has ocurred, try again later.";
     public final static String ERR_PARSING = "Error parsing an Item Result.";
+    public final static String NO_PERMISSION = "Not enough permissions.";
 
 }

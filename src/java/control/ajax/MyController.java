@@ -14,11 +14,9 @@ import util.AjaxResponse;
  */
 public class MyController {
     
-    protected AjaxResponse ajaxResponse;
 
     @PostConstruct
     public void init() {
-        ajaxResponse = new AjaxResponse();
     }
     
     

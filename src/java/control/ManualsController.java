@@ -10,7 +10,7 @@ public class ManualsController {
     
     @RequestMapping(value = "/manuals", method = RequestMethod.GET)
     public String requestManuals(ModelMap model) {
-        return "/manuals/manuals";
+        return "/static/manuals.html";
     }
-
+    
 }

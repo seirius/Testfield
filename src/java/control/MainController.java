@@ -16,7 +16,12 @@ public class MainController {
     
     @RequestMapping(value = "/part/login", method = RequestMethod.GET)
     public String partLogin(ModelMap model) {
-        return "/static/htmlParts/loginPart.html";
+        return "/static/htmlParts/login/loginPart.html";
+    }
+    
+    @RequestMapping(value = "/part/register", method = RequestMethod.GET)
+    public String partRegister(ModelMap model) {
+        return "/static/htmlParts/login/registerPart.html";
     }
     
     @RequestMapping(value = "/part/choseApp", method = RequestMethod.GET)
@@ -28,11 +33,6 @@ public class MainController {
     public String choseAppRequest(ModelMap model) {
         return "/static/chose-app.html";
     }
-//    
-//    @RequestMapping(value = "/choseApp", method = RequestMethod.GET)
-//    public String choseAppRequest(ModelMap model) {
-//        return "chose-app";
-//    }
     
     @RequestMapping(value = "/jspdf-test", method = RequestMethod.GET)
     public String jspdf(ModelMap model) {
@@ -50,10 +50,10 @@ public class MainController {
         return "/includes/imports/navbar-testfield";
     }
     
-    @RequestMapping(value = "/testfield-manuals", method = RequestMethod.GET)
-    public String importManuals(ModelMap model) {
-        return "/includes/imports/testfield-manuals";
-    }
+//    @RequestMapping(value = "/testfield-manuals", method = RequestMethod.GET)
+//    public String importManuals(ModelMap model) {
+//        return "/includes/imports/testfield-manuals";
+//    }
     
     @RequestMapping(value = "/test-field", method = RequestMethod.GET)
     public String testField(ModelMap model) {

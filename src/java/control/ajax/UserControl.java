@@ -12,14 +12,14 @@ import javax.servlet.http.HttpSession;
 import model.bean.UserTestfield;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import service.ConnectionsService;
 import service.UserService;
 import util.AjaxResponse;
 import util.ServiceReturn;
+import util.dummys.UserDummy;
 import util.exceptions.ServiceException;
 
 /**
@@ -47,13 +47,12 @@ public class UserControl extends MyController {
     }
     
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public @ResponseBody AjaxResponse loginRequest(@RequestParam String userNick, @RequestParam String password, HttpSession session) {
+    public @ResponseBody AjaxResponse loginRequest(@RequestBody UserDummy userDummy, HttpSession session) {
+        AjaxResponse ajaxResponse = new AjaxResponse();
         boolean loginOk = false;
         
         try {
-            UserService userService = new UserService();
-
-            ServiceReturn result = userService.login(userNick, password);
+            ServiceReturn result = new UserService().login(userDummy.userNick, userDummy.password);
             UserTestfield user = (UserTestfield) result.getItem("user");
             if (user != null) {
                 session.setAttribute("user", user.getUserNick());
@@ -63,92 +62,45 @@ public class UserControl extends MyController {
         } catch(ServiceException e) {
             ajaxResponse.setError(e);
         } catch(Exception e) {
-            ajaxResponse.setErrorMsg();
+            ajaxResponse.setErrorMsg(e);
         }
         
         ajaxResponse.add("loginOk", loginOk);
         
         return ajaxResponse;
     }
-//    
-//    @RequestMapping(value = "/login", method = RequestMethod.POST)
-//    public @ResponseBody AjaxResponse loginRequest(@RequestParam String userNick, @RequestParam String password, HttpSession session) {
-//        boolean loginOk = false;
-//        
-//        try {
-//            UserService userService = new UserService();
-//
-//            HashMap<String, Object> result = userService.login(userNick, password, maxConnections);
-//            UserTestfield user = (UserTestfield) result.get("user");
-//            Connections connection = (Connections) result.get("connection");
-//            if (user != null) {
-//                session.setAttribute("user", user.getUserNick());
-//                session.setAttribute("connectionToken", connection.getId().getToken());
-//                loginOk = true;
-//            }
-//        } catch(ServiceException e) {
-//            ajaxResponse.setError(e);
-//        } catch(Exception e) {
-//            ajaxResponse.setErrorMsg();
-//        }
-//        
-//        ajaxResponse.add("loginOk", loginOk);
-//        
-//        return ajaxResponse;
-//    }
-    
-//    @RequestMapping(value = "/login", method = RequestMethod.POST)
-//    public @ResponseBody AjaxResponse loginRequest(@RequestBody UserTestfield user, HttpSession session) {
-//        boolean loginOk = false;
-//        ajaxResponse.add("user", user);
-//        System.out.println(user);
-////        try {
-////            if (session.getAttribute("user") != null) {
-////                ajaxResponse.setErrorMsg("You are already logged in.");
-////            } else {
-////                UserService userService = new UserService();
-////
-////                HashMap<String, Object> result = userService.login(userNick, password, maxConnections);
-////                UserTestfield user = (UserTestfield) result.get("user");
-////                Connections connection = (Connections) result.get("connection");
-////                if (user != null) {
-////                    session.setAttribute("user", user.getUserNick());
-////                    session.setAttribute("connectionToken", connection.getId().getToken());
-////                    loginOk = true;
-////                }
-////            }
-////        } catch(ServiceException e) {
-////            ajaxResponse.setError(e);
-////        } catch(Exception e) {
-////            ajaxResponse.setErrorMsg();
-////        }
-////        
-////        ajaxResponse.add("loginOk", loginOk);
-//        
-//        return ajaxResponse;
-//    }
     
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     public @ResponseBody AjaxResponse logoutRequest(HttpSession session) {
+        AjaxResponse ajaxResponse = new AjaxResponse();
         boolean logoutOk = false;
         
         try {
-            String userNick = (String) session.getAttribute("user");
-            String token = (String) session.getAttribute("connectionToken");
-            if (userNick != null && token != null) {
-                ConnectionsService connectionService = new ConnectionsService();
-                connectionService.delete(userNick, token);
-                session.invalidate();
-                logoutOk = true;
-            }
-            
-        } catch(ServiceException e) {
-            ajaxResponse.setError(e);
+            session.invalidate();
+            logoutOk = true;
         } catch(Exception e) {
-            ajaxResponse.setErrorMsg();
+            ajaxResponse.setErrorMsg(e);
         }
         
         ajaxResponse.add("logoutOk", logoutOk);
+        
+        return ajaxResponse;
+    }
+    
+    @RequestMapping(value = "/createUser", method = RequestMethod.POST)
+    public @ResponseBody AjaxResponse createUser(@RequestBody UserDummy userDummy) {
+        AjaxResponse ajaxResponse = new AjaxResponse();
+        
+        try {
+            UserService userService = new UserService();
+            ServiceReturn serviceReturn = userService.createUser(userDummy);
+            UserTestfield user = (UserTestfield) serviceReturn.getItem("user");
+            ajaxResponse.add("user", user);
+        } catch(ServiceException e) {
+            ajaxResponse.setError(e);
+        } catch(Exception e) {
+            ajaxResponse.setErrorMsg(e);
+        }
         
         return ajaxResponse;
     }

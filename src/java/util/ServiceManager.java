@@ -1,7 +1,14 @@
 package util;
 
-import dao.ConnectionsDAO;
+import dao.BlockWidthTypeDAO;
+import dao.ManualBlockDAO;
+import dao.ManualDAO;
+import dao.ManualPageDAO;
+import dao.ManualRowDAO;
+import dao.TagDAO;
 import dao.UserDAO;
+import dao.UserInfoDAO;
+import dao.WidthTypeDAO;
 import hibernate.HibernateUtil;
 import org.hibernate.Session;
 
@@ -20,8 +27,36 @@ public class ServiceManager {
         return new UserDAO(session);
     }
     
-    public ConnectionsDAO getConnectionsDAO() {
-        return new ConnectionsDAO(session);
+    public UserInfoDAO getUserInfoDAO() {
+        return new UserInfoDAO(session);
+    }
+    
+    public ManualDAO getManualDAO() {
+        return new ManualDAO(session);
+    }
+    
+    public ManualPageDAO getManualPageDAO() {
+        return new ManualPageDAO(session);
+    }
+    
+    public ManualRowDAO getManualRowDAO() {
+        return new ManualRowDAO(session);
+    }
+    
+    public ManualBlockDAO getManualBlockDAO() {
+        return new ManualBlockDAO(session);
+    }
+    
+    public TagDAO getTagDAO() {
+        return new TagDAO(session);
+    }
+    
+    public WidthTypeDAO getWidthTypeDAO() {
+        return new WidthTypeDAO(session);
+    }
+    
+    public BlockWidthTypeDAO getBlockWidthTypeDAO() {
+        return new BlockWidthTypeDAO(session);
     }
 
     public Session getSession() {

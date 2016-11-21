@@ -108,4 +108,12 @@ body {
 
 /*------------------------------------------------------*/
 
+/*---FORM VALIDATION-----------*/
+.help-block {
+    display: none;
+}
 
+.has-error .help-block {
+    display: block;
+}
+/*-----------------------------*/

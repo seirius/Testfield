@@ -20,6 +20,7 @@ public class AngularController extends MyController {
     
     @RequestMapping(value = "/angularArray", method = RequestMethod.GET)
     public @ResponseBody AjaxResponse logoutRequest() {
+        AjaxResponse ajaxResponse = new AjaxResponse();
         ajaxResponse.add("Type", "213 Grove Street");
         
         return ajaxResponse;
