@@ -6,6 +6,8 @@
 
 package util.exceptions;
 
+import util.ErrorMsgs;
+
 /**
  * @author Andriy Yednarovych
  */
@@ -14,6 +16,7 @@ public class MyException extends Exception {
     public MyException() {}
  
     public MyException(String msg) {
+        
         super(msg);
     }
     
@@ -28,7 +31,7 @@ public class MyException extends Exception {
     }
     
     private void treatException(Exception e) {
-//        System.err.println(e.getMessage());
+        ErrorMsgs.sysLogThis(e);
     }
     
 }

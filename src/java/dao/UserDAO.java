@@ -2,8 +2,8 @@
 package dao;
 
 import java.util.List;
-import model.bean.UserInfo;
-import model.bean.UserTestfield;
+import model.bean.user.UserInfo;
+import model.bean.user.UserTestfield;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;

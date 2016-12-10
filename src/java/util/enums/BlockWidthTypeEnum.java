@@ -27,4 +27,24 @@ public enum BlockWidthTypeEnum {
     public String getText() {
         return text;
     }
+    
+    public static BlockWidthTypeEnum getWidthTypeEnum(int value) {
+        BlockWidthTypeEnum widthType = null;
+        
+        switch (value) {
+            case 1:
+                return BlockWidthTypeEnum.XS;
+            
+            case 2:
+                return BlockWidthTypeEnum.SM;
+                
+            case 3:
+                return BlockWidthTypeEnum.MD;
+                
+            case 4:
+                return BlockWidthTypeEnum.LG;
+        }
+        
+        return widthType;
+    }
 }

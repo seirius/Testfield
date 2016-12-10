@@ -7,7 +7,6 @@
 package control.ajax;
 
 import javax.annotation.PostConstruct;
-import util.AjaxResponse;
 
 /**
  * @author Andriy Yednarovych

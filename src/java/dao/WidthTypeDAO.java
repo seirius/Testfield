@@ -5,10 +5,11 @@
  */
 package dao;
 
-import model.bean.WidthType;
+import java.util.List;
+import model.bean.widthtype.WidthType;
 import org.hibernate.Session;
+import util.DAOValidator;
 import util.enums.BlockWidthTypeEnum;
-import util.exceptions.BeanException;
 import util.exceptions.DAOException;
 
 /**
@@ -30,10 +31,20 @@ public class WidthTypeDAO {
             widthType.setWidthType(type.getValue());
             widthType.setDescription(type.getText());
             session.save(widthType);
-        } catch(BeanException e) {
+        } catch(Exception e) {
             throw new DAOException(e);
         }
         return widthType;
+    }
+    
+    public List<WidthType> getWidthTypes() throws DAOException {
+        List<WidthType> widthTypes = null;
+        try {
+            widthTypes = session.createCriteria(WidthType.class).list();
+        } catch(Exception e) {
+            DAOValidator.errorOnSelect("Width Types", e);
+        }
+        return widthTypes;
     }
     
 }

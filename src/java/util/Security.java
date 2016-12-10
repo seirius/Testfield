@@ -6,7 +6,7 @@
 package util;
 
 import javax.servlet.http.HttpSession;
-import model.bean.Manual;
+import model.bean.manual.Manual;
 import util.exceptions.ServiceException;
 
 /**

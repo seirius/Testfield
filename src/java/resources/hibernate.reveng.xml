@@ -41,6 +41,14 @@ Contributor(s):
 -->
 <hibernate-reverse-engineering>
   <schema-selection match-catalog="testfield"/>
-  <table-filter match-name="block_width_type"/>
+  <table-filter match-name="manual_block"/>
+  <table-filter match-name="manual_row"/>
   <table-filter match-name="width_type"/>
+  <table-filter match-name="block_width_type"/>
+  <table-filter match-name="manual"/>
+  <table-filter match-name="rel_tag_manual"/>
+  <table-filter match-name="manual_page"/>
+  <table-filter match-name="user_info"/>
+  <table-filter match-name="user_testfield"/>
+  <table-filter match-name="tag"/>
 </hibernate-reverse-engineering>

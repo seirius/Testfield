@@ -1,9 +1,8 @@
 package service;
 
 import dao.UserDAO;
-import model.bean.UserTestfield;
+import model.bean.user.UserTestfield;
 import util.ServiceReturn;
-import util.dummys.UserDummy;
 import util.exceptions.DAOException;
 import util.exceptions.ServiceException;
 
@@ -45,39 +44,6 @@ public class UserService extends Service {
         }
         
         return user;
-    }
-    
-    /**
-     * Check if the user exists in the Database by userNick and password 
-     * 
-     * @param userId
-     * @param password
-     * @return ServiceReturn {
-     *      UserTestfield user
-     * }
-     * @throws Exception 
-     */
-    public ServiceReturn login(String userId, String password) throws Exception {
-        ServiceReturn result = new ServiceReturn();
-        
-        try {
-            MANAGER.beginTransaction();
-            UserDAO userDAO = MANAGER.getUserDAO();
-            UserTestfield user = userDAO.login(userId, password);
-            if (user == null) {
-                throw new ServiceException("User or Password incorrect.");
-            }
-            
-            result.addItem("user", user);
-            MANAGER.commit();
-        } catch(Exception e) {
-            MANAGER.rollback();
-            throw treatException("Couldn't login, try again later.", e);
-        } finally {
-            MANAGER.close();
-        }
-        
-        return result;
     }
     
     /**
@@ -130,10 +96,6 @@ public class UserService extends Service {
         }
         
         return result;
-    }
-    
-    public ServiceReturn createUser(UserDummy user) throws Exception {
-        return createUser(user.userNick, user.password, user.email);
     }
     
 }

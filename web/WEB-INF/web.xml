@@ -13,6 +13,9 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
+    <listener>  
+        <listener-class>hibernate.HibernateListener</listener-class>  
+    </listener>  
     
     <servlet>
         <servlet-name>main</servlet-name>

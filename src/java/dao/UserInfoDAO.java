@@ -5,7 +5,7 @@
  */
 package dao;
 
-import model.bean.UserInfo;
+import model.bean.user.UserInfo;
 import org.hibernate.Session;
 import util.exceptions.BeanException;
 import util.exceptions.DAOException;

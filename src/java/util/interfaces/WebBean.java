@@ -3,16 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package util.dummys;
+package util.interfaces;
 
 /**
  *
  * @author Andriy
  */
-public class UserDummy {
+public interface WebBean {
     
-    public String userNick;
-    public String password;
-    public String email;
+    public WebBean prepareForWeb() throws Exception;
     
 }

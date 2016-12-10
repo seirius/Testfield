@@ -9,17 +9,17 @@ package control.ajax;
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
-import model.bean.UserTestfield;
+import model.bean.user.UserTestfield;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import service.UserService;
 import util.AjaxResponse;
 import util.ServiceReturn;
-import util.dummys.UserDummy;
 import util.exceptions.ServiceException;
 
 /**
@@ -47,13 +47,13 @@ public class UserControl extends MyController {
     }
     
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public @ResponseBody AjaxResponse loginRequest(@RequestBody UserDummy userDummy, HttpSession session) {
+    public @ResponseBody AjaxResponse loginRequest(@RequestBody UserTestfield user, HttpSession session) {
         AjaxResponse ajaxResponse = new AjaxResponse();
         boolean loginOk = false;
         
         try {
-            ServiceReturn result = new UserService().login(userDummy.userNick, userDummy.password);
-            UserTestfield user = (UserTestfield) result.getItem("user");
+            ServiceReturn result = new UserService().login(user);
+            user = (UserTestfield) result.getItem("user");
             if (user != null) {
                 session.setAttribute("user", user.getUserNick());
                 loginOk = true;
@@ -88,14 +88,13 @@ public class UserControl extends MyController {
     }
     
     @RequestMapping(value = "/createUser", method = RequestMethod.POST)
-    public @ResponseBody AjaxResponse createUser(@RequestBody UserDummy userDummy) {
+    public @ResponseBody AjaxResponse createUser(@RequestParam String userNick, @RequestParam String password, @RequestParam String email) {
         AjaxResponse ajaxResponse = new AjaxResponse();
         
         try {
             UserService userService = new UserService();
-            ServiceReturn serviceReturn = userService.createUser(userDummy);
-            UserTestfield user = (UserTestfield) serviceReturn.getItem("user");
-            ajaxResponse.add("user", user);
+            userService.createUser(userNick, password, email);
+            ajaxResponse.add("userCreated", true);
         } catch(ServiceException e) {
             ajaxResponse.setError(e);
         } catch(Exception e) {

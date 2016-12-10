@@ -19,34 +19,116 @@
             </div>
         </div>
     </div>
+
+    <!--PAGE-->
+    <!--    <div ng-repeat="manualPage in manual.pages">
+            <div class="row">
+                <h3>PAGE {{manualPage.pageOrder}}</h3>
+                <div class="col-xs-12">
+                    <div class="manual-page manual-page-style" 
+                         ng-click="pageSelected()" 
+                         ng-controller="pageCtrl" 
+                         ng-init="initPage(manualPage)">
     
-    <div ng-repeat="manualPage in manual.manualPages">
-        <div class="row manual-page">
-            <div class="col-xs-12">
-                
-                <div ng-repeat="manualRow in manualPage.manualRows">
-                    <div class="row">
-                        <div ng-repeat="manualBlock in manualRow.manualBlocks" ng-controller="manualBlockCtrl">
-                            <div class="col-xs-12" ng-init="$scope.manualBlock = manualBlock">
-                                <form novalidate role="form">
-                                    <span class="color-white" tf-editable-element="block">{{manualBlock.content}}</span>
-                                    <textarea 
-                                        name="title" 
-                                        class="hidden editable-textarea" 
-                                        tf-editable-textarea="block" 
-                                        ng-keyup="keyup()" 
-                                        ng-blur="save()"
-                                        ng-model="manualBlock.content"
-                                        >
-                                    </textarea>
-                                </form>
+                        ROW
+                        <div ng-repeat="manualRow in manualPage.rows">
+                            <div class="row manual-row manual-row-style"
+                                         ng-click="rowSelected()"
+                                         ng-controller="rowCtrl"
+                                         ng-init="initRow(manualRow)">
+    
+    
+                                        <h4>ROW {{manualRow.rowOrder}} - {{manualRow.id}}</h4>
+    
+                                        BLOCK
+                                        <div ng-repeat="manualBlock in manualRow.blocks">
+                                            <div 
+                                                class="col-xs-12 manual-block manual-block-style" 
+                                                ng-init="initBlock(manualBlock)" 
+                                                ng-controller="manualBlockCtrl"
+                                                ng-click="blockSelected()"
+                                                >
+                                                <form novalidate role="form">
+                                                    <span class="min-block-height" tf-editable-element="block">{{manualBlock.content}}</span>
+                                                    <textarea 
+                                                        name="title" 
+                                                        class="hidden editable-textarea" 
+                                                        tf-editable-textarea="block" 
+                                                        ng-keyup="keyup()" 
+                                                        ng-blur="save()"
+                                                        ng-model="manualBlock.content"
+                                                        >
+                                                    </textarea>
+                                                </form>
+                                            </div>
+                                        </div>
+    
                             </div>
                         </div>
                     </div>
+    
                 </div>
-                
             </div>
-        </div>
-        
-    </div>
+    
+        </div>-->
+
+    <div class="row" ng-repeat="manualPage in manual.pages">
+
+        <div class="col-xs-12">
+
+            <div 
+                class="manual-page manual-page-style" 
+                block-options="horizontal"
+                ng-controller="pageCtrl"
+                ng-init="initPage(manualPage)"
+                >
+
+                <div 
+                    class="row" 
+                    ng-repeat="manualRow in manualPage.rows"
+                    ng-controller="rowCtrl"
+                    ng-init="initRow(manualRow)"
+                    >
+                    
+                    <div class="col-xs-12">
+                        
+                        <div class="manual-row manual-row-style" block-options="horizontal">
+                            
+                            <div class="row">
+                                <div
+                                    ng-repeat="manualBlock in manualRow.blocks" 
+                                    ng-controller="manualBlockCtrl"
+                                    ng-init="initBlock(manualBlock)"
+                                    block-class
+                                    >
+                                    <div class="manual-block manual-block-style" block-options="vertical">
+                                        <form novalidate role="form">
+                                            <span class="min-block-height" tf-editable-element="block">{{manualBlock.content}}</span>
+                                            <textarea 
+                                                name="title" 
+                                                class="hidden editable-textarea" 
+                                                tf-editable-textarea="block" 
+                                                ng-keyup="keyup()" 
+                                                ng-blur="save()"
+                                                ng-model="manualBlock.content"
+                                                >
+                                            </textarea>
+                                        </form>
+                                    </div>
+
+                                </div> <!-- END LOOP BLOCKS -->
+                            </div>
+
+                        </div>
+                        
+                    </div>
+                    
+                    
+                </div> <!-- END LOOP ROWS, TEST-ROW -->
+
+            </div>  <!--END TEST-PAGE -->
+
+        </div> <!-- END PAGE COL -->
+
+    </div> <!-- END LOOP PAGES -->
 </div>

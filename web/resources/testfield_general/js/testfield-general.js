@@ -3,33 +3,65 @@ var app = angular.module("generalTestfield", []);
 app.service("tfHttp", function ($http) {
     var showError = true;
     
+    var httpReturn = function (args) {
+        return $http(args).then(function (response) {
+            return new Promise(function (resolve, reject) {
+                if (typeof response !== "undefined" && typeof response.data !== "undefined") {
+                    var data = response.data;
+                    if (data.errorCode === 0) {
+                        resolve(data.data);
+                    } else {
+                        if (showError) {
+                            alert(data.errorMsg);
+                        }
+                        reject(data);
+                    }
+
+                }
+
+                showError = true;
+            });
+        }, function (response) {
+            alert(response.responseText);
+        });
+    };
+    
+    var checkStringify = function (args) {
+        var argsToStr = args.argsStr;
+        if ($.type(argsToStr) === "array") {
+            argsToStr.forEach(function (arg) {
+                var dataArg = args.data[arg];
+                if (typeof dataArg !== "undefined") {
+                    args.data[arg] = JSON.stringify(dataArg);
+                }
+            });
+        }
+    };
+    
     return {
         request: function (args) {
             args.data = typeof args.data === "undefined" ? {} : args.data;
+            checkStringify(args);
             args = $.extend({
                 data: {},
                 method: "POST"
-            } ,args);
-            return $http(args).then(function (response) {
-                return new Promise(function (resolve, reject) {
-                    if (typeof response !== "undefined" && typeof response.data !== "undefined") {
-                        var data = response.data;
-                        if (data.errorCode === 0) {
-                            resolve(data.data);
-                        } else {
-                            if (showError) {
-                                alert(data.errorMsg);
-                            }
-                            reject(data);
-                        }
-
-                    }
-                    
-                    showError = true;
-                });
-            }, function (response) {
-                alert(response.responseText);
-            });
+            }, args);
+            
+            return httpReturn(args);
+        },
+        
+        requestParam: function (args) {
+            args.params = typeof args.data === "undefined" ? {} : args.data;
+            checkStringify(args);
+            args = $.extend({
+                params: {},
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }, args);
+            
+            return httpReturn(args);
         },
         
         showError: function () {
@@ -37,6 +69,29 @@ app.service("tfHttp", function ($http) {
         }
     };
 });
+
+function httpReturn($http, args) {
+    return $http(args).then(function (response) {
+        return new Promise(function (resolve, reject) {
+            if (typeof response !== "undefined" && typeof response.data !== "undefined") {
+                var data = response.data;
+                if (data.errorCode === 0) {
+                    resolve(data.data);
+                } else {
+                    if (showError) {
+                        alert(data.errorMsg);
+                    }
+                    reject(data);
+                }
+
+            }
+
+            showError = true;
+        });
+    }, function (response) {
+        alert(response.responseText);
+    });
+}
 
 app.service("UserService", function (tfHttp) {
     return {
@@ -51,7 +106,7 @@ app.service("UserService", function (tfHttp) {
         },
         
         createUser: function (user, password, email) {
-            return tfHttp.request({
+            return tfHttp.requestParam({
                 url: "/Testfield/request/createUser",
                 data: {
                     userNick: user,

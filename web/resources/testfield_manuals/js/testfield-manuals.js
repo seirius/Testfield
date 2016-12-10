@@ -26,6 +26,10 @@ app.controller("manualPageCtrl", function($scope, ManualService) {
             console.log(data);
         });
     };
+    
+    $scope.pageSelected = function () {
+        
+    };
 });
 
 app.controller("manualListCtrl", function ($rootScope, $scope, ManualService) {
@@ -35,113 +39,6 @@ app.controller("manualListCtrl", function ($rootScope, $scope, ManualService) {
         $rootScope.$broadcast("close-manual-list");
         ManualService.openManual(idManual, $scope, $(".manualContainer"));
     };
-});
-
-app.service("ManualService", function (tfHttp, $compile) {
-    var manualService = this;
-    
-    var currentManual = {};
-    var manualsList = [];
-    
-    manualService = {
-        createManual: function () {
-            return tfHttp.request({
-                url: "/Testfield/request/manual/createManual"
-            });
-        },
-        
-        loadManual: function (idManual) {
-            return tfHttp.request({
-                url: "/Testfield/request/manual/loadManual",
-                data: {
-                    id: idManual
-                }
-            });
-        },
-        
-        loadManuals: function () {
-            return tfHttp.request({
-                url: "/Testfield/request/manual/loadManuals"
-            });
-        },
-        
-        openManualsList: function ($scope) {
-            manualService.loadManuals().then(function (data) {
-                manualService.setManualsList(data.manuals);
-                var $modalList = $("<tf-modal>", {
-                    "url-content": "/Testfield/static/htmlParts/manuals/manualList.html"
-                });
-                
-                $modalList = $compile($modalList)($scope);
-                $("body").append($modalList);
-            });
-        },
-        
-        openManual: function (idManual, $scope, container) {
-            manualService.loadManual(idManual).then(function (data) {
-                manualService.setCurrentManual(data.manual);
-                var manualPageDir = $compile($("<manual-page>"))($scope);
-                container.empty().append(manualPageDir);
-            });
-        },
-        
-        setCurrentManual: function (manual) {
-            currentManual = manual;
-        },
-        
-        getCurrentManual: function () {
-            return currentManual;
-        },
-        
-        setManualsList: function (manuals) {
-            manualsList = manuals;
-        },
-        
-        getManualsList: function () {
-            return manualsList;
-        },
-        
-        save: function (type, content) {
-            console.log(content);
-        },
-        
-        saveTitle: function (args) {
-            args = $.extend(args, {
-                idManual: currentManual.id,
-                newTitle: currentManual.title
-            });
-            var request = tfHttp.request({
-                url: "/Testfield/request/manual/setTitle",
-                data: {
-                    idManual: args.idManual,
-                    newTitle: args.newTitle
-                }
-            });
-            
-            return request.then(function (data) {
-                return new Promise(function (resolve) {
-                    manualService.setCurrentManual(data.manual);
-                    resolve(data);
-                });
-            });
-        },
-        
-        saveBlock: function (manualBlock) {
-            return tfHttp.request({
-                url: "/Testfield/request/manual/saveManualBlock",
-                data: {
-                    manualBlock: manualBlock
-                }
-            }).then(function (data) {
-                return new Promise(function (resolve) {
-                    manualService.setCurrentManual(data.manual);
-                    resolve(data);
-                });
-            });
-        }
-    };
-    
-    return manualService;
 });
 
 app.directive("manualPage", function () {
@@ -186,7 +83,7 @@ app.directive("tfEditableTextarea", function () {
     return tfEditable;
 });
 
-app.controller("manualBlockCtrl", function ($scope, ManualService) {
+app.controller("manualBlockCtrl", function ($scope, $rootScope, ManualService) {
     var keyups = 0;
     $scope.keyup = function () {
         keyups++;
@@ -197,8 +94,172 @@ app.controller("manualBlockCtrl", function ($scope, ManualService) {
     };
     
     $scope.save = function () {
-        ManualService.saveBlock($scope.manualBlock).then(function (data) {
+        ManualService.saveBlock($scope.block.id, $scope.block.content).then(function (data) {
             console.log(data);
         });
     };
+    
+    $scope.blockSelected = function () {
+        $rootScope.$broadcast("block-selected", $scope.block);
+    };
+    
+    $scope.initBlock = function (block) {
+        $scope.block = block;
+    };
+    
+    $scope.delete = function () {
+        ManualService.deleteBlock($scope.block.id).then(function () {
+            ManualService.reloadManual($scope);
+        });
+    };
+    
+    $scope.moveLeft = function () {
+        ManualService.moveBlockBackward($scope.block.id).then(function () {
+            ManualService.reloadManual($scope);
+        });
+    };
+    
+    $scope.moveRight = function () {
+        ManualService.moveBlockFoward($scope.block.id).then(function () {
+            ManualService.reloadManual($scope);
+        });
+    };
+    
 });
+
+app.controller("pageCtrl", function ($scope, $rootScope, ManualService) {
+    $scope.pageSelected = function () {
+        $rootScope.$broadcast("page-selected", $scope.page);
+    };
+    
+    $scope.initPage = function (page) {
+        $scope.page = page;
+    };
+    
+    $scope.delete = function () {
+        ManualService.deletePage($scope.page.id).then(function () {
+            ManualService.reloadManual($scope);
+        });
+    };
+});
+
+app.controller("rowCtrl", function ($scope, $rootScope, ManualService) {
+    $scope.rowSelected = function () {
+        $rootScope.$broadcast("row-selected", $scope.row);
+    };
+    
+    $scope.initRow = function (row) {
+        $scope.row = row;
+    };
+    
+    $scope.delete = function () {
+        ManualService.deleteRow($scope.row.id).then(function () {
+            ManualService.reloadManual($scope);
+        });
+    };
+});
+
+app.directive("blockOptions", function ($templateRequest, $compile) {
+    var blockOptions = {
+        restrict: "A",
+        link: function (scope, element, attrs) {
+            var direction = attrs.blockOptions;
+            var $element = $(element);
+            $templateRequest("static/htmlParts/manuals/blockOptions.html").then(function (html) {
+                $element.prepend($compile(html)(scope));
+                var $deleteIcon = $element.find(".delete");
+                var $arrowLeft = $element.find(".arrows-left");
+                var $arrowRight = $element.find(".arrows-right");
+                var $arrowUp = $element.find(".arrows-up");
+                var $arrowDown = $element.find(".arrows-down");
+                $element.hover(
+                    function () {
+                        $deleteIcon.removeClass("hidden");
+                        if (direction.indexOf("vertical") > -1) {
+                            $arrowLeft.removeClass("hidden");
+                            $arrowRight.removeClass("hidden");
+                        }
+                        
+                        if (direction.indexOf("horizontal") > -1) {
+                            $arrowUp.removeClass("hidden");
+                            $arrowDown.removeClass("hidden");
+                        }
+                    },
+                    function () {
+                        $deleteIcon.addClass("hidden");
+                        if (direction.indexOf("vertical") > -1) {
+                            $arrowLeft.addClass("hidden");
+                            $arrowRight.addClass("hidden");
+                        }
+                        if (direction.indexOf("horizontal") > -1) {
+                            $arrowUp.addClass("hidden");
+                            $arrowDown.addClass("hidden");
+                        }
+                    }
+                );
+            });
+        }
+    };
+    
+    return blockOptions;
+});
+
+app.directive("blockClass", function () {
+    var blockClass = {
+        restrict: "A",
+        link: function (scope, element, attrs) {
+            var $element = $(element);
+            var classes = getClassesByWidthTypes(scope.block.widthTypes, scope.block.relBlockWidthTypes);
+            classes.forEach(function (value) {
+                $element.addClass(value);
+            });
+        }
+    };
+    
+    return blockClass;
+});
+
+function getClassesByWidthTypes(widthTypes, relWidthTypes) {
+    var classes = [];
+    
+    widthTypes.forEach(function (widthType) {
+        
+        relWidthTypes.some(function (relWidthType) {
+            
+            if (widthType.widthType === relWidthType.id.widthType) {
+                classes.push(getClassByWidthType(widthType, relWidthType));
+            }
+            
+        });
+        
+    });
+    
+    return classes;
+}
+
+function getClassByWidthType(widthType, relWidthType) {
+    var classAux = "";
+    switch (widthType.description) {
+        
+        case "Phones":
+            classAux = "col-xs-";
+            break;
+        
+        case "Tablets":
+            classAux = "col-sm-";
+            break;
+            
+        case "Default":
+            classAux = "col-md-";
+            break;
+            
+        case "Large display":
+            classAux = "col-lg-";
+            break;
+        
+        default:
+            throw "Width Type not supported.";
+    }
+    
+    return classAux + relWidthType.amount;
+}

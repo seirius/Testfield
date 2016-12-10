@@ -19,4 +19,20 @@ public class BeanValidator {
         }
     }
     
+    public static void validateLength(int item, int number, String name) throws BeanException {
+        validateLength(String.valueOf(item), number, name);
+    }
+    
+    public static void validateEmpty(String item, String name) throws BeanException {
+        if (item == null || item.length() == 0) {
+            throw new BeanException(name + " can't be empty.");
+        }
+    }
+    
+    public static void validateNull(Object item, String name) throws BeanException {
+        if (item == null) {
+            throw new BeanException(name + " can't be null.");
+        }
+    }
+    
 }

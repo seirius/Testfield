@@ -1,7 +1,9 @@
 package util;
 
 import java.util.HashMap;
+import java.util.List;
 import util.exceptions.ServiceReturnException;
+import util.interfaces.WebBean;
 
 /**
  *
@@ -21,6 +23,22 @@ public class ServiceReturn {
     
     public ServiceReturn addItem(String itemName, Object item) {
         RESULT.put(itemName, item);
+        return this;
+    }
+    
+    public ServiceReturn addItem(String itemName, Object item, boolean prepareForWeb) throws Exception {
+        if (prepareForWeb && item instanceof WebBean) {
+            if (item instanceof WebBean) {
+                ((WebBean) item).prepareForWeb();
+            } else if (item instanceof List) {
+                for (WebBean webBean: (List<WebBean>) item) {
+                    webBean.prepareForWeb();
+                }
+            } else {
+                System.err.println("Item is not an WebBean.");
+            }
+        }
+        addItem(itemName, item);
         return this;
     }
     

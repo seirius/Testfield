@@ -22,7 +22,7 @@ public class ServiceManager {
     public ServiceManager() {
         session = HibernateUtil.getSessionFactory().openSession();
     }
-
+    
     public UserDAO getUserDAO() {
         return new UserDAO(session);
     }
@@ -73,12 +73,12 @@ public class ServiceManager {
 
     public void rollbackClose() {
         session.getTransaction().rollback();
-        session.close();
+        close();
     }
 
     public void commitClose() {
         session.getTransaction().commit();
-        session.close();
+        close();
     }
 
     public void commit() {
@@ -86,7 +86,9 @@ public class ServiceManager {
     }
 
     public void close() {
-        session.close();
+        if (session.isOpen()) {
+            session.close();
+        }
     }
     
     public void openSession() {

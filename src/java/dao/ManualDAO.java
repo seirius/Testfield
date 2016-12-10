@@ -5,16 +5,20 @@
  */
 package dao;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
-import model.bean.Manual;
-import model.bean.ManualPage;
-import model.bean.ManualRow;
+import model.bean.manual.Manual;
+import model.bean.manual.ManualBlock;
+import model.bean.manual.ManualPage;
+import model.bean.manual.ManualRow;
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import util.DAOValidator;
 import util.enums.ManualState;
 import util.enums.ManualVisibility;
 import util.exceptions.BeanException;
@@ -25,6 +29,9 @@ import util.exceptions.DAOException;
  * @author Andriy
  */
 public class ManualDAO {
+    
+    private final String ERR_GET = "Error getting Manual.";
+    private final String ERR_GETS = "Error getting Manuals.";
  
     private final Session session;
     
@@ -39,10 +46,7 @@ public class ManualDAO {
             manual.setUserNick(userNick);
             manual.setTitle(title);
             manual.setVisibility(visibilty);
-            manual.setStateCurrent(state);
-            Date dateNow = new Date();
-            manual.setDateCreation(dateNow);
-            manual.setDateLastMod(dateNow);
+            manual.setCurrentState(state);
             
             session.save(manual);
         } catch(BeanException e) {
@@ -53,26 +57,98 @@ public class ManualDAO {
         return manual;
     }
     
-    public Manual getManual(String idManual) throws DAOException {
+    public Manual getManual(int idManual) throws DAOException {
         Manual manual = null;
         try {
             Object objManual = session.get(Manual.class, idManual);
             if (objManual != null) {
                 manual = (Manual) objManual;
-                Set<ManualPage> pages = manual.getManualPages();
-                pages.size();
-                pages.forEach((page) -> {
-                    Set<ManualRow> rows = page.getManualRows();
-                    rows.size();
-                    rows.forEach((row) -> {
-                        row.getManualBlocks().size();
-                    });
-                });
-                manual.getTags().size();
             }
             
         } catch(Exception e) {
-            throw new DAOException("Error getting Manual.", e);
+            throw new DAOException(ERR_GET, e);
+        }
+        return manual;
+    }
+    
+    public Manual getManualByBlock(String idBlock) throws DAOException {
+        Manual manual = null;
+        
+        try {
+            DetachedCriteria blocks = DetachedCriteria.forClass(ManualBlock.class)
+                    .setProjection(Projections.property("manualRow"))
+                    .add(Restrictions.eq("id", idBlock));
+            
+            DetachedCriteria rows = DetachedCriteria.forClass(ManualRow.class)
+                    .setProjection(Projections.property("manualPage"))
+                    .add(Property.forName("id").in(blocks));
+            
+            DetachedCriteria pages = DetachedCriteria.forClass(ManualPage.class)
+                    .setProjection(Projections.property("manualId"))
+                    .add(Property.forName("id").in(rows));
+            
+            Criteria manuals = session.createCriteria(Manual.class)
+                    .add(Property.forName("id").in(pages));
+            
+            List<Manual> manualList = manuals.list();
+            if (manualList.size() == 1) {
+                manual = manualList.get(0);
+            } else if (manualList.isEmpty()) {
+                throw new Exception("No manuals found for manual block.");
+            } else {
+                throw new Exception("More than one manual found (impossible?).");
+            }
+        } catch(Exception e) {
+            DAOValidator.errorOnSelect("Manual", e);
+        }
+        
+        return manual;
+    }
+    
+    public Manual getManualByRow(String idRow) throws DAOException {
+        Manual manual = null;
+        
+        try {
+            DetachedCriteria rows = DetachedCriteria.forClass(ManualRow.class)
+                    .setProjection(Projections.property("manualPage"))
+                    .add(Restrictions.eq("id", idRow));
+            
+            DetachedCriteria pages = DetachedCriteria.forClass(ManualPage.class)
+                    .setProjection(Projections.property("manualId"))
+                    .add(Property.forName("id").in(rows));
+            
+            Criteria manuals = session.createCriteria(Manual.class)
+                    .add(Property.forName("id").in(pages));
+            
+            List<Manual> manualList = manuals.list();
+            if (manualList.size() == 1) {
+                manual = manualList.get(0);
+            } else if (manualList.isEmpty()) {
+                throw new Exception("No manuals found for manual row.");
+            } else {
+                throw new Exception("More than one manual found (impossible?).");
+            }
+        } catch(Exception e) {
+            DAOValidator.errorOnSelect("Manual", e);
+        }
+        
+        return manual;
+    }
+    
+    public Manual getManualByPage(String idPage) throws DAOException {
+        Manual manual = null;
+        try {
+            ManualPage page = (ManualPage) session.get(ManualPage.class, idPage);
+            if (page == null) {
+                throw new DAOException("No page found with this id: " + idPage);
+            }
+            
+            int idManual = page.getManualId();
+            manual = getManual(idManual);
+        } catch(DAOException e) {
+            throw e;
+        } catch(Exception e) {
+            throw new DAOException(ERR_GET, e);
         }
         return manual;
     }
@@ -83,18 +159,13 @@ public class ManualDAO {
             Criteria criteria = session.createCriteria(Manual.class);
             criteria.add(Restrictions.eq("userNick", userNick));
             manuals = criteria.list();
-            manuals.forEach((manual) -> {
-                manual.setManualPages(null);
-                manual.setTags(null);
-            });
-            
         } catch(HibernateException e) {
-            throw new DAOException("Error getting Manuals.", e);
+            throw new DAOException(ERR_GETS, e);
         }
         return manuals;
     }
     
-    public Manual setTitle(String manualId, String newTitle) throws DAOException {
+    public Manual setTitle(int manualId, String newTitle) throws DAOException {
         Manual manual;
         try {
             manual = new Manual();

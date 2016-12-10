@@ -5,8 +5,6 @@
  */
 package dao;
 
-import model.bean.BlockWidthType;
-import model.bean.BlockWidthTypeId;
 import org.hibernate.Session;
 import util.enums.BlockWidthTypeEnum;
 import util.exceptions.DAOException;
@@ -23,21 +21,5 @@ public class BlockWidthTypeDAO {
         this.session = session;
     }
     
-    public BlockWidthType insert(BlockWidthTypeEnum type, String idManual) throws DAOException {
-        BlockWidthType blockWidthType;
-        try {
-            BlockWidthTypeId id = new BlockWidthTypeId();
-            id.setWidthType(type.getValue());
-            id.setManualBlock(idManual);
-            
-            blockWidthType = new BlockWidthType();
-            blockWidthType.setId(id);
-            
-            session.save(blockWidthType);
-        } catch(Exception e) {
-            throw new DAOException(e);
-        }
-        return blockWidthType;
-    }
      
 }
