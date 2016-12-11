@@ -116,6 +116,9 @@
     border: 1px solid aquamarine;
 }
 
+.block-add-popover {
+    color: black;
+}
 
 /*-----------GLYPHICONS----------*/
 
@@ -131,14 +134,14 @@
     color: white;
 }
 
-.arrows-left, .arrows-right, .arrows-up, .arrows-down {
+.arrows-left, .arrows-right, .arrows-up, .arrows-down, .add-element {
     color: dodgerblue;
     cursor: pointer;
     position: absolute;
     font-size: 2rem;
 }
 
-.arrows-left:hover, .arrows-right:hover, .arrows-up:hover, .arrows-down:hover {
+.arrows-left:hover, .arrows-right:hover, .arrows-up:hover, .arrows-down:hover, .add-element:hover {
     color: white;
 }
 
@@ -164,6 +167,12 @@
     left: 50%;
     transform: translateX(-50%);
     bottom: -12px;
+}
+
+.add-element {
+    color: greenyellow;
+    right: 20px;
+    bottom: 12px;
 }
 
 /*-------------------------------*/

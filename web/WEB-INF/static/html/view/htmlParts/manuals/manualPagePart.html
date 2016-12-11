@@ -73,16 +73,14 @@
         </div>-->
 
     <div class="row" ng-repeat="manualPage in manual.pages">
-
         <div class="col-xs-12">
 
             <div 
                 class="manual-page manual-page-style" 
-                block-options="horizontal"
+                block-options="horizontal delete"
                 ng-controller="pageCtrl"
                 ng-init="initPage(manualPage)"
                 >
-
                 <div 
                     class="row" 
                     ng-repeat="manualRow in manualPage.rows"
@@ -92,7 +90,7 @@
                     
                     <div class="col-xs-12">
                         
-                        <div class="manual-row manual-row-style" block-options="horizontal">
+                        <div class="manual-row manual-row-style" block-options="horizontal add delete">
                             
                             <div class="row">
                                 <div
@@ -101,7 +99,7 @@
                                     ng-init="initBlock(manualBlock)"
                                     block-class
                                     >
-                                    <div class="manual-block manual-block-style" block-options="vertical">
+                                    <div class="manual-block manual-block-style" block-options="vertical delete">
                                         <form novalidate role="form">
                                             <span class="min-block-height" tf-editable-element="block">{{manualBlock.content}}</span>
                                             <textarea 

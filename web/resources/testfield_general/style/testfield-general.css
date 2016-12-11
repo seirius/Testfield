@@ -116,4 +116,8 @@ body {
 .has-error .help-block {
     display: block;
 }
+
+.popover {
+    /*max-width: 100%;*/
+}
 /*-----------------------------*/

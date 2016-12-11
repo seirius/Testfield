@@ -1,0 +1,96 @@
+<div class="block-add-popover" ng-init="blockSize = {xs: 0, sm: 0, md: 0, lg: 0}">
+    <!--    <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="number" class="form-control" placeholder="Phones" ng-model="blockSize.xs.amount">
+                        <span class="input-group-addon">
+                            <input type="checkbox" ng-model="blockSize.xs.checked">
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="number" class="form-control" placeholder="Tablets" ng-model="blockSize.sm.amount">
+                        <span class="input-group-addon">
+                            <input type="checkbox" ng-model="blockSize.sm.checked">
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="number" class="form-control" placeholder="Default" ng-model="blockSize.md.amount">
+                        <span class="input-group-addon">
+                            <input type="checkbox" ng-model="blockSize.md.checked">
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="number" class="form-control" placeholder="Large display" ng-model="blockSize.lg.amount">
+                        <span class="input-group-addon">
+                            <input type="checkbox" ng-model="blockSize.lg.checked">
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <button class="btn btn-success pull-right" name="addElement" ng-click="addElement()">Add block</button>
+                </div>
+            </div>
+        </div>-->
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="control-label">Phones {{blockSize.xs}}</label><br>
+                <input name="blockSize" type="text" ng-model="blockSize.xs">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="control-label">Tablets {{blockSize.sm}}</label><br>
+                <input name="blockSize" type="number" ng-model="blockSize.sm">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="control-label">Default {{blockSize.md}}</label><br>
+                <input name="blockSize" type="number" ng-model="blockSize.md">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="control-label">Large display {{blockSize.lg}}</label><br>
+                <input name="blockSize" type="number" ng-model="blockSize.lg">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <button class="btn btn-success pull-right" name="addElement" ng-click="addElement()">Add block</button>
+            </div>
+        </div>
+    </div>
+</div>
