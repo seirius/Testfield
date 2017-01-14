@@ -11,6 +11,13 @@ app.service("ManualService", function (tfHttp, $compile) {
         EDIT: 1
     };
     
+    var MOVE_OPTIONS = {
+        UP: 0,
+        DOWN: 1,
+        LEFT: 2,
+        RIGHT: 3
+    };
+    
     var emitManualLoaded = function ($scope) {
         $scope.$emit("manual-loaded");
     };
@@ -56,6 +63,7 @@ app.service("ManualService", function (tfHttp, $compile) {
     
     manualService = {
         VIEW_STATE: VIEW_STATE,
+        MOVE_OPTIONS: MOVE_OPTIONS,
         createManual: function () {
             return tfHttp.request({
                 url: "/Testfield/request/manual/createManual"
@@ -346,7 +354,7 @@ app.service("ManualService", function (tfHttp, $compile) {
                 url: "/Testfield/request/manual/moveBlock",
                 data: {
                     idBlock: idBlock,
-                    moveOption: 3
+                    moveOption: MOVE_OPTIONS.RIGHT
                 }
             });
         },
@@ -356,7 +364,27 @@ app.service("ManualService", function (tfHttp, $compile) {
                 url: "/Testfield/request/manual/moveBlock",
                 data: {
                     idBlock: idBlock,
-                    moveOption: 2
+                    moveOption: MOVE_OPTIONS.LEFT
+                }
+            });
+        },
+        
+        movePage: function (idPage, moveOption) {
+            return tfHttp.requestParam({
+                url: "/Testfield/request/manual/movePage",
+                data: {
+                    idPage: idPage,
+                    moveOption: moveOption
+                }
+            });
+        },
+        
+        moveRow: function (idRow, moveOption) {
+            return tfHttp.requestParam({
+                url: "/Testfield/request/manual/moveRow",
+                data: {
+                    idRow: idRow,
+                    moveOption: moveOption
                 }
             });
         }

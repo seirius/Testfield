@@ -16,3 +16,16 @@ $.fn.resizeTextarea = function () {
         resize();
     });
 };
+
+var UTIL = (function () {
+    var WIDTH_TYPES = {
+        XS: 1,
+        SM: 3,
+        MD: 2,
+        LG: 4
+    };
+    
+    return {
+        WIDTH_TYPES: WIDTH_TYPES
+    };
+})();

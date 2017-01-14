@@ -232,5 +232,35 @@ public class ManualController extends MyController {
         return ajaxResponse;
     }
     
+    @RequestMapping(value = "/manual/movePage", method = RequestMethod.POST)
+    public @ResponseBody AjaxResponse movePage(HttpSession session, @RequestParam String idPage, @RequestParam int moveOption) {
+        AjaxResponse ajaxResponse = new AjaxResponse();
+        try {
+            String userNick = Security.isSessionOpened(session);
+            ServiceReturn serviceReturn = new ManualService().movePage(userNick, MoveOptions.toMoveOptions(moveOption), idPage);
+            ajaxResponse.digest(serviceReturn);
+        } catch(ServiceException e) {
+            ajaxResponse.setError(e);
+        } catch(Exception e) {
+            ajaxResponse.setErrorMsg(e);
+        }
+        return ajaxResponse; 
+    }
+    
+    @RequestMapping(value = "/manual/moveRow", method = RequestMethod.POST)
+    public @ResponseBody AjaxResponse moveRow(HttpSession session, @RequestParam String idRow, @RequestParam int moveOption) {
+        AjaxResponse ajaxResponse = new AjaxResponse();
+        try {
+            String userNick = Security.isSessionOpened(session);
+            ServiceReturn serviceReturn = new ManualService().moveRow(userNick, MoveOptions.toMoveOptions(moveOption), idRow);
+            ajaxResponse.digest(serviceReturn);
+        } catch(ServiceException e) {
+            ajaxResponse.setError(e);
+        } catch(Exception e) {
+            ajaxResponse.setErrorMsg(e);
+        }
+        return ajaxResponse; 
+    }
+    
     
 }

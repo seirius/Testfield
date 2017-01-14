@@ -1,4 +1,4 @@
-<div class="block-add-popover" ng-init="blockSize = {xs: 0, sm: 0, md: 0, lg: 0}">
+<div class="block-add-popover">
     <div class="row">
         <div class="col-xs-12">
             <div class="form-group">
@@ -33,9 +33,21 @@
     </div>
     <div class="row">
         <div class="col-xs-12">
-            <div class="form-group">
-                <button class="btn btn-success pull-right" name="addElement" ng-click="addElement()">Add block</button>
-                <button class="btn btn-warning pull-right" name="modifyElement" ng-click="modifyElement()">Modify block</button>
+            <div class="form-group text-center">
+                <button 
+                    class="btn btn-success" 
+                    name="addElement" 
+                    ng-click="addElement()"
+                    ng-show="!showModButton">
+                    Add block
+                </button>
+                <button 
+                    class="btn btn-warning" 
+                    name="modifyElement" 
+                    ng-click="modifyElement()"
+                    ng-show="showModButton">
+                    Modify block
+                </button>
             </div>
         </div>
     </div>

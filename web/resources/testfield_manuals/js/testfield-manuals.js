@@ -1,3 +1,5 @@
+/* global UTIL */
+
 var app = angular.module("manualsTestfield", ["generalTestfield"]);
 
 app.controller("manualContainerCtrl", function ($scope, $compile, ManualService) {
@@ -92,6 +94,8 @@ app.directive("tfEditableTextarea", function () {
 });
 
 app.controller("manualBlockCtrl", function ($scope, $rootScope, ManualService) {
+    $scope.showModButton = true;
+    
     var keyups = 0;
     $scope.keyup = function () {
         keyups++;
@@ -113,6 +117,7 @@ app.controller("manualBlockCtrl", function ($scope, $rootScope, ManualService) {
 
     $scope.initBlock = function (block) {
         $scope.block = block;
+        $scope.blockSize = MANSC.getBlockSizes($scope.block);
     };
 
     $scope.delete = function () {
@@ -134,44 +139,19 @@ app.controller("manualBlockCtrl", function ($scope, $rootScope, ManualService) {
     };
     
     $scope.modifyElement = function () {
-        var widthTypes = [];
-        
-        if ($scope.blockSize.xs > 0) {
-            widthTypes.push({
-                widthTypeId: 1,
-                amount: $scope.blockSize.xs
-            });
-        }
-        if ($scope.blockSize.sm > 0) {
-            widthTypes.push({
-                widthTypeId: 2,
-                amount: $scope.blockSize.sm
-            });
-        }
-        if ($scope.blockSize.md > 0) {
-            widthTypes.push({
-                widthTypeId: 3,
-                amount: $scope.blockSize.md
-            });
-        }
-        if ($scope.blockSize.lg > 0) {
-            widthTypes.push({
-                widthTypeId: 4,
-                amount: $scope.blockSize.lg
-            });
-        }
-        
         ManualService.modifyBlockSize({
             idBlock: $scope.block.id,
-            widthTypes: widthTypes
+            widthTypes: MANSC.getWidthTypes($scope.blockSize)
         }).then(function () {
             ManualService.reloadManual($scope);
         });
     };
-
+    
 });
 
 app.controller("pageCtrl", function ($scope, $rootScope, ManualService) {
+    $scope.clickEnabled = true;
+    
     $scope.pageSelected = function () {
         $rootScope.$broadcast("page-selected", $scope.page);
     };
@@ -185,15 +165,43 @@ app.controller("pageCtrl", function ($scope, $rootScope, ManualService) {
             ManualService.reloadManual($scope);
         });
     };
+    
+    $scope.moveUp = function () {
+        ManualService.movePage($scope.page.id, ManualService.MOVE_OPTIONS.UP).then(function () {
+            ManualService.reloadManual($scope);
+        });
+    };
+    
+    $scope.moveDown = function () {
+        ManualService.movePage($scope.page.id, ManualService.MOVE_OPTIONS.DOWN).then(function () {
+            ManualService.reloadManual($scope);
+        });
+    };
+    
+    $scope.addElement = function () {
+        ManualService.addRow({
+            idPage: $scope.page.id
+        }).then(function () {
+            ManualService.reloadManual($scope);
+        });
+    };
 });
 
 app.controller("rowCtrl", function ($scope, $rootScope, ManualService) {
+    $scope.showModButton = false;
+    
     $scope.rowSelected = function () {
         $rootScope.$broadcast("row-selected", $scope.row);
     };
 
     $scope.initRow = function (row) {
         $scope.row = row;
+        $scope.blockSize = {
+            xs: 0,
+            sm: 0,
+            md: 0,
+            lg: 0
+        };
     };
 
     $scope.delete = function () {
@@ -203,38 +211,23 @@ app.controller("rowCtrl", function ($scope, $rootScope, ManualService) {
     };
 
     $scope.addElement = function () {
-        var widthTypes = [];
-        
-        if ($scope.blockSize.xs > 0) {
-            widthTypes.push({
-                widthTypeId: 1,
-                amount: $scope.blockSize.xs
-            });
-        }
-        if ($scope.blockSize.sm > 0) {
-            widthTypes.push({
-                widthTypeId: 2,
-                amount: $scope.blockSize.sm
-            });
-        }
-        if ($scope.blockSize.md > 0) {
-            widthTypes.push({
-                widthTypeId: 3,
-                amount: $scope.blockSize.md
-            });
-        }
-        if ($scope.blockSize.lg > 0) {
-            widthTypes.push({
-                widthTypeId: 4,
-                amount: $scope.blockSize.lg
-            });
-        }
-        
         ManualService.addBlock({
             idRow: $scope.row.id,
-            widthTypes: widthTypes,
+            widthTypes: MANSC.getWidthTypes($scope.blockSize),
             blockOrder: 0
         }).then(function () {
+            ManualService.reloadManual($scope);
+        });
+    };
+    
+    $scope.moveUp = function () {
+        ManualService.moveRow($scope.row.id, ManualService.MOVE_OPTIONS.UP).then(function () {
+            ManualService.reloadManual($scope);
+        });
+    };
+    
+    $scope.moveDown = function () {
+        ManualService.moveRow($scope.row.id, ManualService.MOVE_OPTIONS.DOWN).then(function () {
             ManualService.reloadManual($scope);
         });
     };
@@ -253,10 +246,10 @@ app.directive("blockOptions", function ($templateRequest, $compile) {
 
                 $element.hover(
                     function () {
-                        MANSC.blockOoptions($element, options, true);
+                        MANSC.blockOptions($element, options, true);
                     },
                     function () {
-                        MANSC.blockOoptions($element, options, false);
+                        MANSC.blockOptions($element, options, false);
                     }
                 );
         
@@ -344,36 +337,37 @@ var MANSC = (function () {
         return $element.children(optionClass);
     }
     
-    function rowsFunctionality(args) {
+    function elementPopover(args) {
         args.$templateRequest("static/htmlParts/manuals/popoverBlocks.html")
                 .then(function (html) {
-                    var $addElement = args.$element.find(".add-element");
+                    var $funElement = args.$element.find(args.classToFind);
                     var popoverContent = args.$compile(html)(args.$scope);
-                    $addElement.popover({
+                    $funElement.popover({
                         content: popoverContent,
                         placement: "left",
                         html: true
                     });
 
                     var clickSetted = false;
-                    $addElement.on("shown.bs.popover", function () {
-                        var $addButton = popoverContent.find("[name='addElement']");
+                    $funElement.on("shown.bs.popover", function () {
+                        var $button = popoverContent.find(args.nameToFind);
 
                         if (!clickSetted) {
                             popoverContent.find("[name='blockSize']").each(function () {
                                 var $thisElement = $(this);
+                                var elementVal = $thisElement.val().length === 0 ? 0 : parseInt($thisElement.val());
                                 $thisElement.slider({
                                     min: 0,
                                     max: 12,
                                     step: 2,
-                                    value: 0
+                                    value: elementVal
                                 });
                                 $thisElement.on("slide", function (ui) {
                                     $thisElement.val(ui.value).trigger("input");
                                 });
                             });
-                            $addButton.click(function () {
-                                $addElement.click();
+                            $button.click(function () {
+                                $funElement.click();
                             });
                             clickSetted = true;
                         }
@@ -381,46 +375,25 @@ var MANSC = (function () {
                 });
     }
     
+    function rowsFunctionality(args) {
+        args = $.extend(args, {
+            classToFind: ".add-element",
+            nameToFind: "[name='addElement']"
+        });
+        elementPopover(args);
+    }
+    
     function blocksFunctionality(args) {
-        args.$templateRequest("static/htmlParts/manuals/popoverBlocks.html")
-                .then(function (html) {
-                    var $modifyElement = args.$element.find(".modify-element");
-                    var popoverContent = args.$compile(html)(args.$scope);
-                    $modifyElement.popover({
-                        content: popoverContent,
-                        placement: "left",
-                        html: true
-                    });
-
-                    var clickSetted = false;
-                    $modifyElement.on("shown.bs.popover", function () {
-                        var $addButton = popoverContent.find("[name='addElement']");
-
-                        if (!clickSetted) {
-                            popoverContent.find("[name='blockSize']").each(function () {
-                                var $thisElement = $(this);
-                                $thisElement.slider({
-                                    min: 0,
-                                    max: 12,
-                                    step: 2,
-                                    value: 0
-                                });
-                                $thisElement.on("slide", function (ui) {
-                                    $thisElement.val(ui.value).trigger("input");
-                                });
-                            });
-                            $addButton.click(function () {
-                                $modifyElement.click();
-                            });
-                            clickSetted = true;
-                        }
-                    });
-                });
+        args = $.extend(args, {
+            classToFind: ".modify-element",
+            nameToFind: "[name='modifyElement']"
+        });
+        elementPopover(args);
     }
     
     var functions = {
         
-        blockOoptions: function ($element, options, showHide) {
+        blockOptions: function ($element, options, showHide) {
             var $elementOptions = findElementByOption($element, options);
             $elementOptions.each(function (index, option) {
                 var $option = $(option);
@@ -508,8 +481,62 @@ var MANSC = (function () {
             } else if (args.$element.hasClass("manual-block")) {
                 blocksFunctionality(args);
             }
+        },
+        
+        getWidthTypes: function (blockSize) {
+            var widthTypes = [];
+            if (blockSize.xs > 0) {
+                widthTypes.push({
+                    widthTypeId: 1,
+                    amount: blockSize.xs
+                });
+            }
+            if (blockSize.sm > 0) {
+                widthTypes.push({
+                    widthTypeId: 2,
+                    amount: blockSize.sm
+                });
+            }
+            if (blockSize.md > 0) {
+                widthTypes.push({
+                    widthTypeId: 3,
+                    amount: blockSize.md
+                });
+            }
+            if (blockSize.lg > 0) {
+                widthTypes.push({
+                    widthTypeId: 4,
+                    amount: blockSize.lg
+                });
+            }
+            
+            return widthTypes;
+        },
+        
+        getBlockSizes: function (block) {
+            var blockSizes = [];
+            block.relBlockWidthTypes.forEach(function (widthType) {
+                switch(widthType.id.widthType) {
+                    case UTIL.WIDTH_TYPES.XS:
+                        blockSizes.xs = widthType.amount;
+                        break;
+                        
+                    case UTIL.WIDTH_TYPES.SM:
+                        blockSizes.sm = widthType.amount;
+                        break;
+                        
+                    case UTIL.WIDTH_TYPES.MD:
+                        blockSizes.md = widthType.amount;
+                        break;
+                        
+                    case UTIL.WIDTH_TYPES.LG:
+                        blockSizes.lg = widthType.amount;
+                        break;
+                }
+            });
+            return blockSizes;
         }
-    };
+    }; 
     
     return functions;
 })();

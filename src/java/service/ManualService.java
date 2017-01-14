@@ -418,4 +418,64 @@ public class ManualService extends Service {
         return result;
     }
     
+    public ServiceReturn movePage(String userNick, MoveOptions moveOption, String idPage) throws Exception {
+        ServiceReturn result = new ServiceReturn();
+        try {
+            MANAGER.beginTransaction();
+            
+            Manual manual = MANAGER.getManualDAO().getManualByPage(idPage);
+            if (!Security.permissionModManual(manual, userNick)) {
+                throw new ServiceException(ErrorMsgs.ACC_DEN);
+            }
+            
+            switch(moveOption) {
+                case UP:
+                    MANAGER.getManualPageDAO().moveBackward(idPage);
+                    break;
+                    
+                case DOWN:
+                    MANAGER.getManualPageDAO().moveFoward(idPage);
+                    break;
+            }
+            
+            result.addItem("manual", manual, true);
+            MANAGER.commit();
+        } catch(Exception e) {
+            throw treatException(e);
+        } finally {
+            MANAGER.close();
+        }
+        return result;
+    }
+    
+    public ServiceReturn moveRow(String userNick, MoveOptions moveOption, String idRow) throws Exception {
+        ServiceReturn result = new ServiceReturn();
+        try {
+            MANAGER.beginTransaction();
+            
+            Manual manual = MANAGER.getManualDAO().getManualByRow(idRow);
+            if (!Security.permissionModManual(manual, userNick)) {
+                throw new ServiceException(ErrorMsgs.ACC_DEN);
+            }
+            
+            switch(moveOption) {
+                case UP:
+                    MANAGER.getManualRowDAO().moveBackward(idRow);
+                    break;
+                    
+                case DOWN:
+                    MANAGER.getManualRowDAO().moveFoward(idRow);
+                    break;
+            }
+            
+            result.addItem("manual", manual, true);
+            MANAGER.commit();
+        } catch(Exception e) {
+            throw treatException(e);
+        } finally {
+            MANAGER.close();
+        }
+        return result;
+    }
+    
 }

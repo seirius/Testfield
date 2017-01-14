@@ -14,6 +14,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import util.DAOValidator;
+import util.ErrorMsgs;
 import util.exceptions.DAOException;
 
 /**
@@ -26,6 +27,16 @@ public class ManualRowDAO {
     
     public ManualRowDAO(Session session) {
         this.session = session;
+    }
+    
+    public ManualRow getRow(String idRow) throws DAOException {
+        ManualRow manualRow = null;
+        try {
+            manualRow = (ManualRow) session.get(ManualRow.class, idRow);
+        } catch(Exception e) {
+            DAOValidator.errorOnSelect("Manual's row", e);
+        }
+        return manualRow;
     }
     
     public ManualRow insert(String manualPage, int order) throws DAOException {
@@ -140,6 +151,135 @@ public class ManualRowDAO {
             }
         } catch(Exception e) {
             DAOValidator.errorOnDelete("Manual's Rows", e);
+        }
+    }
+    
+    public int updateOrder(String idRow, int rowOrder) throws DAOException {
+        int updated = -1;
+        try {
+            String hql = ""
+                    + "update ManualRow "
+                    + "set "
+                    + " rowOrder = :rowOrder "
+                    + "where "
+                    + " id = :id "
+                    + "";
+            
+            updated = session.createQuery(hql)
+                    .setInteger("rowOrder", rowOrder)
+                    .setString("id", idRow)
+                    .executeUpdate();
+        } catch(Exception e) {
+            DAOValidator.errorOnUpdate("Row's block", e);
+        }
+        return updated; 
+    }
+    
+    public int minusOneWRange(String idPage, int startPosition, int endPosition) throws DAOException {
+        int updated = -1;
+        try {
+            String hql = ""
+                    + "update ManualRow "
+                    + "set "
+                    + " rowOrder = rowOrder - 1 "
+                    + "where "
+                    + " manualPage = :manualPage "
+                    + "and "
+                    + " rowOrder >= :startPosition "
+                    + "and "
+                    + " rowOrder <= :endPosition "
+                    + "";
+            
+            updated = session.createQuery(hql)
+                    .setString("manualPage", idPage)
+                    .setInteger("startPosition", startPosition)
+                    .setInteger("endPosition", endPosition)
+                    .executeUpdate();
+        } catch(Exception e) {
+            DAOValidator.errorOnUpdate("Page's rows", e);
+        }
+        return updated;
+    }
+    
+    public int plusOneWRange(String idPage, int startPosition, int endPosition) throws DAOException {
+        int updated = -1;
+        try {
+            String hql = ""
+                    + "update ManualRow "
+                    + "set "
+                    + " rowOrder = rowOrder + 1 "
+                    + "where "
+                    + " manualPage = :manualPage "
+                    + "and "
+                    + " rowOrder >= :startPosition "
+                    + "and "
+                    + " rowOrder <= :endPosition "
+                    + "";
+            
+            updated = session.createQuery(hql)
+                    .setString("manualPage", idPage)
+                    .setInteger("startPosition", startPosition)
+                    .setInteger("endPosition", endPosition)
+                    .executeUpdate();
+        } catch(Exception e) {
+            DAOValidator.errorOnUpdate("Page's rows", e);
+        }
+        return updated;
+    }
+    
+    public boolean isLast(String idRow) throws DAOException {
+        boolean isLast = false;
+        try {
+            ManualRow row = getRow(idRow);
+            String idPage = row.getManualPage();
+            ManualRow lastRow = getLastRow(idPage);
+            isLast = row.getRowOrder() == lastRow.getRowOrder();
+        } catch(Exception e) {
+            DAOValidator.errorOnCheck("on checking if row is last", e);
+        }
+        return isLast;
+    }
+    
+    public boolean isFirst(String idRow) throws DAOException {
+        boolean isFirst = false;
+        try {
+            ManualRow row = getRow(idRow);
+            isFirst = row.getRowOrder() == 1;
+        } catch(Exception e) {
+            DAOValidator.errorOnCheck("on checking if row is first", e);
+        }
+        return isFirst; 
+    }
+    
+    public void moveFoward(String idRow) throws DAOException {
+        try {
+            if (isLast(idRow)) {
+                ErrorMsgs.sysLogInfo(("Can't move last row foward."));
+                return;
+            }
+            
+            ManualRow row = getRow(idRow);
+            int newOrder = row.getRowOrder() + 1;
+            minusOneWRange(row.getManualPage(), newOrder, newOrder);
+            updateOrder(idRow, newOrder);
+        } catch(Exception e) {
+            DAOValidator.errorOnUpdate("Manual's row", e);
+        }
+    }
+    
+    public void moveBackward(String idRow) throws DAOException {
+        try {
+            if (isFirst(idRow)) {
+                ErrorMsgs.sysLogInfo("Can't move first row backwards.");
+                return;
+            }
+            
+            ManualRow row = getRow(idRow);
+            int newOrder = row.getRowOrder() - 1;
+            plusOneWRange(row.getManualPage(), newOrder, newOrder);
+            updateOrder(idRow, newOrder);
+        } catch(Exception e) {
+            DAOValidator.errorOnUpdate("Page's block", e);
         }
     }
     
