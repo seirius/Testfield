@@ -153,6 +153,23 @@ public class ManualController extends MyController {
         return ajaxResponse;
     }
     
+
+    @RequestMapping(value = "/manual/modifyBlockSize", method = RequestMethod.POST)
+    public @ResponseBody AjaxResponse modifyBlockSize(HttpSession session, @RequestParam String idBlock, @RequestParam String widthTypes) {
+        AjaxResponse ajaxResponse = new AjaxResponse();
+        try {
+            String userNick = Security.isSessionOpened(session);
+            List<WidthTypeHelper> widthTypeList = WidthTypeHelper.parseWidthTypes(widthTypes);
+            ServiceReturn serviceReturn = new ManualService().updateBlockSize(userNick, idBlock, widthTypeList);
+            ajaxResponse.digest(serviceReturn);
+        } catch(ServiceException e) {
+            ajaxResponse.setError(e);
+        } catch(Exception e) {
+            ajaxResponse.setErrorMsg(e);
+        }
+        return ajaxResponse; 
+    }
+    
     /**
      *
      * @param session

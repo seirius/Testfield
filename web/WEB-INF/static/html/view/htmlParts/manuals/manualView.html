@@ -1,0 +1,27 @@
+<div class="color-white" ng-controller="manualView">
+    
+    <div class="row">
+        <div class="col-xs-12">
+            <h2>{{manual.title}}</h2>
+        </div>
+    </div>
+    
+    <!--PAGES-->
+    <div class="row" ng-repeat="page in manual.pages">
+        <div class="col-xs-12">
+            
+            <!--ROWS-->
+            <div class="row" ng-repeat="row in page.rows">
+                
+                <div 
+                    block-class
+                    ng-repeat="block in row.blocks">
+                    {{block.content}}
+                </div>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+</div>

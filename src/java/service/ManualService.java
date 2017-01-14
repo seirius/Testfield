@@ -159,6 +159,31 @@ public class ManualService extends Service {
         return result;
     }
     
+    public ServiceReturn updateBlockSize(String userNick, String idBlock, List<WidthTypeHelper> widthTypes) throws Exception {
+        ServiceReturn result = new ServiceReturn();
+        try {
+            MANAGER.beginTransaction();
+            
+            ManualDAO manualDAO = MANAGER.getManualDAO();
+            Manual manual = manualDAO.getManualByBlock(idBlock);
+            
+            if (!Security.permissionModManual(manual, userNick)) {
+                throw new ServiceException(ErrorMsgs.ACC_DEN);
+            }
+            
+            MANAGER.getManualBlockDAO().modifyWidthTypes(idBlock, widthTypes);
+            
+            result.addItem("manual", manual, true);
+            MANAGER.commit();
+        } catch(Exception e) {
+            MANAGER.rollback();
+            throw treatException(e);
+        } finally {
+            MANAGER.close();
+        }
+        return result;
+    }
+    
     public ServiceReturn addPage(String userNick, int idManual, int pageOrder) throws Exception {
         ServiceReturn result = new ServiceReturn();
         try {

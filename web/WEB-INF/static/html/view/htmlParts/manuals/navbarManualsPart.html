@@ -34,7 +34,8 @@
                     <ul class="dropdown-menu">
                         <li><a href="#" ng-click="createManual()">Create</a></li>
                         <li><a href="#" ng-click="manualsList()">Open</a></li>
-                        <li><a href="#">Modify</a></li>
+                        <li><a href="#" ng-show="!editing" ng-click="edit()">Edit</a></li>
+                        <li><a href="#" ng-show="editing" ng-click="visualize()">Visualize</a></li>
                     </ul>
 
                 </li>

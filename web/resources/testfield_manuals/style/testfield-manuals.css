@@ -134,14 +134,14 @@
     color: white;
 }
 
-.arrows-left, .arrows-right, .arrows-up, .arrows-down, .add-element {
+.arrows-left, .arrows-right, .arrows-up, .arrows-down, .add-element, .modify-element {
     color: dodgerblue;
     cursor: pointer;
     position: absolute;
     font-size: 2rem;
 }
 
-.arrows-left:hover, .arrows-right:hover, .arrows-up:hover, .arrows-down:hover, .add-element:hover {
+.arrows-left:hover, .arrows-right:hover, .arrows-up:hover, .arrows-down:hover, .add-element:hover, .modify-element:hover {
     color: white;
 }
 
@@ -171,6 +171,12 @@
 
 .add-element {
     color: greenyellow;
+    right: 20px;
+    bottom: 12px;
+}
+
+.modify-element {
+    color: burlywood;
     right: 20px;
     bottom: 12px;
 }

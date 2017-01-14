@@ -9,8 +9,22 @@ app.controller("navbarManualsCtrl", function ($scope, $rootScope, ManualService)
         });
     };
     
+    $scope.editing = true;
+    $scope.$on("manual-loaded", function () {
+        var viewState = ManualService.getCurrentManual().viewState;
+        $scope.editing = viewState === ManualService.VIEW_STATE.EDIT;
+    });
+    
     $scope.manualsList = function () {
         ManualService.openManualsList($scope);
+    };
+    
+    $scope.edit = function () {
+        ManualService.reloadManual($scope);
+    };
+    
+    $scope.visualize = function () {
+        ManualService.visualizeManual($scope);
     };
 });
 

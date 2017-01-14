@@ -20,7 +20,6 @@ import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import util.DAOValidator;
 import util.ErrorMsgs;
-import util.enums.BlockWidthTypeEnum;
 import util.exceptions.DAOException;
 
 /**
@@ -55,6 +54,30 @@ public class ManualBlockDAO {
             }
         } catch(Exception e) {
             DAOValidator.errorOnInsert("Manual's block", e);
+        }
+        return manualBlock;
+    }
+    
+    public ManualBlock modifyWidthTypes(String idBlock, List<WidthTypeHelper> widthTypes) throws DAOException {
+        ManualBlock manualBlock = null;
+        try {
+            manualBlock = getBlock(idBlock);
+            if (manualBlock == null) {
+                throw new DAOException(String.format("Manual Block with ID: {0}, doesn't exist.", idBlock));
+            }
+            List<WidthType> auxTypes = new ArrayList<>();
+            for (WidthTypeHelper widthType: widthTypes) {
+                WidthType type = new WidthType();
+                type.setBlockWidthType(widthType.getWidthType());
+                auxTypes.add(type);
+            }
+            manualBlock.setWidthTypes(auxTypes);
+            session.update(manualBlock);
+            for (WidthTypeHelper widthType: widthTypes) {
+                updateWidthTypeAmount(widthType.getWidthType().getValue(), manualBlock.getId(), widthType.getAmount());
+            }
+        } catch(Exception e) {
+            DAOValidator.errorOnUpdate("Manual's block", e);
         }
         return manualBlock;
     }

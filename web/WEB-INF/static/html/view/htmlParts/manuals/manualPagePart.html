@@ -3,8 +3,8 @@
         <div class="col-xs-12">
             <div class="">
                 <form role="form" novalidate>
-                    <h2>
-                        <span class="color-white" tf-editable-element="title">{{manual.title}}</span>
+                    <h2 class="color-white">
+                        <span tf-editable-element="title">{{manual.title}}</span>
                         <textarea 
                             name="title" 
                             class="hidden editable-textarea" 
@@ -20,62 +20,11 @@
         </div>
     </div>
 
-    <!--PAGE-->
-    <!--    <div ng-repeat="manualPage in manual.pages">
-            <div class="row">
-                <h3>PAGE {{manualPage.pageOrder}}</h3>
-                <div class="col-xs-12">
-                    <div class="manual-page manual-page-style" 
-                         ng-click="pageSelected()" 
-                         ng-controller="pageCtrl" 
-                         ng-init="initPage(manualPage)">
-    
-                        ROW
-                        <div ng-repeat="manualRow in manualPage.rows">
-                            <div class="row manual-row manual-row-style"
-                                         ng-click="rowSelected()"
-                                         ng-controller="rowCtrl"
-                                         ng-init="initRow(manualRow)">
-    
-    
-                                        <h4>ROW {{manualRow.rowOrder}} - {{manualRow.id}}</h4>
-    
-                                        BLOCK
-                                        <div ng-repeat="manualBlock in manualRow.blocks">
-                                            <div 
-                                                class="col-xs-12 manual-block manual-block-style" 
-                                                ng-init="initBlock(manualBlock)" 
-                                                ng-controller="manualBlockCtrl"
-                                                ng-click="blockSelected()"
-                                                >
-                                                <form novalidate role="form">
-                                                    <span class="min-block-height" tf-editable-element="block">{{manualBlock.content}}</span>
-                                                    <textarea 
-                                                        name="title" 
-                                                        class="hidden editable-textarea" 
-                                                        tf-editable-textarea="block" 
-                                                        ng-keyup="keyup()" 
-                                                        ng-blur="save()"
-                                                        ng-model="manualBlock.content"
-                                                        >
-                                                    </textarea>
-                                                </form>
-                                            </div>
-                                        </div>
-    
-                            </div>
-                        </div>
-                    </div>
-    
-                </div>
-            </div>
-    
-        </div>-->
-
     <div class="row" ng-repeat="manualPage in manual.pages">
         <div class="col-xs-12">
 
             <div 
+                ng-class="{'last': manualPage.isLast, 'first': manualPage.isFirst}"
                 class="manual-page manual-page-style" 
                 block-options="horizontal delete"
                 ng-controller="pageCtrl"
@@ -90,7 +39,10 @@
                     
                     <div class="col-xs-12">
                         
-                        <div class="manual-row manual-row-style" block-options="horizontal add delete">
+                        <div 
+                            class="manual-row manual-row-style" 
+                            block-options="horizontal add delete"
+                            ng-class="{'last': manualRow.isLast, 'first': manualRow.isFirst}">
                             
                             <div class="row">
                                 <div
@@ -99,11 +51,15 @@
                                     ng-init="initBlock(manualBlock)"
                                     block-class
                                     >
-                                    <div class="manual-block manual-block-style" block-options="vertical delete">
+                                    <div 
+                                        class="manual-block manual-block-style" 
+                                        block-options="vertical delete modify"
+                                        ng-class="{'last': manualBlock.isLast, 'first': manualBlock.isFirst}"
+                                        >
                                         <form novalidate role="form">
                                             <span class="min-block-height" tf-editable-element="block">{{manualBlock.content}}</span>
                                             <textarea 
-                                                name="title" 
+                                                name="block" 
                                                 class="hidden editable-textarea" 
                                                 tf-editable-textarea="block" 
                                                 ng-keyup="keyup()" 

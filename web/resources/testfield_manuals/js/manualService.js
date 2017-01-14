@@ -6,7 +6,56 @@ app.service("ManualService", function (tfHttp, $compile) {
     var currentManual = {};
     var manualsList = [];
     
+    var VIEW_STATE = {
+        VIEW: 0,
+        EDIT: 1
+    };
+    
+    var emitManualLoaded = function ($scope) {
+        $scope.$emit("manual-loaded");
+    };
+    
+    var setManualsViewState = function (state) {
+        var manual = manualService.getCurrentManual();
+        manual.viewState = state;
+    };
+    
+    var setManualsPositions = function (manual) {
+        manual.pages.forEach(function (page, indexPage) {
+            page.isFirst = indexPage === 0;
+            page.isLast = indexPage + 1 === manual.pages.length;
+            
+            page.rows.forEach(function (row, indexRow) {
+                row.isFirst = indexRow === 0;
+                row.isLast = indexRow + 1 === page.rows.length;
+                
+                row.blocks.forEach(function (block, indexBlock) {
+                    block.isFirst = indexBlock === 0;
+                    block.isLast = indexBlock + 1 === row.blocks.length;
+                });
+            });
+        });
+    };
+    
+    var introduceManual = function ($scope, container, manual) {
+        manualService.setCurrentManual(manual);
+        var manualPageDir = $compile($("<manual-page>"))($scope);
+        container.empty().append(manualPageDir);
+        setManualsPositions(manual);
+        setManualsViewState(VIEW_STATE.EDIT);
+        emitManualLoaded($scope);
+    };
+    
+    var visualizeManual = function ($scope, container, manual) {
+        manualService.setCurrentManual(manual);
+        var manualView = $compile($("<manual-view>"))($scope);
+        container.empty().append(manualView);
+        setManualsViewState(VIEW_STATE.VIEW);
+        emitManualLoaded($scope);
+    };
+    
     manualService = {
+        VIEW_STATE: VIEW_STATE,
         createManual: function () {
             return tfHttp.request({
                 url: "/Testfield/request/manual/createManual"
@@ -42,21 +91,19 @@ app.service("ManualService", function (tfHttp, $compile) {
         
         openManual: function (idManual, $scope, container) {
             manualService.loadManual(idManual).then(function (data) {
-                manualService.setCurrentManual(data.manual);
-                var manualPageDir = $compile($("<manual-page>"))($scope);
-                container.empty().append(manualPageDir);
-                
-                $scope.$emit("manual-loaded");
+                introduceManual($scope, container, data.manual);
             });
         },
         
         reloadManual: function ($scope) {
             manualService.loadManual(manualService.getCurrentManual().id).then(function (data) {
-                manualService.setCurrentManual(data.manual);
-                var manualPageDir = $compile($("<manual-page>"))($scope);
-                $(".manualContainer").empty().append(manualPageDir);
-                
-                $scope.$emit("manual-loaded");
+                introduceManual($scope, $(".manualContainer"), data.manual);
+            });
+        },
+        
+        visualizeManual: function ($scope) {
+            manualService.loadManual(manualService.getCurrentManual().id).then(function (data) {
+                visualizeManual($scope, $(".manualContainer"), data.manual);
             });
         },
         
@@ -193,6 +240,44 @@ app.service("ManualService", function (tfHttp, $compile) {
             
             return tfHttp.requestParam({
                 url: "/Testfield/request/manual/addBlock",
+                data: args,
+                argsStr: [
+                    "widthTypes"
+                ]
+            }).then(function (data) {
+                return new Promise(function (resolve) {
+                    manualService.setCurrentManual(data.manual);
+                    resolve(data);
+                });
+            });
+        },
+        
+        /**
+         * 
+         * @param {JSON} args {
+         *      idBlock,
+         *      widthTypes: [
+         *          {
+         *              widthTypes,
+         *              amount
+         *          }
+         *      ]
+         * }
+         * @returns {unresolved}
+         */
+        modifyBlockSize: function (args) {
+            args = $.extend({
+                idBlock: "",
+                widthTypes: [
+                    {
+                        widthType: 3,
+                        amount: 12
+                    }
+                ]
+            }, args);
+            
+            return tfHttp.requestParam({
+                url: "/Testfield/request/manual/modifyBlockSize",
                 data: args,
                 argsStr: [
                     "widthTypes"
