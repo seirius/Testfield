@@ -53,7 +53,6 @@ manualsTestfield.controller("manualListCtrl", function ($rootScope, $scope, Manu
     $scope.openManual = function (idManual) {
         $rootScope.$broadcast("close-manual-list");
         $location.search("id", idManual);
-//        ManualService.openManual(idManual, $scope, $(".manualContainer"));
     };
 });
 
@@ -110,6 +109,10 @@ manualsTestfield.directive("tfEditableTextarea", function () {
 manualsTestfield.controller("manualBlockCtrl", function ($scope, $rootScope, ManualService) {
     $scope.showModButton = true;
     
+    var loadBlockSize = function () {
+        $scope.blockSize = MANSC.getBlockSizes($scope.block);
+    };
+    
     var keyups = 0;
     $scope.keyup = function () {
         keyups++;
@@ -131,8 +134,10 @@ manualsTestfield.controller("manualBlockCtrl", function ($scope, $rootScope, Man
 
     $scope.initBlock = function (block) {
         $scope.block = block;
-        $scope.blockSize = MANSC.getBlockSizes($scope.block);
+        loadBlockSize();
     };
+    
+    $scope.popoverClosed = loadBlockSize;
 
     $scope.delete = function () {
         ManualService.deleteBlock($scope.block.id).then(function () {
@@ -204,18 +209,22 @@ manualsTestfield.controller("pageCtrl", function ($scope, $rootScope, ManualServ
 manualsTestfield.controller("rowCtrl", function ($scope, $rootScope, ManualService) {
     $scope.showModButton = false;
     
-    $scope.rowSelected = function () {
-        $rootScope.$broadcast("row-selected", $scope.row);
-    };
-
-    $scope.initRow = function (row) {
-        $scope.row = row;
+    var resetBlockSize = function () {
         $scope.blockSize = {
             xs: 0,
             sm: 0,
             md: 0,
             lg: 0
         };
+    };
+    
+    $scope.rowSelected = function () {
+        $rootScope.$broadcast("row-selected", $scope.row);
+    };
+
+    $scope.initRow = function (row) {
+        $scope.row = row;
+        resetBlockSize();
     };
 
     $scope.delete = function () {
@@ -233,6 +242,8 @@ manualsTestfield.controller("rowCtrl", function ($scope, $rootScope, ManualServi
             ManualService.reloadManual($scope);
         });
     };
+    
+    $scope.popoverClosed = resetBlockSize;
     
     $scope.moveUp = function () {
         ManualService.moveRow($scope.row.id, ManualService.MOVE_OPTIONS.UP).then(function () {
@@ -352,13 +363,18 @@ var MANSC = (function () {
                         placement: "left",
                         html: true
                     });
+                    
+                    var getBlockSizes = function () {
+                        return popoverContent.find("[name='blockSize']");
+                    };
 
-                    var clickSetted = false;
+                    var clickSet = false;
                     $funElement.on("shown.bs.popover", function () {
                         var $button = popoverContent.find(args.nameToFind);
+                        
 
-                        if (!clickSetted) {
-                            popoverContent.find("[name='blockSize']").each(function () {
+                        if (!clickSet) {
+                            getBlockSizes().each(function () {
                                 var $thisElement = $(this);
                                 var elementVal = $thisElement.val().length === 0 ? 0 : parseInt($thisElement.val());
                                 $thisElement.slider({
@@ -374,8 +390,21 @@ var MANSC = (function () {
                             $button.click(function () {
                                 $funElement.click();
                             });
-                            clickSetted = true;
+                            clickSet = true;
                         }
+                    });
+                    //Reset the values of the slider when is again opened.
+                    $funElement.on("show.bs.popover", function () {
+                        if (clickSet) {
+                            getBlockSizes().each(function () {
+                                var $thisElement = $(this);
+                                var elementVal = $thisElement.val().length === 0 ? 0 : parseInt($thisElement.val());
+                                $thisElement.slider("setValue", elementVal);
+                            });
+                        }
+                    });
+                    $funElement.on("hidden.bs.popover", function () {
+                        args.$scope.popoverClosed();
                     });
                 });
     }
