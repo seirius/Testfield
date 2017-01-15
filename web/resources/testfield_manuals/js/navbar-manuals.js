@@ -1,18 +1,22 @@
-var app = angular.module("manualsTestfield");
+/* global manualsTestfield */
 
-app.controller("navbarManualsCtrl", function ($scope, $rootScope, ManualService) {
+manualsTestfield.controller("navbarManualsCtrl", function ($scope, $rootScope, ManualService, $location) {
+    $scope.manualLoaded = false;
+    
     $scope.createManual = function () {
         ManualService.createManual().then(function (data) {
-            $rootScope.$broadcast("load-manual", {
-                idManual: data.manual.id
-            });
+            $location.search("id", data.manual.id);
+//            $rootScope.$broadcast("load-manual", {
+//                idManual: data.manual.id
+//            });
         });
     };
     
     $scope.editing = true;
-    $scope.$on("manual-loaded", function () {
+    $rootScope.$on("manual-loaded", function () {
         var viewState = ManualService.getCurrentManual().viewState;
         $scope.editing = viewState === ManualService.VIEW_STATE.EDIT;
+        $scope.manualLoaded = $scope.editing;
     });
     
     $scope.manualsList = function () {
@@ -26,9 +30,15 @@ app.controller("navbarManualsCtrl", function ($scope, $rootScope, ManualService)
     $scope.visualize = function () {
         ManualService.visualizeManual($scope);
     };
+    
+    $scope.addPage = function () {
+        ManualService.addPage(ManualService.getCurrentManual().id).then(function () {
+            ManualService.reloadManual($scope);
+        });
+    };
 });
 
-app.directive("logout", function (UserService, Testfield) {
+manualsTestfield.directive("logout", function (UserService, Testfield) {
     return {
         restrict: "A",
         link: function (scope, element, attrs) {

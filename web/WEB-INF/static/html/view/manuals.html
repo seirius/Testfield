@@ -34,22 +34,24 @@ and open the template in the editor.
         <script src="/Testfield/resources/testfield_manuals/js/manualService.js" type="text/javascript"></script>
         <script src="/Testfield/resources/testfield_manuals/js/navbar-manuals.js" type="text/javascript"></script>
         <script src="/Testfield/resources/testfield_manuals/js/manualPanel.js" type="text/javascript"></script>
+        
+        <base href="/Testfield/">
     </head>
     <body class="background-congruent">
         <div ng-include="'static/htmlParts/manuals/navbarManualsPart.html'"></div>
         
         <div class="container-fluid">
             <div class="row">
-                <div class="col-sm-4 col-md-3 col-lg-2 hidden-xs panel-container">
+                <!-- <div class="col-sm-4 col-md-3 col-lg-2 hidden-xs panel-container">
                     <div ng-include="'static/htmlParts/manuals/panelPart.html'"></div>
-                </div>
-                <div class="col-xs-12 col-sm-8 col-md-9 col-lg-8 col-lg-offset-1 content-container">
-                    <div ng-include="'static/htmlParts/manuals/manualPart.html'"></div>
+                </div>-->
+                <div class="container">
+                    <div class="col-xs-12 content-container">
+                        <div ng-include="'static/htmlParts/manuals/manualPart.html'"></div>
+                    </div>
                 </div>
             </div>
         </div>
-        
-        <!--<tf-modal url-content="/Testfield/static/htmlParts/manuals/manualList.html"></tf-modal>-->
         
     </body>
 </html>

@@ -171,6 +171,10 @@ public class ManualService extends Service {
                 throw new ServiceException(ErrorMsgs.ACC_DEN);
             }
             
+            if (widthTypes.isEmpty()) {
+                throw new ServiceException(ErrorMsgs.SIZE_REQ);
+            }
+            
             MANAGER.getManualBlockDAO().modifyWidthTypes(idBlock, widthTypes);
             
             result.addItem("manual", manual, true);
@@ -252,6 +256,10 @@ public class ManualService extends Service {
             
             if (!Security.permissionModManual(manual, userNick)) {
                 throw new ServiceException(ErrorMsgs.ACC_DEN);
+            }
+            
+            if (widthTypes.isEmpty()) {
+                throw new ServiceException(ErrorMsgs.SIZE_REQ);
             }
             
             ManualBlockDAO blockDAO = MANAGER.getManualBlockDAO();

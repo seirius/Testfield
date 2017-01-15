@@ -1,6 +1,6 @@
-var app = angular.module("generalTestfield", []);
+var generalTestfield = angular.module("generalTestfield", []);
 
-app.service("tfHttp", function ($http) {
+generalTestfield.service("tfHttp", function ($http) {
     var showError = true;
     
     var httpReturn = function (args) {
@@ -93,7 +93,7 @@ function httpReturn($http, args) {
     });
 }
 
-app.service("UserService", function (tfHttp) {
+generalTestfield.service("UserService", function (tfHttp) {
     return {
         login: function (user, password) {
             return tfHttp.request({
@@ -124,7 +124,7 @@ app.service("UserService", function (tfHttp) {
     };
 });
 
-app.service("Testfield", function ($window) {
+generalTestfield.service("Testfield", function ($window) {
     return {
         goAfterLogout: function () {
             $window.location.href = "/Testfield/";
@@ -132,7 +132,7 @@ app.service("Testfield", function ($window) {
     };
 });
 
-app.directive("linkable", function ($window) {
+generalTestfield.directive("linkable", function ($window) {
     return {
         restrict: "A",
         link: function (scope, element, attrs) {
@@ -145,7 +145,7 @@ app.directive("linkable", function ($window) {
     };
 });
 
-app.directive("tfModal", function ($http, $compile) {
+generalTestfield.directive("tfModal", function ($http, $compile) {
     return {
         restrict: "E",
         templateUrl: "/Testfield/static/htmlParts/util/modalPart.html",

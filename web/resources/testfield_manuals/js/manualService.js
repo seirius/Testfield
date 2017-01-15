@@ -1,6 +1,6 @@
-var app = angular.module("manualsTestfield");
+/* global generalTestfield */
 
-app.service("ManualService", function (tfHttp, $compile) {
+generalTestfield.service("ManualService", function (tfHttp, $compile) {
     var manualService = this;
     
     var currentManual = {};

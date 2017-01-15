@@ -1,6 +1,6 @@
-var app = angular.module("manualsTestfield");
+var manualsTestfieldPanel = angular.module("manualsTestfield");
 
-app.controller("manualPanelCtrl", function ($rootScope, $scope, ManualService) {
+manualsTestfieldPanel.controller("manualPanelCtrl", function ($rootScope, $scope, ManualService) {
     $scope.manualLoaded = false;
     $scope.pageOrderSelected = 0;
     $scope.rowOrderSelected = 0;

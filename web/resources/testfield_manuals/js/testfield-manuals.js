@@ -1,14 +1,27 @@
 /* global UTIL */
 
-var app = angular.module("manualsTestfield", ["generalTestfield"]);
-
-app.controller("manualContainerCtrl", function ($scope, $compile, ManualService) {
-    $scope.$on("load-manual", function (event, args) {
-        ManualService.openManual(args.idManual, $scope, $(".manualContainer"));
-    });
+var manualsTestfield = angular.module("manualsTestfield", ["generalTestfield"]);
+manualsTestfield.config(function ($locationProvider) {
+    $locationProvider.html5Mode(true);
 });
 
-app.controller("manualPageCtrl", function ($scope, ManualService) {
+manualsTestfield.controller("manualContainerCtrl", function ($scope, $location, ManualService) {
+    var loadManualByGet = function () {
+        var id = parseInt($location.search().id);
+        if (!isNaN(id)) {
+            ManualService.openManual(id, $scope, $(".manualContainer"));
+        }
+    };
+    
+    $scope.$watch(function () {
+        return $location.search();
+    }, function () {
+        loadManualByGet();
+    }, true);
+    $location.search();
+});
+
+manualsTestfield.controller("manualPageCtrl", function ($scope, ManualService) {
     var manual = ManualService.getCurrentManual();
     $scope.manual = manual;
     
@@ -34,30 +47,31 @@ app.controller("manualPageCtrl", function ($scope, ManualService) {
     };
 });
 
-app.controller("manualListCtrl", function ($rootScope, $scope, ManualService) {
+manualsTestfield.controller("manualListCtrl", function ($rootScope, $scope, ManualService, $location) {
     $scope.manuals = ManualService.getManualsList();
 
     $scope.openManual = function (idManual) {
         $rootScope.$broadcast("close-manual-list");
-        ManualService.openManual(idManual, $scope, $(".manualContainer"));
+        $location.search("id", idManual);
+//        ManualService.openManual(idManual, $scope, $(".manualContainer"));
     };
 });
 
-app.directive("manualPage", function () {
+manualsTestfield.directive("manualPage", function () {
     return {
         restrict: "E",
         templateUrl: "static/htmlParts/manuals/manualPagePart.html"
     };
 });
 
-app.directive("manualView", function () {
+manualsTestfield.directive("manualView", function () {
     return {
         restrict: "E",
         templateUrl: "static/htmlParts/manuals/manualView.html"
     };
 });
 
-app.directive("tfEditableElement", function () {
+manualsTestfield.directive("tfEditableElement", function () {
     var tfEditable = {
         restrict: "A",
         link: function (scope, element, attrs) {
@@ -75,7 +89,7 @@ app.directive("tfEditableElement", function () {
     return tfEditable;
 });
 
-app.directive("tfEditableTextarea", function () {
+manualsTestfield.directive("tfEditableTextarea", function () {
     var tfEditable = {
         restrict: "A",
         link: function (scope, element, attrs) {
@@ -93,7 +107,7 @@ app.directive("tfEditableTextarea", function () {
     return tfEditable;
 });
 
-app.controller("manualBlockCtrl", function ($scope, $rootScope, ManualService) {
+manualsTestfield.controller("manualBlockCtrl", function ($scope, $rootScope, ManualService) {
     $scope.showModButton = true;
     
     var keyups = 0;
@@ -149,7 +163,7 @@ app.controller("manualBlockCtrl", function ($scope, $rootScope, ManualService) {
     
 });
 
-app.controller("pageCtrl", function ($scope, $rootScope, ManualService) {
+manualsTestfield.controller("pageCtrl", function ($scope, $rootScope, ManualService) {
     $scope.clickEnabled = true;
     
     $scope.pageSelected = function () {
@@ -187,7 +201,7 @@ app.controller("pageCtrl", function ($scope, $rootScope, ManualService) {
     };
 });
 
-app.controller("rowCtrl", function ($scope, $rootScope, ManualService) {
+manualsTestfield.controller("rowCtrl", function ($scope, $rootScope, ManualService) {
     $scope.showModButton = false;
     
     $scope.rowSelected = function () {
@@ -234,7 +248,7 @@ app.controller("rowCtrl", function ($scope, $rootScope, ManualService) {
 
 });
 
-app.directive("blockOptions", function ($templateRequest, $compile) {
+manualsTestfield.directive("blockOptions", function ($templateRequest, $compile) {
     var blockOptions = {
         restrict: "A",
         link: function (scope, element, attrs) {
@@ -242,24 +256,15 @@ app.directive("blockOptions", function ($templateRequest, $compile) {
             var $element = $(element);
             
             $templateRequest("static/htmlParts/manuals/blockOptions.html").then(function (html) {
-                $element.prepend($compile(html)(scope));
-
-                $element.hover(
-                    function () {
-                        MANSC.blockOptions($element, options, true);
-                    },
-                    function () {
-                        MANSC.blockOptions($element, options, false);
-                    }
-                );
-        
                 MANSC.functionalityByType({
                     $element: $element,
                     $templateRequest: $templateRequest,
                     $scope: scope,
-                    $compile: $compile
+                    $compile: $compile,
+                    html: html
                 });
-        
+                
+                MANSC.elementHover($element, options);
             });
         }
     };
@@ -267,7 +272,7 @@ app.directive("blockOptions", function ($templateRequest, $compile) {
     return blockOptions;
 });
 
-app.directive("blockClass", function () {
+manualsTestfield.directive("blockClass", function () {
     var blockClass = {
         restrict: "A",
         link: function (scope, element, attrs) {
@@ -282,7 +287,7 @@ app.directive("blockClass", function () {
     return blockClass;
 });
 
-app.controller("manualView", function ($scope, ManualService) {
+manualsTestfield.controller("manualView", function ($scope, ManualService) {
     $scope.manual = ManualService.getCurrentManual();
 });
 
@@ -375,7 +380,26 @@ var MANSC = (function () {
                 });
     }
     
+    function pageFunctionality(args) {
+        var $html = $("<div>").append(args.html);
+        $html.find(".add-element").attr("ng-click", "addElement()");
+        $html.find(".delete").attr("ng-click", "delete()");
+        $html.find(".arrows-up").attr("ng-click", "moveUp()");
+        $html.find(".arrows-down").attr("ng-click", "moveDown()");
+        
+        var htmlP = $html.html();
+        args.$element.prepend(args.$compile(htmlP)(args.$scope));
+    }
+    
     function rowsFunctionality(args) {
+        var $html = $("<div>").append(args.html);
+        $html.find(".delete").attr("ng-click", "delete()");
+        $html.find(".arrows-up").attr("ng-click", "moveUp()");
+        $html.find(".arrows-down").attr("ng-click", "moveDown()");
+        
+        var htmlP = $html.html();
+        args.$element.prepend(args.$compile(htmlP)(args.$scope));
+        
         args = $.extend(args, {
             classToFind: ".add-element",
             nameToFind: "[name='addElement']"
@@ -384,6 +408,15 @@ var MANSC = (function () {
     }
     
     function blocksFunctionality(args) {
+        var $html = $("<div>").append(args.html);
+        $html.find(".delete").attr("ng-click", "delete()");
+        $html.find(".arrows-left").attr("ng-click", "moveLeft()");
+        $html.find(".arrows-right").attr("ng-click", "moveRight()");
+        $html.find(".modify-element").attr("ng-click", "modify()");
+        
+        var htmlP = $html.html();
+        args.$element.prepend(args.$compile(htmlP)(args.$scope));
+        
         args = $.extend(args, {
             classToFind: ".modify-element",
             nameToFind: "[name='modifyElement']"
@@ -480,6 +513,8 @@ var MANSC = (function () {
                 rowsFunctionality(args);
             } else if (args.$element.hasClass("manual-block")) {
                 blocksFunctionality(args);
+            } else if (args.$element.hasClass("manual-page")) {
+                pageFunctionality(args);
             }
         },
         
@@ -514,7 +549,12 @@ var MANSC = (function () {
         },
         
         getBlockSizes: function (block) {
-            var blockSizes = [];
+            var blockSizes = {
+                xs: 0,
+                sm: 0,
+                md: 0,
+                lg: 0
+            };
             block.relBlockWidthTypes.forEach(function (widthType) {
                 switch(widthType.id.widthType) {
                     case UTIL.WIDTH_TYPES.XS:
@@ -535,6 +575,17 @@ var MANSC = (function () {
                 }
             });
             return blockSizes;
+        },
+        
+        elementHover: function ($element, options) {
+            $element.hover(
+                function () {
+                    MANSC.blockOptions($element, options, true);
+                },
+                function () {
+                    MANSC.blockOptions($element, options, false);
+                }
+            );
         }
     }; 
     

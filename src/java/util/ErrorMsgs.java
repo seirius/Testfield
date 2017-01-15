@@ -16,6 +16,7 @@ public class ErrorMsgs {
     public final static String ERR_PARSING = "Error parsing an Item Result.";
     public final static String NO_PERMISSION = "Not enough permissions.";
     public final static String ACC_DEN = "Access denied.";
+    public final static String SIZE_REQ = "Can't add a block without any size.";
     
     public static void sysLogThis(Exception e) {
         try {
