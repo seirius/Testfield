@@ -81,27 +81,41 @@
 
 .manual-page-style {
     min-height: 150px;
-    border: 1px solid gray;
+    border: 2px solid black;
     padding: 20px;
-    color: white;
+    border-radius: 5px;
+    /*color: white;*/
     margin-bottom: 10px;
     box-sizing: border-box;
+    -webkit-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+    box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
 }
 
 .manual-page-style:hover {
-    border: 1px solid white;
+    border: 2px solid green;
+    -webkit-box-shadow: 0px 0px 20px 0px rgba(20,117,11,1);
+    -moz-box-shadow: 0px 0px 20px 0px rgba(20,117,11,1);
+    box-shadow: 0px 0px 20px 0px rgba(20,117,11,1);
 }
 
 .manual-row-style {
     min-height: 100px;
-    border: 1px solid gray;
+    border: 2px solid black;
+    border-radius: 5px;
     padding: 20px;
     margin-bottom: 10px;
     box-sizing: border-box;
+    -webkit-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+    box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
 }
 
 .manual-row-style:hover {
-    border: 1px solid yellow;
+    border: 2px solid yellow;
+    -webkit-box-shadow: 0px 0px 20px 0px rgba(143,143,8,1);
+    -moz-box-shadow: 0px 0px 20px 0px rgba(143,143,8,1);
+    box-shadow: 0px 0px 20px 0px rgba(143,143,8,1);
 }
 
 .manual-block-style {
@@ -109,15 +123,29 @@
     padding: 20px;
     margin-bottom: 10px;
     box-sizing: border-box;
-    border: 1px solid gray;
+    border: 2px solid black;
+    -webkit-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+    box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.75);
+    border-radius: 5px;
 }
 
 .manual-block-style:hover {
-    border: 1px solid aquamarine;
+    border: 2px solid aquamarine;
+    -webkit-box-shadow: 0px 0px 20px 0px rgba(8,116,143,1);
+    -moz-box-shadow: 0px 0px 20px 0px rgba(8,116,143,1);
+    box-shadow: 0px 0px 20px 0px rgba(8,116,143,1);
 }
 
 .block-add-popover {
     color: black;
+}
+
+.manual-list {
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 5px;
 }
 
 /*-----------GLYPHICONS----------*/
@@ -142,7 +170,7 @@
 }
 
 .arrows-left:hover, .arrows-right:hover, .arrows-up:hover, .arrows-down:hover, .add-element:hover, .modify-element:hover {
-    color: white;
+    color: orange;
 }
 
 .arrows-left {
