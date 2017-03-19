@@ -1,0 +1,32 @@
+<div 
+    class="manual-block manual-block-style" 
+    block-options="vertical delete modify"
+    ng-class="{
+        'last': manualBlock.isLast, 
+        'first': manualBlock.isFirst,
+        'is-editing': isEditing
+    }"
+    editable-block
+    tabindex="-1"
+    ng-dblclick="startEditing()"
+    >
+    <form novalidate role="form">
+        <span 
+            class="min-block-height text-span" 
+            ng-hide="isEditing"
+            ng-bind-html="manualBlock.manualBlockTrustedHtml"
+            >
+        </span>
+        <textarea 
+            name="block" 
+            class="editable-textarea hidden" 
+            ng-keyup="keyup()" 
+            ng-blur="save();"
+            ng-model="manualBlock.content"
+            >
+        </textarea>
+    </form>
+</div>
+
+<!--tf-editable-element="block"-->
+<!--tf-editable-textarea="block"--> 

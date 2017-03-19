@@ -27,6 +27,17 @@ generalTestfield.service("ManualService", function (tfHttp, $compile) {
         manual.viewState = state;
     };
     
+    var setManualsStyle = function (manual) {
+        var $manualContainer = $(".manualContainer");
+        $manualContainer.css({
+            "font-family": manual.manualConf.fontFamily.cssStyle,
+            "color": manual.manualConf.fontColor.cssStyle
+        });
+        if (manual.manualConf.manualBackground === "none") {
+            $("body").removeClass("background-congruent");
+        }
+    };
+    
     var setManualsPositions = function (manual) {
         manual.pages.forEach(function (page, indexPage) {
             page.isFirst = indexPage === 0;
@@ -50,6 +61,7 @@ generalTestfield.service("ManualService", function (tfHttp, $compile) {
         container.empty().append(manualPageDir);
         setManualsPositions(manual);
         setManualsViewState(VIEW_STATE.EDIT);
+        setManualsStyle(manual);
         emitManualLoaded($scope);
     };
     

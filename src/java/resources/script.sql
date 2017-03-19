@@ -26,6 +26,11 @@ INSERT INTO USER_INFO (
     'andsei91@gmail.com'
 );
 
+CREATE TABLE user_conf (
+	user_nick VARCHAR(30) PRIMARY KEY,
+    CONSTRAINT FOREIGN KEY(user_nick) REFERENCES user_testfield(user_nick)
+);
+
 -- CREATE TABLE CONNECTIONS (
 --     TOKEN VARCHAR(100),
 --     USER_NICK VARCHAR(30),
@@ -47,6 +52,22 @@ CREATE TABLE MANUAL (
     DATE_LAST_MOD TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CURRENT_STATE INT(2) NOT NULL DEFAULT 0,
     CONSTRAINT FOREIGN KEY(USER_NICK) REFERENCES USER_TESTFIELD(USER_NICK)
+);
+
+CREATE TABLE `testfield`.`font_conf` (
+	`type` INT(1) NOT NULL,
+	`css_style` VARCHAR(255) NOT NULL DEFAULT 'initial',
+	PRIMARY KEY (`type`)
+);
+
+CREATE TABLE manual_conf (
+	manual INT(11) PRIMARY KEY,
+    manual_background VARCHAR(255) NOT NULL DEFAULT 'none',
+    font_color INT(11) NOT NULL,
+    font_family INT(11) NOT NULL,
+    CONSTRAINT FOREIGN KEY(id) REFERENCES manual(id),
+	CONSTRAINT FOREIGN KEY(font_color) REFERENCES font_conf(id),
+    CONSTRAINT FOREIGN KEY(font_family) REFERENCES font_conf(id)
 );
 
 CREATE TABLE REL_TAG_MANUAL (

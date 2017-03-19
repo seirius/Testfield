@@ -14,12 +14,10 @@ import util.exceptions.DAOException;
  *
  * @author Andriy
  */
-public class UserInfoDAO {
-    
-    private final Session session;
+public class UserInfoDAO extends DAO {
     
     public UserInfoDAO (Session session) {
-        this.session = session;
+        super(session);
     }
     
     public UserInfo create(String userNick, String email) throws DAOException {

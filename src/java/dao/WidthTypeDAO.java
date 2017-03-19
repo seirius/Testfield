@@ -16,12 +16,10 @@ import util.exceptions.DAOException;
  *
  * @author Andriy
  */
-public class WidthTypeDAO {
-    
-    private final Session session;
+public class WidthTypeDAO extends DAO {
     
     public WidthTypeDAO(Session session) {
-        this.session = session;
+        super(session);
     }
     
     public WidthType insert(BlockWidthTypeEnum type) throws DAOException {

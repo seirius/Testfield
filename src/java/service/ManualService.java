@@ -5,6 +5,7 @@
  */
 package service;
 
+import dao.FontConfDAO;
 import dao.ManualBlockDAO;
 import dao.ManualDAO;
 import dao.ManualPageDAO;
@@ -13,14 +14,18 @@ import java.util.ArrayList;
 import java.util.List;
 import model.bean.manual.Manual;
 import model.bean.manual.ManualBlock;
+import model.bean.manual.ManualConf;
 import model.bean.manual.ManualPage;
 import model.bean.manual.ManualRow;
+import model.bean.style.FontConf;
 import model.bean.widthtype.WidthTypeHelper;
 import util.ErrorMsgs;
 import util.Security;
 import util.ServiceReturn;
 import util.enums.BlockWidthTypeEnum;
+import util.enums.DAOList;
 import util.enums.DeleteOptions;
+import util.enums.FontStyle;
 import util.enums.ManualState;
 import util.enums.ManualVisibility;
 import util.enums.MoveOptions;
@@ -50,14 +55,14 @@ public class ManualService extends Service {
             int idManual = manual.getId();
             ManualPage manualPage = MANAGER.getManualPageDAO().insert(idManual, 1);
             ManualRow manualRow = MANAGER.getManualRowDAO().insert(manualPage.getId(), 1);
-//            List<BlockWidthTypeEnum> widthTypes = new ArrayList<>();
-//            widthTypes.add(BlockWidthTypeEnum.MD);
             
             List<WidthTypeHelper> widthTypes = new ArrayList<>();
             widthTypes.add(new WidthTypeHelper(BlockWidthTypeEnum.MD, 12));
             
             MANAGER.getManualBlockDAO().insert(manualRow.getId(), "Write something new here!", 1, widthTypes);
             result.addItem("manual", manual, true);
+            
+            MANAGER.getManualConfDAO().insertOrUpdate(idManual);
             
             MANAGER.commit();
         } catch(Exception e) {
@@ -479,6 +484,44 @@ public class ManualService extends Service {
             result.addItem("manual", manual, true);
             MANAGER.commit();
         } catch(Exception e) {
+            throw treatException(e);
+        } finally {
+            MANAGER.close();
+        }
+        return result;
+    }
+    
+    public ServiceReturn updateManualsFont(String userNick, int manualId, FontStyle type, String cssStyle) throws Exception {
+        ServiceReturn result = new ServiceReturn();
+        try {
+            MANAGER.beginTransaction();
+            
+            Manual manual = MANAGER.getManualDAO().getManual(manualId);
+            if (!Security.permissionModManual(manual, userNick)) {
+                throw new ServiceException(ErrorMsgs.ACC_DEN);
+            }
+            
+            ManualConf manualConf = manual.getManualConf();
+            FontConf fontConf;
+            switch(type) {
+                case COLOR:
+                    fontConf = manualConf.getFontColor();
+                    break;
+                    
+                case FAMILY:
+                    fontConf = manualConf.getFontFamily();
+                    break;
+                    
+                default:
+                    throw new ServiceException("Non-existent font style.");
+            }
+            
+            FontConfDAO fontConfDao = (FontConfDAO) MANAGER.getDAO(DAOList.FONT_CONF);
+            fontConfDao.updateCssStyle(fontConf.getId(), cssStyle);
+            
+            result.addItem("manual", manual, true);
+            MANAGER.commit();
+        } catch (DAOException | ServiceException e) {
             throw treatException(e);
         } finally {
             MANAGER.close();

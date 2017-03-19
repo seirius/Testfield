@@ -28,18 +28,17 @@ import util.exceptions.DAOException;
  *
  * @author Andriy
  */
-public class ManualDAO {
+public class ManualDAO extends DAO {
     
     private final String ERR_GET = "Error getting Manual.";
     private final String ERR_GETS = "Error getting Manuals.";
  
-    private final Session session;
-    
     public ManualDAO(Session session) {
-        this.session = session;
+        super(session);
     }
     
-    public Manual insert(String userNick, String title, ManualVisibility visibilty, ManualState state) throws DAOException, BeanException {
+    public Manual insert(String userNick, String title, ManualVisibility visibilty, 
+            ManualState state) throws DAOException, BeanException {
         Manual manual = null;
         try {
             manual = new Manual();

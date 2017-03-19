@@ -19,6 +19,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -69,6 +70,10 @@ public class Manual implements Serializable, WebBean {
     @JoinColumn(name = "MANUAL")
     @OrderBy("pageOrder")
     private List<ManualPage> pages;
+    
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID")
+    private ManualConf manualConf;
     
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "rel_tag_manual", catalog = "testfield", 
@@ -159,6 +164,14 @@ public class Manual implements Serializable, WebBean {
     public void setCurrentState(int currentState) {
         this.currentState = currentState;
     }
+
+    public ManualConf getManualConf() {
+        return manualConf;
+    }
+
+    public void setManualConf(ManualConf manualConf) {
+        this.manualConf = manualConf;
+    }
     
     @Transient
     public void setCurrentState(ManualState currentState) {
@@ -171,6 +184,7 @@ public class Manual implements Serializable, WebBean {
         try {
             Hibernate.initialize(pages);
             Hibernate.initialize(tags);
+            Hibernate.initialize(manualConf);
             if (pages == null) {
                 return this;
             }

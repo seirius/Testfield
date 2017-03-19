@@ -6,19 +6,15 @@
 package dao;
 
 import org.hibernate.Session;
-import util.enums.BlockWidthTypeEnum;
-import util.exceptions.DAOException;
 
 /**
  *
  * @author Andriy
  */
-public class BlockWidthTypeDAO {
-    
-    private final Session session;
+public class BlockWidthTypeDAO extends DAO {
     
     public BlockWidthTypeDAO(Session session) {
-        this.session = session;
+        super(session);
     }
     
      

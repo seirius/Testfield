@@ -1,7 +1,7 @@
 /*NAVBAR*/
 /*-------------------------------------------*/
 .navbar-testfield {
-    background-color: white; /*#5A159A;*/
+    background-color: #dbdbdb; /*#5A159A;*/
     border-radius: 0px;
 }
 
@@ -130,6 +130,10 @@
     border-radius: 5px;
 }
 
+.manual-block-editing {
+    padding: 0px;
+}
+
 .manual-block-style:hover {
     border: 2px solid aquamarine;
     -webkit-box-shadow: 0px 0px 20px 0px rgba(8,116,143,1);
@@ -163,6 +167,7 @@
 }
 
 .arrows-left, .arrows-right, .arrows-up, .arrows-down, .add-element, .modify-element {
+    z-index: 1;
     color: dodgerblue;
     cursor: pointer;
     position: absolute;
@@ -210,3 +215,26 @@
 }
 
 /*-------------------------------*/
+
+/*Summernote stuff*/
+
+.summernote-edit-panel {
+}
+
+.summernote-edit-panel-container {
+    position: fixed;
+    bottom: 20px;
+    width: 100%;
+}
+
+.remove-panel-margin {
+    margin-bottom: 0px;
+}
+
+.note-editor.note-frame .note-editing-area .note-editable {
+    padding: 20px;
+    min-height: 50px;
+}
+
+
+/*------------------------------*/

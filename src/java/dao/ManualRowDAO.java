@@ -21,12 +21,10 @@ import util.exceptions.DAOException;
  *
  * @author Andriy
  */
-public class ManualRowDAO {
-    
-    private final Session session;
+public class ManualRowDAO extends DAO {
     
     public ManualRowDAO(Session session) {
-        this.session = session;
+        super(session);
     }
     
     public ManualRow getRow(String idRow) throws DAOException {

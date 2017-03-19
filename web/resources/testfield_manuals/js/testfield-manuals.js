@@ -1,6 +1,6 @@
-/* global UTIL */
+/* global UTIL, summer_util */
 
-var manualsTestfield = angular.module("manualsTestfield", ["generalTestfield"]);
+var manualsTestfield = angular.module("manualsTestfield", ["generalTestfield", "ngSanitize"]);
 manualsTestfield.config(function ($locationProvider) {
     $locationProvider.html5Mode(true);
 });
@@ -70,6 +70,91 @@ manualsTestfield.directive("manualView", function () {
     };
 });
 
+manualsTestfield.directive("editableBlock", function ($compile) {
+    var editableBlock = {
+        restrict: "A",
+        scope: false,
+        link: function (scope, element, attrs) {
+            var $textSpan = element.find("span");
+            var $textarea = element.find(".editable-textarea");
+            var $editorPanel;
+            scope.isEditing = false;
+            var idCounter = 0;
+            scope.startEditing = function () {
+                if (!scope.isEditing) {
+                    scope.isEditing = true;
+                    var ownId = idCounter;
+                    var onClose = function () {
+                        scope.stopEditing();
+                        scope.save();
+                    };
+                    element.addClass("manual-block-editing");
+                    $textarea.summernote({
+                        toolbar: summer_util.getToolbarForBlock,
+                        buttons: {
+                            close: summer_util.closeButton(onClose)
+                        },
+                        callbacks: {
+                            onInit: function () {
+                                var $noteEditor = $textarea.siblings(".note-editor");
+                                $noteEditor.addClass("remove-panel-margin");
+                                $noteEditor.find("button").tooltip('destroy'); 
+                                var $aux = $("<summernote-edit-panel>", {
+                                    attr: {
+                                        onsuccess: "onLoadEditPanel"
+                                    }
+                                });
+                                $editorPanel = $($compile($aux)(scope));
+                                $(".principal-container").append($editorPanel);
+                            },
+                            onBlur: function (event) {
+                                if (event.relatedTarget === null 
+                                        || $(event.relatedTarget).closest(".note-toolbar").data("id-counter") !== ownId) {
+                                    onClose();
+                                }
+                            }
+                        }
+                    });
+                }
+            };
+            scope.onLoadEditPanel = function (data) {
+                var $noteEditor = $textarea.siblings(".note-editor");
+                var $noteToolbar = $noteEditor.find(".note-toolbar");
+                $noteToolbar.data("id-counter", idCounter);
+                $editorPanel.find(".summernote-edit-panel").append($noteToolbar);
+                $noteToolbar.find(".dropdown-menu").closest(".note-btn-group").addClass("dropup");
+                $noteEditor.find(".note-editable").focus();
+            };
+            scope.stopEditing = function () {
+                if (scope.isEditing) {
+                    scope.isEditing = false;
+                    var originalValue = $textarea.summernote("code");
+                    scope.manualBlock.manualBlockTrustedHtml = scope.$parent.$sce.trustAsHtml(originalValue);
+                    scope.manualBlock.content = originalValue;
+                    $textarea.summernote("destroy");
+                    $editorPanel.remove();
+                    element.removeClass("manual-block-editing");
+                }
+            };
+        }
+    };
+    
+    return editableBlock;
+});
+
+manualsTestfield.directive("summernoteEditPanel", function ($templateRequest) {
+    return {
+        restrict: "E",
+        link: function (scope, element, attrs) {
+            $templateRequest("static/htmlParts/manuals/summernoteEditPanel.html").then(function (data) {
+                element.append(data);
+                element.addClass("summernote-edit-panel-container");
+                scope[attrs.onsuccess](data);
+            });
+        }
+    };
+});
+
 manualsTestfield.directive("tfEditableElement", function () {
     var tfEditable = {
         restrict: "A",
@@ -106,8 +191,10 @@ manualsTestfield.directive("tfEditableTextarea", function () {
     return tfEditable;
 });
 
-manualsTestfield.controller("manualBlockCtrl", function ($scope, $rootScope, ManualService) {
+manualsTestfield.controller("manualBlockCtrl", function ($scope, $rootScope, ManualService, $sce) {
     $scope.showModButton = true;
+    $scope.$sce = $sce;
+    $scope.manualBlock.manualBlockTrustedHtml = $sce.trustAsHtml($scope.manualBlock.content);
     
     var loadBlockSize = function () {
         $scope.blockSize = MANSC.getBlockSizes($scope.block);
@@ -123,9 +210,7 @@ manualsTestfield.controller("manualBlockCtrl", function ($scope, $rootScope, Man
     };
 
     $scope.save = function () {
-        ManualService.saveBlock($scope.block.id, $scope.block.content).then(function (data) {
-            console.log(data);
-        });
+        ManualService.saveBlock($scope.block.id, $scope.block.content);
     };
 
     $scope.blockSelected = function () {

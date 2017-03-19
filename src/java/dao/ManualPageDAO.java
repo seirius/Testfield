@@ -6,7 +6,6 @@
 package dao;
 
 import java.util.List;
-import model.bean.manual.ManualBlock;
 import model.bean.manual.ManualPage;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -23,12 +22,10 @@ import util.exceptions.DAOException;
  *
  * @author Andriy
  */
-public class ManualPageDAO {
-    
-    private final Session session;
+public class ManualPageDAO extends DAO {
     
     public ManualPageDAO(Session session) {
-        this.session = session;
+        super(session);
     }
     
     public ManualPage getPage(String idPage) throws DAOException {

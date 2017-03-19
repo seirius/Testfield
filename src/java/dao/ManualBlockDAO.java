@@ -26,12 +26,10 @@ import util.exceptions.DAOException;
  *
  * @author Andriy
  */
-public class ManualBlockDAO {
-    
-    private final Session session;
+public class ManualBlockDAO extends DAO {
     
     public ManualBlockDAO(Session session) {
-        this.session = session;
+        super(session);
     }
     
     public ManualBlock insert(String manualRow, String content, int order, List<WidthTypeHelper> widthTypes) throws DAOException {

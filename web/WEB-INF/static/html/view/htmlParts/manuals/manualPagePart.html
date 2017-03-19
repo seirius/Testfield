@@ -3,7 +3,7 @@
         <div class="col-xs-12">
             <div class="">
                 <form role="form" novalidate>
-                    <h2 class="color-white">
+                    <h2>
                         <span tf-editable-element="title">{{manual.title}}</span>
                         <textarea 
                             name="title" 
@@ -52,23 +52,9 @@
                                     block-class
                                     >
                                     <div 
-                                        class="manual-block manual-block-style" 
-                                        block-options="vertical delete modify"
-                                        ng-class="{'last': manualBlock.isLast, 'first': manualBlock.isFirst}"
-                                        >
-                                        <form novalidate role="form">
-                                            <span class="min-block-height" tf-editable-element="block">{{manualBlock.content}}</span>
-                                            <textarea 
-                                                name="block" 
-                                                class="hidden editable-textarea" 
-                                                tf-editable-textarea="block" 
-                                                ng-keyup="keyup()" 
-                                                ng-blur="save()"
-                                                ng-model="manualBlock.content"
-                                                >
-                                            </textarea>
-                                        </form>
+                                        ng-include="'static/htmlParts/manuals/manualBlock.html'">
                                     </div>
+                                    
 
                                 </div> <!-- END LOOP BLOCKS -->
                             </div>

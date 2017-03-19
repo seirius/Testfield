@@ -11,10 +11,12 @@ import org.hibernate.Session;
  *
  * @author Andriy
  */
-public class TagDAO extends DAO {
+public class DAO {
     
-    public TagDAO(Session session) {
-        super(session);
+    protected Session session;
+    
+    public DAO(Session session) {
+        this.session = session;
     }
     
 }

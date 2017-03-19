@@ -1,7 +1,9 @@
 package util;
 
 import dao.BlockWidthTypeDAO;
+import dao.DAO;
 import dao.ManualBlockDAO;
+import dao.ManualConfDAO;
 import dao.ManualDAO;
 import dao.ManualPageDAO;
 import dao.ManualRowDAO;
@@ -10,7 +12,9 @@ import dao.UserDAO;
 import dao.UserInfoDAO;
 import dao.WidthTypeDAO;
 import hibernate.HibernateUtil;
+import java.lang.reflect.Constructor;
 import org.hibernate.Session;
+import util.enums.DAOList;
 
 /**
  * @author Andriy Yednarovych
@@ -21,6 +25,18 @@ public class ServiceManager {
 
     public ServiceManager() {
         session = HibernateUtil.getSessionFactory().openSession();
+    }
+    
+    public DAO getDAO(DAOList daoItem) {
+        DAO dao = null;
+        try {
+            Class<?> clazz = Class.forName(daoItem.getValue());
+            Constructor<?> constructor = clazz.getConstructor(Session.class);
+            dao = (DAO) constructor.newInstance(new Object[] {session});
+        } catch (Exception e) {
+            ErrorMsgs.sysLogThis(e);
+        }
+        return dao;
     }
     
     public UserDAO getUserDAO() {
@@ -57,6 +73,10 @@ public class ServiceManager {
     
     public BlockWidthTypeDAO getBlockWidthTypeDAO() {
         return new BlockWidthTypeDAO(session);
+    }
+    
+    public ManualConfDAO getManualConfDAO() {
+        return new ManualConfDAO(session);
     }
 
     public Session getSession() {

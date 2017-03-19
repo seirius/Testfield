@@ -16,12 +16,10 @@ import util.exceptions.ServiceException;
 /**
  * @author Andriy Yednarovych
  */
-public class UserDAO {
+public class UserDAO extends DAO {
 
-    private final Session session;
-    
     public UserDAO (Session session) {
-        this.session = session;
+        super(session);
     }
     
     public UserTestfield getUser(String userId) throws DAOException {

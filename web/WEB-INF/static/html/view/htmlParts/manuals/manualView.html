@@ -1,4 +1,4 @@
-<div class="color-white" ng-controller="manualView">
+<div ng-controller="manualView">
     
     <div class="row">
         <div class="col-xs-12">
@@ -15,8 +15,8 @@
                 
                 <div 
                     block-class
-                    ng-repeat="block in row.blocks">
-                    {{block.content}}
+                    ng-repeat="block in row.blocks"
+                    ng-bind-html="block.content">
                 </div>
                 
             </div>
