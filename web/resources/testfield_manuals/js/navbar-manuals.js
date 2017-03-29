@@ -6,9 +6,6 @@ manualsTestfield.controller("navbarManualsCtrl", function ($scope, $rootScope, M
     $scope.createManual = function () {
         ManualService.createManual().then(function (data) {
             $location.search("id", data.manual.id);
-//            $rootScope.$broadcast("load-manual", {
-//                idManual: data.manual.id
-//            });
         });
     };
     
@@ -35,6 +32,10 @@ manualsTestfield.controller("navbarManualsCtrl", function ($scope, $rootScope, M
         ManualService.addPage(ManualService.getCurrentManual().id).then(function () {
             ManualService.reloadManual($scope);
         });
+    };
+    
+    $scope.manualsStyle = function () {
+        ManualService.openManualsStyle($scope);
     };
 });
 

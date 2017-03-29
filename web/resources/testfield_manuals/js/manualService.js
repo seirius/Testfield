@@ -109,6 +109,15 @@ generalTestfield.service("ManualService", function (tfHttp, $compile) {
             });
         },
         
+        openManualsStyle: function ($scope) {
+            var $modalList = $("<tf-modal>", {
+                "url-content": "/Testfield/static/htmlParts/manuals/manualStyle.html"
+            });
+
+            $("body").append($modalList);
+            $modalList = $compile($modalList)($scope);
+        },
+        
         openManual: function (idManual, $scope, container) {
             manualService.loadManual(idManual).then(function (data) {
                 introduceManual($scope, container, data.manual);

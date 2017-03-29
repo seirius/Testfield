@@ -15,7 +15,8 @@ public enum DAOList {
     TAG("TagDAO"),
     USER("UserDAO"),
     USER_INFO("UserInfoDAO"),
-    WIDTH_TYPE("WidthTypeDAO");
+    WIDTH_TYPE("WidthTypeDAO"),
+    FONT_FAMILY("FontFamilyDAO");
     
     private final String value;
     private final String path = "dao";

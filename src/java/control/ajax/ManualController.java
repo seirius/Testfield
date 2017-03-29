@@ -8,7 +8,6 @@ package control.ajax;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import model.bean.manual.Manual;
-import model.bean.manual.ManualBlock;
 import model.bean.widthtype.WidthTypeHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;

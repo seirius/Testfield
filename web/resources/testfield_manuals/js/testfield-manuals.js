@@ -51,7 +51,7 @@ manualsTestfield.controller("manualListCtrl", function ($rootScope, $scope, Manu
     $scope.manuals = ManualService.getManualsList();
 
     $scope.openManual = function (idManual) {
-        $rootScope.$broadcast("close-manual-list");
+        $rootScope.$broadcast("close-tf-modal");
         $location.search("id", idManual);
     };
 });
@@ -381,6 +381,18 @@ manualsTestfield.directive("blockClass", function () {
     };
 
     return blockClass;
+});
+
+manualsTestfield.controller("manualStyleCtrl", function ($scope, $rootScope, StyleService) {
+    $scope.R = $scope.G = $scope.B = 0;
+    $scope.submitStyles = function () {
+        $rootScope.$broadcast("close-tf-modal");
+    };
+    
+    StyleService.getFontFamilies()
+    .then(function (data) {
+        $scope.fontFamilies = data.fontFamilies;
+    });
 });
 
 manualsTestfield.controller("manualView", function ($scope, ManualService) {

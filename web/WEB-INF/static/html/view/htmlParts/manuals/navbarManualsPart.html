@@ -35,8 +35,9 @@
                         <li><a href="#" ng-click="createManual()">Create</a></li>
                         <li><a href="#" ng-click="manualsList()">Open</a></li>
                         <li><a href="#" ng-show="!editing" ng-click="edit()">Edit</a></li>
-                        <li><a href="#" ng-show="editing" ng-click="visualize()">Visualize</a></li>
+                        <li><a href="#" ng-show="editing && manualLoaded" ng-click="visualize()">Visualize</a></li>
                         <li><a href="#" ng-show="manualLoaded" ng-click="addPage()">Add page</a></li>
+                        <li><a href="#" ng-show="manualLoaded" ng-click="manualsStyle()">Set style</a></li>
                     </ul>
 
                 </li>

@@ -161,7 +161,7 @@ generalTestfield.directive("tfModal", function ($http, $compile) {
                 $modal.modal("show");
             });
             
-            scope.$on("close-manual-list", function () {
+            scope.$on("close-tf-modal", function () {
                 $modal.modal("hide");
             });
         }

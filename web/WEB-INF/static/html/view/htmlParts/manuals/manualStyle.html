@@ -1,0 +1,57 @@
+<div class="row" ng-controller="manualStyleCtrl" ng-init="getData()">
+    <div class="col-xs-12">
+        <form name="manualStyleForm" novalidate ng-submit="submitStyles()">
+            <div class="row">
+                <div class="col-xs-12">
+                    <span><strong>Font color</strong></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label class="">R</label>
+                        <input type="number" class="form-control" 
+                               name="R" ng-min="0" ng-max="255" 
+                               min="0" max="255"
+                               ng-model="R">
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label class="">G</label>
+                        <input type="number" class="form-control" 
+                               name="G" ng-min="0" ng-max="255" 
+                               min="0" max="255"
+                               ng-model="G">
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label class="">B</label>
+                        <input type="number" class="form-control" 
+                               name="B" ng-min="0" ng-max="255" 
+                               min="0" max="255"
+                               ng-model="B">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label>Font family</label>
+                        <select class="form-control" name="fontFamily">
+                            <option ng-repeat="fontFamily in fontFamilies">
+                                {{fontFamily.fontName}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <button type="submit" class="btn btn-primary pull-right">Submit changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
