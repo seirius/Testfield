@@ -5,8 +5,9 @@
  */
 package service;
 
-import dao.FontConfDAO;
+import dao.FontFamilyDAO;
 import dao.ManualBlockDAO;
+import dao.ManualConfDAO;
 import dao.ManualDAO;
 import dao.ManualPageDAO;
 import dao.ManualRowDAO;
@@ -17,7 +18,9 @@ import model.bean.manual.ManualBlock;
 import model.bean.manual.ManualConf;
 import model.bean.manual.ManualPage;
 import model.bean.manual.ManualRow;
+import model.bean.manual.pojo.ManualStylePojo;
 import model.bean.style.FontConf;
+import model.bean.style.FontFamily;
 import model.bean.widthtype.WidthTypeHelper;
 import util.ErrorMsgs;
 import util.Security;
@@ -25,7 +28,6 @@ import util.ServiceReturn;
 import util.enums.BlockWidthTypeEnum;
 import util.enums.DAOList;
 import util.enums.DeleteOptions;
-import util.enums.FontStyle;
 import util.enums.ManualState;
 import util.enums.ManualVisibility;
 import util.enums.MoveOptions;
@@ -51,7 +53,8 @@ public class ManualService extends Service {
         try {
             MANAGER.beginTransaction();
             
-            Manual manual = MANAGER.getManualDAO().insert(userNick, "Temporal title", ManualVisibility.HIDDEN, ManualState.PROGRESS);
+            Manual manual = MANAGER.getManualDAO()
+                    .insert(userNick, "Temporal title", ManualVisibility.HIDDEN, ManualState.PROGRESS);
             int idManual = manual.getId();
             ManualPage manualPage = MANAGER.getManualPageDAO().insert(idManual, 1);
             ManualRow manualRow = MANAGER.getManualRowDAO().insert(manualPage.getId(), 1);
@@ -62,7 +65,7 @@ public class ManualService extends Service {
             MANAGER.getManualBlockDAO().insert(manualRow.getId(), "Write something new here!", 1, widthTypes);
             result.addItem("manual", manual, true);
             
-            MANAGER.getManualConfDAO().insertOrUpdate(idManual);
+            MANAGER.getManualConfDAO().createDefaultForManual(idManual);
             
             MANAGER.commit();
         } catch(Exception e) {
@@ -391,8 +394,10 @@ public class ManualService extends Service {
                     
             }
         } catch(ServiceException e) {
+            MANAGER.rollback();
             throw e;
         } catch(Exception e) {
+            MANAGER.rollback();
             throw treatException(e);
         } finally {
             MANAGER.close();
@@ -424,6 +429,7 @@ public class ManualService extends Service {
             
             MANAGER.commit();
         } catch(Exception e) {
+            MANAGER.rollback();
             throw treatException(e);
         } finally {
             MANAGER.close();
@@ -454,6 +460,7 @@ public class ManualService extends Service {
             result.addItem("manual", manual, true);
             MANAGER.commit();
         } catch(Exception e) {
+            MANAGER.rollback();
             throw treatException(e);
         } finally {
             MANAGER.close();
@@ -484,6 +491,7 @@ public class ManualService extends Service {
             result.addItem("manual", manual, true);
             MANAGER.commit();
         } catch(Exception e) {
+            MANAGER.rollback();
             throw treatException(e);
         } finally {
             MANAGER.close();
@@ -491,37 +499,36 @@ public class ManualService extends Service {
         return result;
     }
     
-    public ServiceReturn updateManualsFont(String userNick, int manualId, FontStyle type, String cssStyle) throws Exception {
+    public ServiceReturn updateManualsStyle(String userNick, 
+            ManualStylePojo stylePojo) throws Exception {
         ServiceReturn result = new ServiceReturn();
         try {
             MANAGER.beginTransaction();
             
-            Manual manual = MANAGER.getManualDAO().getManual(manualId);
+            Manual manual = MANAGER.getManualDAO().getManual(stylePojo.manualId);
             if (!Security.permissionModManual(manual, userNick)) {
                 throw new ServiceException(ErrorMsgs.ACC_DEN);
             }
             
+            ManualConfDAO manualConfDao = 
+                    (ManualConfDAO) MANAGER.getDAO(DAOList.MANUAL_CONF);
+            FontFamilyDAO fontFamilyDao = 
+                    (FontFamilyDAO) MANAGER.getDAO(DAOList.FONT_FAMILY);
             ManualConf manualConf = manual.getManualConf();
-            FontConf fontConf;
-            switch(type) {
-                case COLOR:
-                    fontConf = manualConf.getFontColor();
-                    break;
-                    
-                case FAMILY:
-                    fontConf = manualConf.getFontFamily();
-                    break;
-                    
-                default:
-                    throw new ServiceException("Non-existent font style.");
-            }
+            FontConf fontConfColor = manualConf.getFontColor();
+            fontConfColor.setCssStyle(stylePojo.getFontColor());
+            FontConf fontConfFamily = manualConf.getFontFamily();
+            FontFamily fontFamily = fontFamilyDao.getFontFamily(stylePojo.fontFamily);
+            fontConfFamily.setCssStyle(fontFamily.getCssStyle());
             
-            FontConfDAO fontConfDao = (FontConfDAO) MANAGER.getDAO(DAOList.FONT_CONF);
-            fontConfDao.updateCssStyle(fontConf.getId(), cssStyle);
+            manualConf.setFontColor(fontConfColor);
+            manualConf.setFontFamily(fontConfFamily);
+            manualConfDao.update(manualConf);
             
             result.addItem("manual", manual, true);
             MANAGER.commit();
         } catch (DAOException | ServiceException e) {
+            MANAGER.rollback();
             throw treatException(e);
         } finally {
             MANAGER.close();

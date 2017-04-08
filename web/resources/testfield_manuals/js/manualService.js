@@ -408,6 +408,20 @@ generalTestfield.service("ManualService", function (tfHttp, $compile) {
                     moveOption: moveOption
                 }
             });
+        },
+        
+        /**
+         * 
+         * @param {JSON} args {
+         *      manualId, R, G, B, fontFamily
+         * }
+         * @returns {unresolved}
+         */
+        updateStyles: function (args) {
+            return tfHttp.request({
+                url: "/Testfield/request/manual/updateStyle",
+                data: args
+            });
         }
     };
     

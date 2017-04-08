@@ -11,7 +11,6 @@ import model.bean.manual.ManualBlock;
 import model.bean.manual.ManualPage;
 import model.bean.manual.ManualRow;
 import org.hibernate.Criteria;
-import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;

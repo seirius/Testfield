@@ -53,7 +53,8 @@ public class AjaxResponse {
     
     public void setErrorMsg(Exception e) {
         System.err.println("-- ERROR: " + e.getMessage());
-        this.errorMsg = ErrorMsgs.DEFAULT_MSG;
+        errorCode = -1;
+        errorMsg = ErrorMsgs.DEFAULT_MSG;
     }
     
     public void add(String elementName, Object element) {

@@ -331,13 +331,15 @@ manualsTestfield.controller("rowCtrl", function ($scope, $rootScope, ManualServi
     $scope.popoverClosed = resetBlockSize;
     
     $scope.moveUp = function () {
-        ManualService.moveRow($scope.row.id, ManualService.MOVE_OPTIONS.UP).then(function () {
+        ManualService.moveRow($scope.row.id, ManualService.MOVE_OPTIONS.UP)
+        .then(function () {
             ManualService.reloadManual($scope);
         });
     };
     
     $scope.moveDown = function () {
-        ManualService.moveRow($scope.row.id, ManualService.MOVE_OPTIONS.DOWN).then(function () {
+        ManualService.moveRow($scope.row.id, ManualService.MOVE_OPTIONS.DOWN)
+        .then(function () {
             ManualService.reloadManual($scope);
         });
     };
@@ -373,7 +375,8 @@ manualsTestfield.directive("blockClass", function () {
         restrict: "A",
         link: function (scope, element, attrs) {
             var $element = $(element);
-            var classes = MANSC.getClassesByWidthTypes(scope.block.widthTypes, scope.block.relBlockWidthTypes);
+            var classes = MANSC.getClassesByWidthTypes(scope.block.widthTypes, 
+                scope.block.relBlockWidthTypes);
             classes.forEach(function (value) {
                 $element.addClass(value);
             });
@@ -383,10 +386,34 @@ manualsTestfield.directive("blockClass", function () {
     return blockClass;
 });
 
-manualsTestfield.controller("manualStyleCtrl", function ($scope, $rootScope, StyleService) {
-    $scope.R = $scope.G = $scope.B = 0;
+manualsTestfield
+        .controller(
+            "manualStyleCtrl", 
+            function ($scope, $rootScope, StyleService, ManualService) {
+    
+    var manual = ManualService.getCurrentManual();
+    
     $scope.submitStyles = function () {
-        $rootScope.$broadcast("close-tf-modal");
+        if ($scope.manualStyleForm.$pristine ||
+                $scope.manualStyleForm.$invalid) {
+            alert("nop");
+        } else {
+            $rootScope.$broadcast("close-tf-modal");
+            var args = $.extend({
+                manualId: ManualService.getCurrentManual().id,
+                R: 0,
+                G: 0,
+                B: 0,
+                fontFamily: 0
+            }, $scope.style);
+            ManualService.updateStyles(args);
+        }
+    };
+    $scope.style = {
+        R: 0,
+        G: 0,
+        B: 0,
+        fontFamily: ""
     };
     
     StyleService.getFontFamilies()

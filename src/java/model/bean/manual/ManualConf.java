@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import model.bean.style.FontConf;
 import util.BeanValidator;
 import util.exceptions.BeanException;
@@ -40,6 +41,9 @@ public class ManualConf implements Serializable {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "font_family")
     private FontConf fontFamily;
+    
+    @Transient
+    public int R, G, B, fontFamilyId;
 
     public int getManualId() {
         return manualId;

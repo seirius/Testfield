@@ -5,8 +5,9 @@
  */
 package dao;
 
-import model.bean.manual.Manual;
 import model.bean.manual.ManualConf;
+import model.bean.style.FontConf;
+import model.bean.style.FontFamily;
 import org.hibernate.Session;
 import util.enums.FontStyle;
 import util.exceptions.BeanException;
@@ -22,35 +23,39 @@ public class ManualConfDAO extends DAO {
         super(session);
     }
     
-    public ManualConf insertOrUpdate(int manualId) throws BeanException, DAOException {
-        return insertOrUpdate(manualId, null);
-    }
-    
     public ManualConf insertOrUpdate(ManualConf manualConf) throws DAOException {
-        try {
-            session.saveOrUpdate(manualConf);
-        } catch (Exception e) {
-            throw new DAOException("Error while creating or updating the manual's configuration.", e);
-        }
+        session.saveOrUpdate(manualConf);
         return manualConf;
     }
     
-    public ManualConf insertOrUpdate(int manualId, String manualBackground) throws BeanException, DAOException {
-        ManualConf manualConf = null;
-        try {
-            manualConf = new ManualConf();
-            manualConf.setManualId(manualId);
-            if (manualBackground != null) {
-                manualConf.setManualBackground(manualBackground);
-            }
-            FontConfDAO fontConfDao = new FontConfDAO(session);
-            manualConf.setFontColor(fontConfDao.insertOrUpdate(FontStyle.COLOR, "#333"));
-            manualConf.setFontFamily(fontConfDao.insertOrUpdate(FontStyle.FAMILY, "\"Orbitron\", sans-serif"));
-            insertOrUpdate(manualConf);
-        } catch (BeanException e) {
-            throw (BeanException) e;
+    public ManualConf createDefaultForManual(int manualId) throws DAOException, BeanException {
+        if (getManualConf(manualId) != null) {
+            throw new DAOException("There is already a ManualConf created.");
         }
+        ManualConf manualConf = new ManualConf();
+        manualConf.setManualId(manualId);
+        FontConfDAO fontConfDao = new FontConfDAO(session);
+        FontConf fontConfColor = fontConfDao.insert(FontStyle.COLOR, "rgb(0, 0, 0)");
+        FontFamilyDAO fontFamilyDao = new FontFamilyDAO(session);
+        FontFamily fontFamily = fontFamilyDao.getFirstFontFamily();
+        String cssStyle = "";
+        if (fontFamily != null) {
+            cssStyle = fontFamily.getCssStyle();
+        }
+        FontConf fontConfFamily = fontConfDao.insert(FontStyle.FAMILY, cssStyle);
+        manualConf.setFontColor(fontConfColor);
+        manualConf.setFontFamily(fontConfFamily);
+        session.save(manualConf);
         return manualConf;
+    }
+    
+    public ManualConf update(ManualConf manualConf) {
+        session.update(manualConf);
+        return manualConf;
+    }
+    
+    public ManualConf getManualConf(int manualId) {
+        return (ManualConf) session.get(ManualConf.class, manualId);
     }
     
 }

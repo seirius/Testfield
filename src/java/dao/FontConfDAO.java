@@ -20,11 +20,11 @@ public class FontConfDAO extends DAO {
         super(session);
     }
     
-    public FontConf insertOrUpdate(FontStyle type) throws DAOException {
-        return insertOrUpdate(type, null);
+    public FontConf insert(FontStyle type) throws DAOException {
+        return insert(type, null);
     }
     
-    public FontConf insertOrUpdate(FontStyle type, String cssStyle) throws DAOException {
+    public FontConf insert(FontStyle type, String cssStyle) throws DAOException {
         FontConf fontConf;
         try {
             fontConf = new FontConf();
@@ -35,6 +35,15 @@ public class FontConfDAO extends DAO {
             session.saveOrUpdate(fontConf);
         } catch (Exception e) {
             throw new DAOException("Couldn't insert or update a FontConf.", e);
+        }
+        return fontConf;
+    }
+    
+    public FontConf update(FontConf fontConf) throws DAOException {
+        try {
+            session.update(fontConf);
+        } catch (Exception e) {
+            throw new DAOException("Couldn't update Font Conf.", e);
         }
         return fontConf;
     }

@@ -8,6 +8,7 @@ package control.ajax;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import model.bean.manual.Manual;
+import model.bean.manual.pojo.ManualStylePojo;
 import model.bean.widthtype.WidthTypeHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -252,6 +253,23 @@ public class ManualController extends MyController {
         try {
             String userNick = Security.isSessionOpened(session);
             ServiceReturn serviceReturn = new ManualService().moveRow(userNick, MoveOptions.toMoveOptions(moveOption), idRow);
+            ajaxResponse.digest(serviceReturn);
+        } catch(ServiceException e) {
+            ajaxResponse.setError(e);
+        } catch(Exception e) {
+            ajaxResponse.setErrorMsg(e);
+        }
+        return ajaxResponse; 
+    }
+    
+    @RequestMapping(value = "/manual/updateStyle", method = RequestMethod.POST)
+    public @ResponseBody AjaxResponse moveRow(HttpSession session, 
+            @RequestBody ManualStylePojo stylePojo) {
+        AjaxResponse ajaxResponse = new AjaxResponse();
+        try {
+            String userNick = Security.isSessionOpened(session);
+            ServiceReturn serviceReturn = new ManualService()
+                    .updateManualsStyle(userNick, stylePojo);
             ajaxResponse.digest(serviceReturn);
         } catch(ServiceException e) {
             ajaxResponse.setError(e);

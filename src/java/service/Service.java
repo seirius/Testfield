@@ -16,6 +16,8 @@ import util.ServiceManager;
  */
 public class Service {
     
+    public static boolean DEBUG = true;
+    
     protected final ServiceManager MANAGER;
     
     public Service() {
@@ -28,6 +30,10 @@ public class Service {
 
     protected Exception treatException(String msg, Exception e) {
         Exception exception;
+        
+        if (DEBUG) {
+            e.printStackTrace();
+        }
         
         if (e instanceof BeanException) {
             exception = e;
