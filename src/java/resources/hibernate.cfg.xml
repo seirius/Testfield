@@ -24,7 +24,7 @@
     <mapping class="model.bean.widthtype.WidthType"/>
     <mapping class="model.bean.widthtype.RelBlockWidthType"/>
     <mapping class="model.bean.widthtype.RelBlockWidthTypeId"/>
-    <mapping class="model.bean.style.FontConf"/>
     <mapping class="model.bean.style.FontFamily"/>
+    <mapping class="model.bean.style.FontColor"/>
   </session-factory>
 </hibernate-configuration>

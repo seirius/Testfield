@@ -394,9 +394,11 @@ manualsTestfield
     var manual = ManualService.getCurrentManual();
     
     $scope.submitStyles = function () {
-        if ($scope.manualStyleForm.$pristine ||
-                $scope.manualStyleForm.$invalid) {
+        if ($scope.manualStyleForm.$invalid) {
             alert("nop");
+        } else if ($scope.manualStyleForm.$pristine) {
+            console.log("Not touched");
+            $rootScope.$broadcast("close-tf-modal");
         } else {
             $rootScope.$broadcast("close-tf-modal");
             var args = $.extend({
@@ -410,15 +412,16 @@ manualsTestfield
         }
     };
     $scope.style = {
-        R: 0,
-        G: 0,
-        B: 0,
+        R: manual.manualConf.fontColor.r,
+        G: manual.manualConf.fontColor.g,
+        B: manual.manualConf.fontColor.b,
         fontFamily: ""
     };
     
     StyleService.getFontFamilies()
     .then(function (data) {
         $scope.fontFamilies = data.fontFamilies;
+        $scope.style.fontFamily = manual.manualConf.fontFamily.toString();
     });
 });
 

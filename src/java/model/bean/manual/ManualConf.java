@@ -13,8 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-import model.bean.style.FontConf;
+import model.bean.style.FontColor;
 import util.BeanValidator;
 import util.exceptions.BeanException;
 
@@ -36,15 +35,11 @@ public class ManualConf implements Serializable {
     
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "font_color")
-    private FontConf fontColor;
+    private FontColor fontColor;
     
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "font_family")
-    private FontConf fontFamily;
+    @Column(name = "font_family", nullable = false, length = 11)
+    private int fontFamily;
     
-    @Transient
-    public int R, G, B, fontFamilyId;
-
     public int getManualId() {
         return manualId;
     }
@@ -64,20 +59,20 @@ public class ManualConf implements Serializable {
         this.manualBackground = manualBackground;
     }
 
-    public FontConf getFontColor() {
+    public FontColor getFontColor() {
         return fontColor;
     }
     
-    public void setFontColor(FontConf fontColorBean) {
+    public void setFontColor(FontColor fontColorBean) {
         this.fontColor = fontColorBean;
     }
     
-    public FontConf getFontFamily() {
+    public int getFontFamily() {
         return fontFamily;
     }
     
-    public void setFontFamily(FontConf fontFamilyBean) {
-        this.fontFamily = fontFamilyBean;
+    public void setFontFamily(int fontFamily) {
+        this.fontFamily = fontFamily;
     }
 
 }

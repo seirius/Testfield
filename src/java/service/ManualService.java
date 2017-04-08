@@ -19,7 +19,7 @@ import model.bean.manual.ManualConf;
 import model.bean.manual.ManualPage;
 import model.bean.manual.ManualRow;
 import model.bean.manual.pojo.ManualStylePojo;
-import model.bean.style.FontConf;
+import model.bean.style.FontColor;
 import model.bean.style.FontFamily;
 import model.bean.widthtype.WidthTypeHelper;
 import util.ErrorMsgs;
@@ -515,14 +515,15 @@ public class ManualService extends Service {
             FontFamilyDAO fontFamilyDao = 
                     (FontFamilyDAO) MANAGER.getDAO(DAOList.FONT_FAMILY);
             ManualConf manualConf = manual.getManualConf();
-            FontConf fontConfColor = manualConf.getFontColor();
-            fontConfColor.setCssStyle(stylePojo.getFontColor());
-            FontConf fontConfFamily = manualConf.getFontFamily();
+            FontColor fontColor = manualConf.getFontColor();
+            fontColor.setRGB(stylePojo);
             FontFamily fontFamily = fontFamilyDao.getFontFamily(stylePojo.fontFamily);
-            fontConfFamily.setCssStyle(fontFamily.getCssStyle());
+            if (fontFamily == null) {
+                throw new ServiceException("Font family doesn't exist.");
+            }
+            manualConf.setFontFamily(stylePojo.fontFamily);
             
-            manualConf.setFontColor(fontConfColor);
-            manualConf.setFontFamily(fontConfFamily);
+            manualConf.setFontColor(fontColor);
             manualConfDao.update(manualConf);
             
             result.addItem("manual", manual, true);

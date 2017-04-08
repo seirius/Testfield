@@ -418,9 +418,16 @@ generalTestfield.service("ManualService", function (tfHttp, $compile) {
          * @returns {unresolved}
          */
         updateStyles: function (args) {
-            return tfHttp.request({
+            var request = tfHttp.request({
                 url: "/Testfield/request/manual/updateStyle",
                 data: args
+            });
+            
+            return request.then(function (data) {
+                return new Promise(function (resolve) {
+                    manualService.setCurrentManual(data.manual);
+                    resolve(data);
+                });
             });
         }
     };

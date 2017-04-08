@@ -54,20 +54,14 @@ CREATE TABLE MANUAL (
     CONSTRAINT FOREIGN KEY(USER_NICK) REFERENCES USER_TESTFIELD(USER_NICK)
 );
 
-CREATE TABLE `testfield`.`font_conf` (
-	`type` INT(1) NOT NULL,
-	`css_style` VARCHAR(255) NOT NULL DEFAULT 'initial',
-	PRIMARY KEY (`type`)
-);
-
 CREATE TABLE manual_conf (
 	manual INT(11) PRIMARY KEY,
     manual_background VARCHAR(255) NOT NULL DEFAULT 'none',
     font_color INT(11) NOT NULL,
     font_family INT(11) NOT NULL,
     CONSTRAINT FOREIGN KEY(id) REFERENCES manual(id),
-	CONSTRAINT FOREIGN KEY(font_color) REFERENCES font_conf(id),
-    CONSTRAINT FOREIGN KEY(font_family) REFERENCES font_conf(id)
+	CONSTRAINT FOREIGN KEY(font_color) REFERENCES font_color(id),
+    CONSTRAINT FOREIGN KEY(font_family) REFERENCES font_family(id)
 );
 
 CREATE TABLE REL_TAG_MANUAL (

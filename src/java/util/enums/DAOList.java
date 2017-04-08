@@ -6,7 +6,7 @@ package util.enums;
  */
 public enum DAOList {
     BLOCK_WIDTH_TYPE("BlockWidthTypeDAO"),
-    FONT_CONF("FontConfDAO"),
+    FONT_COLOR("FontColorDAO"),
     MANUAL_BLOCK("ManualBlockDAO"),
     MANUAL_CONF("ManualConfDAO"),
     MANUAL("ManualDAO"),

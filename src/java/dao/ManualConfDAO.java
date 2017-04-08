@@ -6,10 +6,9 @@
 package dao;
 
 import model.bean.manual.ManualConf;
-import model.bean.style.FontConf;
+import model.bean.style.FontColor;
 import model.bean.style.FontFamily;
 import org.hibernate.Session;
-import util.enums.FontStyle;
 import util.exceptions.BeanException;
 import util.exceptions.DAOException;
 
@@ -34,17 +33,19 @@ public class ManualConfDAO extends DAO {
         }
         ManualConf manualConf = new ManualConf();
         manualConf.setManualId(manualId);
-        FontConfDAO fontConfDao = new FontConfDAO(session);
-        FontConf fontConfColor = fontConfDao.insert(FontStyle.COLOR, "rgb(0, 0, 0)");
+        FontColorDAO fontColorDao = new FontColorDAO(session);
+        FontColor fontColor = new FontColor();
+        fontColor.setR(0);
+        fontColor.setG(0);
+        fontColor.setB(0);
+        fontColorDao.insert(fontColor);
         FontFamilyDAO fontFamilyDao = new FontFamilyDAO(session);
         FontFamily fontFamily = fontFamilyDao.getFirstFontFamily();
-        String cssStyle = "";
-        if (fontFamily != null) {
-            cssStyle = fontFamily.getCssStyle();
+        if (fontFamily == null) {
+            throw new DAOException("No font families defined to create a manual.");
         }
-        FontConf fontConfFamily = fontConfDao.insert(FontStyle.FAMILY, cssStyle);
-        manualConf.setFontColor(fontConfColor);
-        manualConf.setFontFamily(fontConfFamily);
+        manualConf.setFontColor(fontColor);
+        manualConf.setFontFamily(fontFamily.getId());
         session.save(manualConf);
         return manualConf;
     }
