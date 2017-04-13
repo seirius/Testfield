@@ -70,6 +70,10 @@
     background: transparent;
 }
 
+.editable-standby {
+    min-height: 50px;
+}
+
 .editable-textarea-empty {
     min-height: 50px;
     background: white;

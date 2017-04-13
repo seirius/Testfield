@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import model.bean.style.FontColor;
+import model.bean.style.FontFamily;
 import util.BeanValidator;
 import util.exceptions.BeanException;
 
@@ -37,8 +38,9 @@ public class ManualConf implements Serializable {
     @JoinColumn(name = "font_color")
     private FontColor fontColor;
     
-    @Column(name = "font_family", nullable = false, length = 11)
-    private int fontFamily;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "font_family")
+    private FontFamily fontFamily;
     
     public int getManualId() {
         return manualId;
@@ -67,11 +69,11 @@ public class ManualConf implements Serializable {
         this.fontColor = fontColorBean;
     }
     
-    public int getFontFamily() {
+    public FontFamily getFontFamily() {
         return fontFamily;
     }
     
-    public void setFontFamily(int fontFamily) {
+    public void setFontFamily(FontFamily fontFamily) {
         this.fontFamily = fontFamily;
     }
 

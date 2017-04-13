@@ -521,7 +521,7 @@ public class ManualService extends Service {
             if (fontFamily == null) {
                 throw new ServiceException("Font family doesn't exist.");
             }
-            manualConf.setFontFamily(stylePojo.fontFamily);
+            manualConf.setFontFamily(fontFamily);
             
             manualConf.setFontColor(fontColor);
             manualConfDao.update(manualConf);

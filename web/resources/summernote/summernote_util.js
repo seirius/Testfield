@@ -1,3 +1,98 @@
+/* global generalTestfield */
+
+generalTestfield.directive("editable", function ($templateRequest) {
+    var validElements = [
+        "div"
+    ];
+    
+    var isEditing = false;
+    var $editorPanel;
+    
+    var onEditingChange = function (element) {
+        if (isEditing) {
+            element.addClass("editing manual-block-editing");
+            element.removeClass("editable-standby");
+        } else {
+            element.removeClass("editing manual-block-editing");
+            element.addClass("editable-standby");
+        }
+        
+        isEditing = !isEditing;
+    };
+    
+    var closeSummernote = function (element) {
+        if (isEditing) {
+            element.summernote("destroy");
+            onEditingChange(element);
+        }
+    };
+    
+    var enableSummernote = function (element, callbacks) {
+        callbacks = $.extend({
+            keyup: function () {}
+        }, callbacks);
+        
+        element.summernote({
+            toolbar: summer_util.getToolbarForBlock,
+            buttons: {
+                close: summer_util.closeButton(function () {
+                    closeSummernote(element);
+                })
+            },
+            callbacks: {
+                onInit: function () {
+                    var $noteEditor = element.siblings(".note-editor");
+                    $noteEditor.find("button").tooltip("destroy");
+                    $templateRequest("static/htmlParts/manuals/summernoteEditPanel.html")
+                    .then(function (data) {
+                        $editorPanel = $(data);
+                        $(".principal-container").append($editorPanel);
+                        var $noteToolbar = $noteEditor.find(".note-toolbar");
+                        $editorPanel.find(".summernote-edit-panel").append($noteToolbar);
+                        $noteToolbar
+                                .find(".dropdown-menu")
+                                .closest(".note-btn-group")
+                                .addClass("dropup");
+                        $noteEditor.find(".note-editable").focus();
+                    });
+                },
+                onBlur: function (event) {
+                    if (event.relatedTarget === null) {
+                        closeSummernote(element);
+                    }
+                },
+                onKeyup: function () {
+                    callbacks.keyup(element.summernote("code"));
+                }
+            }
+        });
+        
+        onEditingChange(element);
+    };
+    
+    return {
+        restrict: "A",
+        link: function (scope, element, attrs) {
+            var isValidElement = validElements.some(function (type) {
+                return element.is(type);
+            });
+            if (!isValidElement) {
+                throw "Non valid element " + element.prop("tagName");
+            }
+            
+            element.dblclick(function () {
+                if (!isEditing) {
+                    enableSummernote(element, {
+                        keyup: scope[attrs.snKeyup]
+                    });
+                }
+            })
+            .addClass("editable-standby");
+            
+        }
+    };
+});
+
 var summer_util = (function () {
     return {
         closeButton: function (click) {

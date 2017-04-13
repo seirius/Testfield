@@ -75,7 +75,6 @@ manualsTestfield.directive("editableBlock", function ($compile) {
         restrict: "A",
         scope: false,
         link: function (scope, element, attrs) {
-            var $textSpan = element.find("span");
             var $textarea = element.find(".editable-textarea");
             var $editorPanel;
             scope.isEditing = false;
@@ -208,7 +207,7 @@ manualsTestfield.controller("manualBlockCtrl", function ($scope, $rootScope, Man
             $scope.save();
         }
     };
-
+    
     $scope.save = function () {
         ManualService.saveBlock($scope.block.id, $scope.block.content);
     };
@@ -421,7 +420,7 @@ manualsTestfield
     StyleService.getFontFamilies()
     .then(function (data) {
         $scope.fontFamilies = data.fontFamilies;
-        $scope.style.fontFamily = manual.manualConf.fontFamily.toString();
+        $scope.style.fontFamily = manual.manualConf.fontFamily.id.toString();
     });
 });
 

@@ -29,9 +29,11 @@ generalTestfield.service("ManualService", function (tfHttp, $compile) {
     
     var setManualsStyle = function (manual) {
         var $manualContainer = $(".manualContainer");
+        var fontColor = manual.manualConf.fontColor;
+        var color = "rgb(" + fontColor.r + "," + fontColor.g + "," + fontColor.b +")";
         $manualContainer.css({
             "font-family": manual.manualConf.fontFamily.cssStyle,
-            "color": manual.manualConf.fontColor.cssStyle
+            "color": color
         });
         if (manual.manualConf.manualBackground === "none") {
             $("body").removeClass("background-congruent");
@@ -426,6 +428,7 @@ generalTestfield.service("ManualService", function (tfHttp, $compile) {
             return request.then(function (data) {
                 return new Promise(function (resolve) {
                     manualService.setCurrentManual(data.manual);
+                    setManualsStyle(data.manual);
                     resolve(data);
                 });
             });

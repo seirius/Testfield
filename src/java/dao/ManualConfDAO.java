@@ -45,7 +45,7 @@ public class ManualConfDAO extends DAO {
             throw new DAOException("No font families defined to create a manual.");
         }
         manualConf.setFontColor(fontColor);
-        manualConf.setFontFamily(fontFamily.getId());
+        manualConf.setFontFamily(fontFamily);
         session.save(manualConf);
         return manualConf;
     }
