@@ -279,5 +279,20 @@ public class ManualController extends MyController {
         return ajaxResponse; 
     }
     
-    
+    @RequestMapping(value = "/manual/jsonManual", method = RequestMethod.POST)
+    public @ResponseBody AjaxResponse moveRow(HttpSession session, 
+            @RequestParam int idManual) {
+        AjaxResponse ajaxResponse = new AjaxResponse();
+        try {
+            String userNick = Security.isSessionOpened(session);
+            ServiceReturn serviceReturn = new ManualService()
+                    .createJsonFileFromManual(userNick, idManual);
+            ajaxResponse.digest(serviceReturn);
+        } catch(ServiceException e) {
+            ajaxResponse.setError(e);
+        } catch(Exception e) {
+            ajaxResponse.setErrorMsg(e);
+        }
+        return ajaxResponse; 
+    }
 }

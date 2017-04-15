@@ -70,29 +70,6 @@ generalTestfield.service("tfHttp", function ($http) {
     };
 });
 
-function httpReturn($http, args) {
-    return $http(args).then(function (response) {
-        return new Promise(function (resolve, reject) {
-            if (typeof response !== "undefined" && typeof response.data !== "undefined") {
-                var data = response.data;
-                if (data.errorCode === 0) {
-                    resolve(data.data);
-                } else {
-                    if (showError) {
-                        alert(data.errorMsg);
-                    }
-                    reject(data);
-                }
-
-            }
-
-            showError = true;
-        });
-    }, function (response) {
-        alert(response.responseText);
-    });
-}
-
 generalTestfield.service("UserService", function (tfHttp) {
     return {
         login: function (user, password) {
@@ -145,25 +122,51 @@ generalTestfield.directive("linkable", function ($window) {
     };
 });
 
-generalTestfield.directive("tfModal", function ($http, $compile) {
+generalTestfield.service("ModalService", function ($templateRequest, $compile) {
     return {
-        restrict: "E",
-        templateUrl: "/Testfield/static/htmlParts/util/modalPart.html",
-        link: function (scope, element, attrs) {
-            var $modal = element.find(".modal");
-            $modal.on("hidden.bs.modal", function () {
-                element.remove();
-            });
-
-            $http.get(attrs.urlContent).then(function (content) {
-                var $content = $compile(content.data)(scope);
-                $modal.find(".modal-body").append($content);
-                $modal.modal("show");
-            });
+        openModal: function (args) {
+            var callbacks = args.callbacks;
+            callbacks = $.extend({
+                open: function () {},
+                close: function () {},
+                buttonClose: function () {}
+            }, callbacks);
             
-            scope.$on("close-tf-modal", function () {
-                $modal.modal("hide");
+            $templateRequest("/Testfield/static/htmlParts/util/modalPart.html")
+            .then(function(modalHtml) {
+                var $modal = $(modalHtml);
+                $("body").append($modal);
+                
+                $modal.on("hidden.bs.modal", function () {
+                    callbacks.close();
+                    $modal.remove();
+                });
+
+                $templateRequest(args.urlContent).then(function (content) {
+                    var $content = $compile(content)(args.scope);
+                    $modal.find(".modal-body").append($content);
+                    $modal.modal("show");
+                });
+
+                args.scope.$on("close-tf-modal", function () {
+                    $modal.modal("hide");
+                });
+                
+                $modal.find("button[data-dismiss='modal']")
+                        .click(callbacks.buttonClose);
             });
         }
     };
 });
+
+generalTestfield.directive("tfModal", ["ModalService", function (ModalService) {
+    return {
+        restrict: "E",
+        link: function (scope, element, attrs) {
+            ModalService.openModal({
+                urlContent: attrs.urlContent, 
+                scope: scope
+            });
+        }
+    };
+}]);

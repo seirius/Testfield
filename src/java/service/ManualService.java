@@ -1,16 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import dao.FontFamilyDAO;
 import dao.ManualBlockDAO;
 import dao.ManualConfDAO;
 import dao.ManualDAO;
 import dao.ManualPageDAO;
 import dao.ManualRowDAO;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import model.bean.manual.Manual;
@@ -128,7 +127,7 @@ public class ManualService extends Service {
                 throw new ServiceException(ErrorMsgs.ACC_DEN);
             }
             manual.setTitle(newTitle);
-            
+            manualDAO.update(manual);
             MANAGER.commit();
             
             result.addItem("manual", manual, true);
@@ -533,6 +532,51 @@ public class ManualService extends Service {
             throw treatException(e);
         } finally {
             MANAGER.close();
+        }
+        return result;
+    }
+    
+    public ServiceReturn createJsonFileFromManual(String userNick, 
+            int manualId) throws Exception {
+        ServiceReturn result = new ServiceReturn();
+        try {
+            Manual manual = MANAGER.getManualDAO().getManual(manualId);
+            if (!Security.permissionModManual(manual, userNick)) {
+                throw new ServiceException(ErrorMsgs.ACC_DEN);
+            }
+            
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode jsonManual = mapper.createObjectNode();
+            jsonManual.put("title", manual.getTitle());
+            jsonManual.put("dateCreation", new SimpleDateFormat("dd-MM-yyyy")
+                .format(manual.getDateCreation()));
+            
+            ArrayNode pages = jsonManual.putArray("pages");
+            manual.getPages().forEach((manualPage) -> {
+                ObjectNode page = mapper.createObjectNode();
+                page.put("pageOrder", manualPage.getPageOrder());
+                ArrayNode rows = page.putArray("rows");
+                manualPage.getRows().forEach((manualRow) -> {
+                    ObjectNode row = mapper.createObjectNode();
+                    row.put("rowOrder", manualRow.getRowOrder());
+                    ArrayNode blocks = row.putArray("blocks");
+                    manualRow.getBlocks().forEach((manualBlock) -> {
+                        ObjectNode block = mapper.createObjectNode();
+                        block.put("blockOrder", manualBlock.getBlockOrder());
+                        block.put("content", manualBlock.getContent());
+                        blocks.add(block);
+                    });
+                    rows.add(row);
+                });
+                pages.add(page);
+            });
+            
+            String sJsonManual = mapper.writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(jsonManual);
+            
+            result.addItem("jsonManual", sJsonManual);
+        } catch (DAOException | ServiceException e) {
+            throw treatException(e);
         }
         return result;
     }

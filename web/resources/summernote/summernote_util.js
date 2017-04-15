@@ -20,28 +20,32 @@ generalTestfield.directive("editable", function ($templateRequest) {
         isEditing = !isEditing;
     };
     
-    var closeSummernote = function (element) {
+    var closeSummernote = function (element, callbacks) {
         if (isEditing) {
+            callbacks.close(element.summernote("code"));
             element.summernote("destroy");
             onEditingChange(element);
         }
     };
     
-    var enableSummernote = function (element, callbacks) {
+    var enableSummernote = function (args, callbacks) {
         callbacks = $.extend({
-            keyup: function () {}
+            keyup: function () {},
+            close: function () {}
         }, callbacks);
         
-        element.summernote({
+        var keyups = 0;
+        
+        args.element.summernote({
             toolbar: summer_util.getToolbarForBlock,
             buttons: {
                 close: summer_util.closeButton(function () {
-                    closeSummernote(element);
+                    closeSummernote(args.element, callbacks);
                 })
             },
             callbacks: {
                 onInit: function () {
-                    var $noteEditor = element.siblings(".note-editor");
+                    var $noteEditor = args.element.siblings(".note-editor");
                     $noteEditor.find("button").tooltip("destroy");
                     $templateRequest("static/htmlParts/manuals/summernoteEditPanel.html")
                     .then(function (data) {
@@ -58,16 +62,20 @@ generalTestfield.directive("editable", function ($templateRequest) {
                 },
                 onBlur: function (event) {
                     if (event.relatedTarget === null) {
-                        closeSummernote(element);
+                        closeSummernote(args.element, callbacks);
                     }
                 },
                 onKeyup: function () {
-                    callbacks.keyup(element.summernote("code"));
+                    keyups++;
+                    if (keyups > args.attrs.snTrigger) {
+                        callbacks.keyup(args.element.summernote("code"));
+                        keyups = 0;
+                    }
                 }
             }
         });
         
-        onEditingChange(element);
+        onEditingChange(args.element);
     };
     
     return {
@@ -82,12 +90,15 @@ generalTestfield.directive("editable", function ($templateRequest) {
             
             element.dblclick(function () {
                 if (!isEditing) {
-                    enableSummernote(element, {
-                        keyup: scope[attrs.snKeyup]
+                    enableSummernote({
+                        element: element,
+                        attrs: attrs
+                    }, {
+                        keyup: scope[attrs.snKeyup],
+                        close: scope[attrs.snClose]
                     });
                 }
-            })
-            .addClass("editable-standby");
+            }).addClass("editable-standby");
             
         }
     };

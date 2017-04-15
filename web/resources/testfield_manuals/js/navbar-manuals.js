@@ -1,6 +1,7 @@
-/* global manualsTestfield */
+/* global manualsTestfield, URL */
 
-manualsTestfield.controller("navbarManualsCtrl", function ($scope, $rootScope, ManualService, $location) {
+manualsTestfield.controller("navbarManualsCtrl", function ($scope, $rootScope, 
+        ManualService, $location, $window) {
     $scope.manualLoaded = false;
     
     $scope.createManual = function () {
@@ -36,6 +37,17 @@ manualsTestfield.controller("navbarManualsCtrl", function ($scope, $rootScope, M
     
     $scope.manualsStyle = function () {
         ManualService.openManualsStyle($scope);
+    };
+    
+    $scope.getJsonManual = function () {
+        ManualService.getJsonManual(ManualService.getCurrentManual().id)
+        .then(function (data) {
+            var jsonManual = new Blob([data.jsonManual], {
+                type: "application/json"
+            });
+            var jsonUrl = URL.createObjectURL(jsonManual);
+            window.open(jsonUrl);
+        });
     };
 });
 

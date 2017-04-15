@@ -159,14 +159,13 @@ generalTestfield.service("ManualService", function (tfHttp, $compile) {
         },
         
         saveTitle: function (args) {
-            args = $.extend(args, {
-                idManual: currentManual.id,
+            args = $.extend({
                 title: currentManual.title
-            });
+            }, args);
             var request = tfHttp.requestParam({
                 url: "/Testfield/request/manual/setTitle",
                 data: {
-                    idManual: args.idManual,
+                    idManual: currentManual.id,
                     title: args.title
                 }
             });
@@ -408,6 +407,15 @@ generalTestfield.service("ManualService", function (tfHttp, $compile) {
                 data: {
                     idRow: idRow,
                     moveOption: moveOption
+                }
+            });
+        },
+        
+        getJsonManual: function (idManual) {
+            return tfHttp.requestParam({
+                url: "/Testfield/request/manual/jsonManual",
+                data: {
+                    idManual: idManual
                 }
             });
         },

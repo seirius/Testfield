@@ -1,22 +1,7 @@
 <div ng-controller="manualPageCtrl">
     <div class="row">
         <div class="col-xs-12">
-            <div class="">
-                <form role="form" novalidate>
-                    <h2>
-                        <span tf-editable-element="title">{{manual.title}}</span>
-                        <textarea 
-                            name="title" 
-                            class="hidden editable-textarea" 
-                            tf-editable-textarea="title" 
-                            ng-model="manual.title" 
-                            ng-keyup="keyup()" 
-                            ng-blur="save()">
-
-                        </textarea>
-                    </h2>
-                </form>
-            </div>
+            <h2 ng-dblclick="editTitle()">{{manual.title}}</h2>
         </div>
     </div>
 

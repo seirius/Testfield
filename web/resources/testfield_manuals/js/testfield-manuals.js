@@ -21,11 +21,12 @@ manualsTestfield.controller("manualContainerCtrl", function ($scope, $location, 
     $location.search();
 });
 
-manualsTestfield.controller("manualPageCtrl", function ($scope, ManualService) {
+manualsTestfield.controller("manualPageCtrl", function ($scope, ManualService, ModalService) {
     var manual = ManualService.getCurrentManual();
     $scope.manual = manual;
     
     var keyups = 0;
+    var titleSaved;
     $scope.keyup = function () {
         keyups++;
         if (keyups > 10) {
@@ -34,11 +35,32 @@ manualsTestfield.controller("manualPageCtrl", function ($scope, ManualService) {
         }
     };
 
-    $scope.save = function () {
+    $scope.saveTitle = function () {
         ManualService.saveTitle({
-            newTitle: $scope.manual.title
+            title: $scope.manual.title
         }).then(function (data) {
             console.log(data);
+        });
+        
+        titleSaved = true;
+        $scope.$broadcast("close-tf-modal");
+    };
+    
+    $scope.editTitle = function () {
+        var oldTitle = $scope.manual.title;
+        titleSaved = false;
+        ModalService.openModal({
+            urlContent: "static/htmlParts/manuals/editTitle.html", 
+            scope: $scope,
+            callbacks: {
+                close: function () {
+                    if (!titleSaved) {
+                        $scope.manual.title = oldTitle;
+                        $scope.$apply();
+                        oldTitle = "";
+                    }
+                }
+            }
         });
     };
 
@@ -70,77 +92,6 @@ manualsTestfield.directive("manualView", function () {
     };
 });
 
-manualsTestfield.directive("editableBlock", function ($compile) {
-    var editableBlock = {
-        restrict: "A",
-        scope: false,
-        link: function (scope, element, attrs) {
-            var $textarea = element.find(".editable-textarea");
-            var $editorPanel;
-            scope.isEditing = false;
-            var idCounter = 0;
-            scope.startEditing = function () {
-                if (!scope.isEditing) {
-                    scope.isEditing = true;
-                    var ownId = idCounter;
-                    var onClose = function () {
-                        scope.stopEditing();
-                        scope.save();
-                    };
-                    element.addClass("manual-block-editing");
-                    $textarea.summernote({
-                        toolbar: summer_util.getToolbarForBlock,
-                        buttons: {
-                            close: summer_util.closeButton(onClose)
-                        },
-                        callbacks: {
-                            onInit: function () {
-                                var $noteEditor = $textarea.siblings(".note-editor");
-                                $noteEditor.addClass("remove-panel-margin");
-                                $noteEditor.find("button").tooltip('destroy'); 
-                                var $aux = $("<summernote-edit-panel>", {
-                                    attr: {
-                                        onsuccess: "onLoadEditPanel"
-                                    }
-                                });
-                                $editorPanel = $($compile($aux)(scope));
-                                $(".principal-container").append($editorPanel);
-                            },
-                            onBlur: function (event) {
-                                if (event.relatedTarget === null 
-                                        || $(event.relatedTarget).closest(".note-toolbar").data("id-counter") !== ownId) {
-                                    onClose();
-                                }
-                            }
-                        }
-                    });
-                }
-            };
-            scope.onLoadEditPanel = function (data) {
-                var $noteEditor = $textarea.siblings(".note-editor");
-                var $noteToolbar = $noteEditor.find(".note-toolbar");
-                $noteToolbar.data("id-counter", idCounter);
-                $editorPanel.find(".summernote-edit-panel").append($noteToolbar);
-                $noteToolbar.find(".dropdown-menu").closest(".note-btn-group").addClass("dropup");
-                $noteEditor.find(".note-editable").focus();
-            };
-            scope.stopEditing = function () {
-                if (scope.isEditing) {
-                    scope.isEditing = false;
-                    var originalValue = $textarea.summernote("code");
-                    scope.manualBlock.manualBlockTrustedHtml = scope.$parent.$sce.trustAsHtml(originalValue);
-                    scope.manualBlock.content = originalValue;
-                    $textarea.summernote("destroy");
-                    $editorPanel.remove();
-                    element.removeClass("manual-block-editing");
-                }
-            };
-        }
-    };
-    
-    return editableBlock;
-});
-
 manualsTestfield.directive("summernoteEditPanel", function ($templateRequest) {
     return {
         restrict: "E",
@@ -152,42 +103,6 @@ manualsTestfield.directive("summernoteEditPanel", function ($templateRequest) {
             });
         }
     };
-});
-
-manualsTestfield.directive("tfEditableElement", function () {
-    var tfEditable = {
-        restrict: "A",
-        link: function (scope, element, attrs) {
-            var $textarea = element.closest("form").find("textarea");
-
-            element.dblclick(function () {
-                $textarea.removeClass("hidden");
-                $textarea.focus();
-                element.addClass("hidden");
-            });
-
-        }
-    };
-
-    return tfEditable;
-});
-
-manualsTestfield.directive("tfEditableTextarea", function () {
-    var tfEditable = {
-        restrict: "A",
-        link: function (scope, element, attrs) {
-            var $oldElement = element.closest("form").find("[tf-editable-element]");
-            
-            element.resizeTextarea();
-            element.blur(function () {
-                $oldElement.removeClass("hidden");
-                $oldElement.focus();
-                element.addClass("hidden");
-            });
-        }
-    };
-
-    return tfEditable;
 });
 
 manualsTestfield.controller("manualBlockCtrl", function ($scope, $rootScope, ManualService, $sce) {
@@ -208,8 +123,8 @@ manualsTestfield.controller("manualBlockCtrl", function ($scope, $rootScope, Man
         }
     };
     
-    $scope.save = function () {
-        ManualService.saveBlock($scope.block.id, $scope.block.content);
+    $scope.saveBlock = function (content) {
+        ManualService.saveBlock($scope.block.id, content);
     };
 
     $scope.blockSelected = function () {

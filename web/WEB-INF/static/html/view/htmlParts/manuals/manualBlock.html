@@ -6,29 +6,12 @@
         'first': manualBlock.isFirst,
         'is-editing': isEditing
     }"
-    editable-block
-    tabindex="-1"
-    ng-dblclick="startEditing()"
-    >
-    <form novalidate role="form">
-        <span 
-            class="min-block-height text-span" 
-            ng-hide="isEditing"
-            ng-bind-html="manualBlock.manualBlockTrustedHtml"
-            >
-        </span>
-        <textarea 
-            name="block" 
-            class="editable-textarea hidden" 
-            ng-keyup="keyup()" 
-            ng-blur="save();"
-            ng-model="manualBlock.content"
-            >
-        </textarea>
-    </form>
-    
-    <div editable sn-keyup="keyupaa"></div>
+    tabindex="-1">
+    <div 
+        editable 
+        sn-keyup="saveBlock" 
+        sn-close="saveBlock" 
+        sn-trigger="30" 
+        ng-bind-html="manualBlock.content">
+    </div>
 </div>
-
-<!--tf-editable-element="block"-->
-<!--tf-editable-textarea="block"--> 
