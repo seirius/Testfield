@@ -8,6 +8,7 @@ package dao;
 import java.util.List;
 import model.bean.manual.ManualRow;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
@@ -83,9 +84,11 @@ public class ManualRowDAO extends DAO {
         ManualRow manualRow = null;
         try {
             DetachedCriteria maxRow = DetachedCriteria.forClass(ManualRow.class)
-                    .setProjection(Projections.max("rowOrder"));
+                    .setProjection(Projections.max("rowOrder"))
+                    .add(Restrictions.eq("manualPage", manualPage));
             Criteria rows = session.createCriteria(ManualRow.class)
-                    .add(Property.forName("rowOrder").eq(maxRow));
+                    .add(Property.forName("rowOrder").eq(maxRow))
+                    .add(Restrictions.eq("manualPage", manualPage));
             
             List<ManualRow> rowList = rows.list();
             if (rowList.size() == 1) {

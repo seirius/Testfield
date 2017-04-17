@@ -20,8 +20,8 @@ $.fn.resizeTextarea = function () {
 var UTIL = (function () {
     var WIDTH_TYPES = {
         XS: 1,
-        SM: 3,
-        MD: 2,
+        SM: 2,
+        MD: 3,
         LG: 4
     };
     
