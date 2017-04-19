@@ -339,8 +339,12 @@ manualsTestfield
     });
 });
 
-manualsTestfield.controller("manualView", function ($scope, ManualService) {
+manualsTestfield.controller("manualView", function ($scope, ManualService, $sce) {
     $scope.manual = ManualService.getCurrentManual();
+    
+    $scope.getTrustedHtml = function (content) {
+        return $sce.trustAsHtml(content);
+    };
 });
 
 var MANSC = (function () {

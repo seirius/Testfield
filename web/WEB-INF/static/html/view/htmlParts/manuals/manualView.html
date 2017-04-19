@@ -16,7 +16,7 @@
                 <div 
                     block-class
                     ng-repeat="block in row.blocks"
-                    ng-bind-html="block.content">
+                    ng-bind-html="getTrustedHtml(block.content)">
                 </div>
                 
             </div>

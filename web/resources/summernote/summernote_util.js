@@ -9,6 +9,7 @@ generalTestfield.directive("editable", function ($templateRequest) {
     var $editorPanel;
     
     var onEditingChange = function (element) {
+        isEditing = !isEditing;
         if (isEditing) {
             element.addClass("editing manual-block-editing");
             element.removeClass("editable-standby");
@@ -16,8 +17,6 @@ generalTestfield.directive("editable", function ($templateRequest) {
             element.removeClass("editing manual-block-editing");
             element.addClass("editable-standby");
         }
-        
-        isEditing = !isEditing;
     };
     
     var closeSummernote = function (element, callbacks) {
