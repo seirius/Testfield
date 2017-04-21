@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model.bean.manual;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import java.beans.Transient;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
@@ -21,6 +17,7 @@ import javax.persistence.Table;
 import model.bean.widthtype.RelBlockWidthType;
 import model.bean.widthtype.WidthType;
 import org.hibernate.annotations.GenericGenerator;
+import util.enums.BlockWidthTypeEnum;
 
 /**
  *
@@ -108,6 +105,32 @@ public class ManualBlock implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+    
+    @Transient
+    public String getWidthCssStyle() {
+        String clazz = "";
+        if (widthTypes == null || relBlockWidthTypes == null) {
+            return clazz;
+        }
+        
+        int amount, widthTypeId;
+        for (RelBlockWidthType relWidthType: relBlockWidthTypes) {
+            amount = relWidthType.getAmount();
+            widthTypeId = relWidthType.getId().getWidthType();
+            for (int i = 0; i < widthTypes.size(); i++) {
+                WidthType widthType = widthTypes.get(i);
+                if (widthType.getWidthType() == widthTypeId) {
+                    BlockWidthTypeEnum widthTypeEnum = BlockWidthTypeEnum
+                            .getWidthTypeEnum(widthTypeId);
+                    clazz += String.format("col-%s-%d ", widthTypeEnum.getCss(), 
+                            amount);
+                    i = widthTypes.size();
+                }
+            }
+        }
+        
+        return clazz;
     }
     
 }

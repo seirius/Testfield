@@ -15,7 +15,7 @@
                 <c:forEach items="${page.rows}" var="row">
                     <div class="row">
                         <c:forEach items="${row.blocks}" var="block">
-                            <div class="col-sm-${block.relBlockWidthTypes[1].amount}">
+                            <div class="${block.getWidthCssStyle()}">
                                 ${block.content}
                             </div>
                         </c:forEach>

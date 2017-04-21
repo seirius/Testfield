@@ -12,7 +12,7 @@ import util.ServiceReturn;
 public class ManualsController {
     
     @RequestMapping(value = "/manualsDownload", method = RequestMethod.GET)
-    public String requestManuals(@RequestParam int idManual, ModelMap model) {
+    public String requestManualsDownload(@RequestParam int idManual, ModelMap model) {
         try {
             ManualService manualService = new ManualService();
             ServiceReturn serviceReturn = manualService.loadManual(idManual);
@@ -21,6 +21,11 @@ public class ManualsController {
             System.err.println("-- ERROR: " + e.getMessage());
         }
         return "/WEB-INF/jsp/view/manuals/manualHtml.jsp";
+    }
+    
+    @RequestMapping(value = "/manuals", method = RequestMethod.GET)
+    public String requestManuals(ModelMap model) {
+        return "/static/manuals.html";
     }
     
 }

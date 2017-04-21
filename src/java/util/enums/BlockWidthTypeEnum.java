@@ -10,14 +10,19 @@ package util.enums;
  * @author Andriy
  */
 public enum BlockWidthTypeEnum {
-    XS(1, "Phones"), SM(2, "Tablets"), MD(3, "Default"), LG(4, "Large display");
+    XS(1, "Phones", "xs"), 
+    SM(2, "Tablets", "sm"), 
+    MD(3, "Default", "md"), 
+    LG(4, "Large display", "lg");
     
     private final int value;
     private final String text;
+    private final String css;
     
-    BlockWidthTypeEnum(int value, String text) {
+    BlockWidthTypeEnum(int value, String text, String css) {
         this.value = value;
         this.text = text;
+        this.css = css;
     }
     
     public int getValue() {
@@ -28,23 +33,16 @@ public enum BlockWidthTypeEnum {
         return text;
     }
     
+    public String getCss() {
+        return css;
+    }
+    
     public static BlockWidthTypeEnum getWidthTypeEnum(int value) {
-        BlockWidthTypeEnum widthType = null;
-        
-        switch (value) {
-            case 1:
-                return BlockWidthTypeEnum.XS;
-            
-            case 2:
-                return BlockWidthTypeEnum.SM;
-                
-            case 3:
-                return BlockWidthTypeEnum.MD;
-                
-            case 4:
-                return BlockWidthTypeEnum.LG;
+        for (BlockWidthTypeEnum val: values()) {
+            if (val.getValue() == value) {
+                return val;
+            }
         }
-        
-        return widthType;
+        return null;
     }
 }
