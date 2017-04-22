@@ -420,6 +420,10 @@ generalTestfield.service("ManualService", function (tfHttp, $compile) {
             });
         },
         
+        getHtmlManual: function (idManual) {
+            window.open("/Testfield/download/manual?id=" + idManual);
+        },
+        
         /**
          * 
          * @param {JSON} args {

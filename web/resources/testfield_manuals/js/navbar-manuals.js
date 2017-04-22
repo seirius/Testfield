@@ -49,6 +49,10 @@ manualsTestfield.controller("navbarManualsCtrl", function ($scope, $rootScope,
             window.open(jsonUrl);
         });
     };
+    
+    $scope.getHtmlManual = function () {
+        ManualService.getHtmlManual(ManualService.getCurrentManual().id);
+    };
 });
 
 manualsTestfield.directive("logout", function (UserService, Testfield) {

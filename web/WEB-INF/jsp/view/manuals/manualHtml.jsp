@@ -4,13 +4,18 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" href="/Testfield/resources/bootstrap/css/bootstrap.css">
-        <script src="/Testfield/resources/bootstrap/js/bootstrap.js"></script>
-        <title>Hello world</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <title>${manual.title}</title>
+        <style>
+            .downloable-manual {
+                font-family: ${manual.manualConf.fontFamily.cssStyle};
+                color: ${manual.manualConf.fontColor.getCssColor()};
+            }
+        </style>
     </head>
     <body>
-        <div class="container">
-            <h1>${manual.title}!</h1>
+        <div class="container downloable-manual">
+            <h1>${manual.title}</h1>
             <c:forEach items="${manual.pages}" var="page">
                 <c:forEach items="${page.rows}" var="row">
                     <div class="row">

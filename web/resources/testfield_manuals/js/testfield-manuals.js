@@ -15,9 +15,7 @@ manualsTestfield.controller("manualContainerCtrl", function ($scope, $location, 
     
     $scope.$watch(function () {
         return $location.search();
-    }, function () {
-        loadManualByGet();
-    }, true);
+    }, loadManualByGet, true);
     $location.search();
 });
 

@@ -11,6 +11,7 @@ import model.bean.manual.Manual;
 import model.bean.manual.pojo.ManualStylePojo;
 import model.bean.widthtype.WidthTypeHelper;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,6 +31,11 @@ import util.exceptions.ServiceException;
  */
 @Controller
 public class ManualController extends MyController {
+    
+    @RequestMapping(value = "/manuals", method = RequestMethod.GET)
+    public String requestManuals(ModelMap model) {
+        return "/static/manuals.html";
+    }
     
     @RequestMapping(value = "/manual/createManual", method = RequestMethod.POST)
     public @ResponseBody AjaxResponse createManual(HttpSession session) {

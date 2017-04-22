@@ -83,4 +83,9 @@ public class FontColor implements Serializable {
         setB(stylePojo.B);
     }
     
+    @Transient
+    public String getCssColor() {
+        return String.format("rgb(%d, %d, %d)", r, g, b);
+    }
+    
 }

@@ -1,4 +1,4 @@
-package control;
+package control.main;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
