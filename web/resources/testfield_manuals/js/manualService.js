@@ -1,6 +1,6 @@
 /* global generalTestfield */
 
-generalTestfield.service("ManualService", function (tfHttp, $compile) {
+generalTestfield.service("ManualService", function (tfHttp, $compile, ModalService) {
     var manualService = this;
     
     var currentManual = {};
@@ -112,12 +112,10 @@ generalTestfield.service("ManualService", function (tfHttp, $compile) {
         },
         
         openManualsStyle: function ($scope) {
-            var $modalList = $("<tf-modal>", {
-                "url-content": "/Testfield/static/htmlParts/manuals/manualStyle.html"
+            ModalService.openModal({
+                urlContent: "/Testfield/static/htmlParts/manuals/manualStyle.html",
+                scope: $scope
             });
-
-            $("body").append($modalList);
-            $modalList = $compile($modalList)($scope);
         },
         
         openManual: function (idManual, $scope, container) {

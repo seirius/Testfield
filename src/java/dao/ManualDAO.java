@@ -7,6 +7,7 @@ import model.bean.manual.ManualPage;
 import model.bean.manual.ManualRow;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
@@ -174,6 +175,21 @@ public class ManualDAO extends DAO {
             throw new DAOException("Error updating the Manual's title.", e);
         }
         return manual;
+    }
+    
+    public String getTitle(int manualId) throws DAOException {
+        String hql = ""
+                + "SELECT title "
+                + "FROM Manual "
+                + "WHERE id = :id"
+                + "";
+        Query query = session.createQuery(hql);
+        query.setInteger("id", manualId);
+        List<String> lista = query.list();
+        if (lista.isEmpty()) {
+            throw new DAOException(String.format("There is no manuals with this ID(%d)", manualId));
+        }
+        return lista.get(0);
     }
      
 }

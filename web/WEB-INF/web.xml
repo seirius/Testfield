@@ -47,6 +47,15 @@
         <url-pattern>/download/*</url-pattern>
     </servlet-mapping>
     
+    <filter>
+        <filter-name>manualFileAccessFilter</filter-name>
+        <filter-class>control.filters.ManualFileAccessFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>manualFileAccessFilter</filter-name>
+        <url-pattern>/files/manual/*</url-pattern>
+    </filter-mapping>
+    
     <session-config>
         <session-timeout> 
             30

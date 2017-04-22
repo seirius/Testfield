@@ -140,6 +140,23 @@ public class ManualService extends Service {
         return result;
     }
     
+    public ServiceReturn getManualTitle(int manulaId) throws Exception {
+        ServiceReturn result = new ServiceReturn();
+        try {
+            MANAGER.beginTransaction();
+            ManualDAO manualDao = MANAGER.getManualDAO();
+            String title = manualDao.getTitle(manulaId);
+            MANAGER.commit();
+            result.addItem("title", title);
+        } catch (DAOException e) {
+            MANAGER.rollback();
+            throw treatException(e);
+        } finally {
+            MANAGER.close();
+        }
+        return result;
+    }
+    
     public ServiceReturn updateBlockContent(String userNick, String idBlock, String content) throws Exception {
         ServiceReturn result = new ServiceReturn();
         try {

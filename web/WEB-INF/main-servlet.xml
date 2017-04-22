@@ -25,5 +25,5 @@
     <mvc:resources mapping="/resources/**" location="/resources/**"/>
     <mvc:resources mapping="/static/**" location="/WEB-INF/static/html/view/"/>
     <mvc:resources mapping="/static/includes/**" location="/WEB-INF/static/html/view/includes/"/>
-
+    <mvc:resources mapping="/files/manual/**" location="/files/manual/"/>
 </beans>

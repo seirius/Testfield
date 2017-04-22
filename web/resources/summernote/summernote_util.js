@@ -70,6 +70,11 @@ generalTestfield.directive("editable", function ($templateRequest) {
                         callbacks.keyup(args.element.summernote("code"));
                         keyups = 0;
                     }
+                },
+                onPaste: function (e) {
+                    var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                    e.preventDefault();
+                    document.execCommand('insertText', false, bufferText);
                 }
             }
         });

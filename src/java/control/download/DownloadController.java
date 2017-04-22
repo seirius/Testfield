@@ -51,8 +51,12 @@ public class DownloadController {
             String content = responseWrapper.toString();
             InputStream stream = 
                     new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
+            String title = new ManualService()
+                    .getManualTitle(id)
+                    .getAsString("title")
+                    .trim();
             String header = String.format("attachment; filename=\"%s.%s\"", 
-                    "temporal_title", "html");
+                    title, "html");
             response.setHeader("Content-Disposition", header);
             IOUtils.copy(stream, response.getOutputStream());
             response.flushBuffer();
@@ -67,8 +71,6 @@ public class DownloadController {
         try {
             ManualService manualService = new ManualService();
             ServiceReturn serviceReturn = manualService.loadManual(id);
-            Manual manual = (Manual) serviceReturn.getItem("manual");
-            String manualTitle = manual.getTitle();
             model.addAttribute("manual", serviceReturn.getItem("manual"));
         } catch (Exception e) {
             System.err.println("-- ERROR: " + e.getMessage());
