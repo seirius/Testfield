@@ -64,6 +64,35 @@ generalTestfield.service("tfHttp", function ($http) {
             return httpReturn(args);
         },
         
+        requestFile: function (args) {
+            var formData = new FormData();
+            
+            if (typeof args.data === "object") {
+                for (var key in args.data) {
+                    formData.append(key, args.data[key]);
+                }
+            }
+            
+            if (typeof args.files === "object") {
+                var i = 0;
+                for (i; i < args.files.length; i++) {
+                    formData.append("files[" + i + "]", args.files[i]);
+                }
+            }
+            
+            var auxArgs = {
+                url: args.url,
+                method: "POST",
+                headers: {
+                    "Content-Type": undefined
+                },
+                transformRequest: angular.identity,
+                data: formData
+            };
+            
+            return httpReturn(auxArgs);
+        },
+        
         showError: function () {
             showError = false;
         }
@@ -154,6 +183,25 @@ generalTestfield.service("ModalService", function ($templateRequest, $compile) {
                 
                 $modal.find("button[data-dismiss='modal']")
                         .click(callbacks.buttonClose);
+            });
+        }
+    };
+});
+
+generalTestfield.service("FileService", function (tfHttp) {
+    return {
+        /**
+         * 
+         * @param {JSON} args {manualId, file}
+         * @returns {Promise}
+         */
+        uploadManualFile: function (args) {
+            return tfHttp.requestFile({
+                url: "/Testfield/request/upload/uploadManualFiles",
+                data: {
+                    manualId: args.manualId
+                },
+                files: args.files
             });
         }
     };

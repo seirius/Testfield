@@ -1,6 +1,7 @@
 /* global generalTestfield */
 
-generalTestfield.directive("editable", function ($templateRequest) {
+generalTestfield.directive("editable", function ($templateRequest, FileService, 
+                        ManualService) {
     var validElements = [
         "div"
     ];
@@ -75,6 +76,16 @@ generalTestfield.directive("editable", function ($templateRequest) {
                     var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
                     e.preventDefault();
                     document.execCommand('insertText', false, bufferText);
+                },
+                onImageUpload: function (files, editor, welEditable) {
+                    FileService.uploadManualFile({
+                        files: files,
+                        manualId: ManualService.getCurrentManual().id
+                    }).then(function (data) {
+                        console.log(data);
+                    }, function (data) {
+                        console.log(data);
+                    });
                 }
             }
         });
@@ -131,7 +142,7 @@ var summer_util = (function () {
             ['color', ['color']],
             ['para', ['ul', 'ol', 'paragraph']],
             ['height', ['height']],
-            ['insert', [/*'picture', 'link', 'video',*/ 'table', 'hr']],
+            ['insert', ['picture',/* 'link', 'video',*/ 'table', 'hr']],
             ['misc', ['fullscreen', 'codeview', 'undo', 'redo', 'help']],
             ["myButtons", ["close"]]
         ]

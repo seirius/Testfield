@@ -26,5 +26,10 @@
     <mapping class="model.bean.widthtype.RelBlockWidthTypeId"/>
     <mapping class="model.bean.style.FontFamily"/>
     <mapping class="model.bean.style.FontColor"/>
+    <mapping class="model.bean.file.File"/>
+    <mapping class="model.bean.file.FileUser"/>
+    <mapping class="model.bean.file.FileUserId"/>
+    <mapping class="model.bean.file.FileManual"/>
+    <mapping class="model.bean.file.FileManualId"/>
   </session-factory>
 </hibernate-configuration>

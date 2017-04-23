@@ -16,7 +16,8 @@ public enum DAOList {
     USER("UserDAO"),
     USER_INFO("UserInfoDAO"),
     WIDTH_TYPE("WidthTypeDAO"),
-    FONT_FAMILY("FontFamilyDAO");
+    FONT_FAMILY("FontFamilyDAO"),
+    FILE("FileDAO");
     
     private final String value;
     private final String path = "dao";
