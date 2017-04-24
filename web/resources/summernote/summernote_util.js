@@ -1,7 +1,7 @@
 /* global generalTestfield */
 
 generalTestfield.directive("editable", function ($templateRequest, FileService, 
-                        ManualService) {
+                        ManualService, $location) {
     var validElements = [
         "div"
     ];
@@ -82,9 +82,12 @@ generalTestfield.directive("editable", function ($templateRequest, FileService,
                         files: files,
                         manualId: ManualService.getCurrentManual().id
                     }).then(function (data) {
-                        console.log(data);
+                        data.files.forEach(function (file) {
+                            args.element.summernote("insertImage", 
+                            + "/Testfield" + file.path);
+                        });
                     }, function (data) {
-                        console.log(data);
+                        alert(data);
                     });
                 }
             }

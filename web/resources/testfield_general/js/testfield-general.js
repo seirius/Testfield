@@ -76,7 +76,7 @@ generalTestfield.service("tfHttp", function ($http) {
             if (typeof args.files === "object") {
                 var i = 0;
                 for (i; i < args.files.length; i++) {
-                    formData.append("files[" + i + "]", args.files[i]);
+                    formData.append("files", args.files[i]);
                 }
             }
             

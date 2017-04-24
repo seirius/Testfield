@@ -1,12 +1,15 @@
 package service;
 
 import dao.FileDAO;
+import java.util.List;
 import model.bean.file.File;
 import model.bean.manual.Manual;
+import org.springframework.web.multipart.MultipartFile;
 import util.ErrorMsgs;
 import util.Security;
 import util.ServiceReturn;
 import util.enums.DAOList;
+import util.enums.FilePath;
 import util.exceptions.DAOException;
 import util.exceptions.ServiceException;
 
@@ -16,8 +19,8 @@ import util.exceptions.ServiceException;
  */
 public class FileService extends Service {
     
-    public ServiceReturn insertManualFile(String userNick, int manualId, 
-            String path) throws Exception {
+    public ServiceReturn insertManualFiles(String userNick, int manualId, 
+            String contextPath, FilePath filePath, MultipartFile[] sFiles) throws Exception {
         ServiceReturn result = new ServiceReturn();
         try {
             MANAGER.beginTransaction();
@@ -27,9 +30,9 @@ public class FileService extends Service {
                 throw new ServiceException(ErrorMsgs.ACC_DEN);
             }
             
-            File file = ((FileDAO) MANAGER.getDAO(DAOList.FILE))
-                    .insertFile(userNick, manualId, path);
-            result.addItem("file", file);
+            List<File> files = ((FileDAO) MANAGER.getDAO(DAOList.FILE))
+                    .insertFiles(userNick, manualId, contextPath, filePath, sFiles);
+            result.addItem("files", files);
             
             MANAGER.commit();
         } catch (DAOException | ServiceException e) {
