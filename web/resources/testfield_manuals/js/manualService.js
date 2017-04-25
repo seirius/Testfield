@@ -119,8 +119,11 @@ generalTestfield.service("ManualService", function (tfHttp, $compile, ModalServi
         },
         
         openManual: function (idManual, $scope, container) {
-            manualService.loadManual(idManual).then(function (data) {
+            return manualService.loadManual(idManual).then(function (data) {
                 introduceManual($scope, container, data.manual);
+                return new Promise(function (resolve, reject) {
+                    resolve(data);
+                });
             });
         },
         

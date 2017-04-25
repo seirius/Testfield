@@ -131,9 +131,15 @@ generalTestfield.service("UserService", function (tfHttp) {
 });
 
 generalTestfield.service("Testfield", function ($window) {
+    var DOMAIN_URL = "http://79.108.123.27:8090/Testfield";
+    
     return {
         goAfterLogout: function () {
             $window.location.href = "/Testfield/";
+        },
+        
+        getDomainUrl() {
+            return DOMAIN_URL;
         }
     };
 });

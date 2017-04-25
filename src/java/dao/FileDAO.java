@@ -40,9 +40,12 @@ public class FileDAO extends DAO {
         
         try {
             String fileName = sFile.getOriginalFilename();
-            String path = String.format("%s%s%s%s", contextPath, filePath.getPath(), 
+            String manualPath = new ManualDAO(session)
+                    .treatManualPath(contextPath, manualId);
+            String path = String.format("%s%s%s", manualPath, 
                     java.io.File.separator, fileName);
-            String webPath = String.format("%s%s%s", filePath.getPath(), 
+            String webPath = String.format("%s%s%s%s%s", filePath.getPath(),
+                    java.io.File.separator, "manual_" + manualId,
                     java.io.File.separator, fileName);
             
             webPath = webPath.replace(java.io.File.separator, "/");

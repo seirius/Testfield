@@ -8,8 +8,14 @@ manualsTestfield.config(function ($locationProvider) {
 manualsTestfield.controller("manualContainerCtrl", function ($scope, $location, ManualService) {
     var loadManualByGet = function () {
         var id = parseInt($location.search().id);
+        var visualize = $location.search().visualize;
         if (!isNaN(id)) {
-            ManualService.openManual(id, $scope, $(".manualContainer"));
+            ManualService.openManual(id, $scope, $(".manualContainer"))
+            .then(function () {
+                if (visualize === "true") {
+                    ManualService.visualizeManual($scope);
+                }
+            });
         }
     };
     

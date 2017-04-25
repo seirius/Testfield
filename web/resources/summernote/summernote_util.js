@@ -1,7 +1,7 @@
 /* global generalTestfield */
 
 generalTestfield.directive("editable", function ($templateRequest, FileService, 
-                        ManualService, $location) {
+                        ManualService, Testfield) {
     var validElements = [
         "div"
     ];
@@ -77,14 +77,14 @@ generalTestfield.directive("editable", function ($templateRequest, FileService,
                     e.preventDefault();
                     document.execCommand('insertText', false, bufferText);
                 },
-                onImageUpload: function (files, editor, welEditable) {
+                onImageUpload: function (files) {
                     FileService.uploadManualFile({
                         files: files,
                         manualId: ManualService.getCurrentManual().id
                     }).then(function (data) {
                         data.files.forEach(function (file) {
                             args.element.summernote("insertImage", 
-                            + "/Testfield" + file.path);
+                            Testfield.getDomainUrl() + file.path);
                         });
                     }, function (data) {
                         alert(data);

@@ -1,5 +1,6 @@
 package dao;
 
+import java.io.File;
 import java.util.List;
 import model.bean.manual.Manual;
 import model.bean.manual.ManualBlock;
@@ -14,6 +15,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import util.DAOValidator;
+import util.enums.FilePath;
 import util.enums.ManualState;
 import util.enums.ManualVisibility;
 import util.exceptions.BeanException;
@@ -190,6 +192,21 @@ public class ManualDAO extends DAO {
             throw new DAOException(String.format("There is no manuals with this ID(%d)", manualId));
         }
         return lista.get(0);
+    }
+    
+    public String treatManualPath(String contextPath, int manualId) {
+        String path = String.format("%s%s%s%smanual_%d",
+                contextPath,
+                File.separator,
+                FilePath.MANUAL_PATH.getPath(),
+                File.separator,
+                manualId);
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        
+        return path;
     }
      
 }
