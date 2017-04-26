@@ -1,7 +1,7 @@
 /* global manualsTestfield, URL */
 
 manualsTestfield.controller("navbarManualsCtrl", function ($scope, $rootScope, 
-        ManualService, $location, $window) {
+        ManualService, $location, ModalService, FilesService) {
     $scope.manualLoaded = false;
     
     $scope.createManual = function () {
@@ -52,6 +52,13 @@ manualsTestfield.controller("navbarManualsCtrl", function ($scope, $rootScope,
     
     $scope.getHtmlManual = function () {
         ManualService.getHtmlManual(ManualService.getCurrentManual().id);
+    };
+    
+    $scope.openImageList = function () {
+        ModalService.openModal({
+            urlContent: FilesService.HTML_USR_IMG,
+            scope: $scope
+        });
     };
 });
 

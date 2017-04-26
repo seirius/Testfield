@@ -1,6 +1,6 @@
 /* global UTIL, summer_util */
 
-var manualsTestfield = angular.module("manualsTestfield", ["generalTestfield", "ngSanitize"]);
+var manualsTestfield = angular.module("manualsTestfield", ["generalTestfield", "ngSanitize", "filesTestfield"]);
 manualsTestfield.config(function ($locationProvider) {
     $locationProvider.html5Mode(true);
 });

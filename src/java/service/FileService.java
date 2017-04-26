@@ -44,4 +44,21 @@ public class FileService extends Service {
         return result;
     }
     
+    public ServiceReturn getUsersImages(String userNick) throws Exception {
+        ServiceReturn result = new ServiceReturn();
+        try {
+            MANAGER.beginTransaction();
+            FileDAO fileDao = (FileDAO) MANAGER.getDAO(DAOList.FILE);
+            List<File> files = fileDao.getUsersImages(userNick);
+            result.addItem("files", files);
+            MANAGER.commit();
+        } catch (Exception e) {
+            MANAGER.rollback();
+            throw treatException(e);
+        } finally {
+            MANAGER.close();
+        }
+        return result;
+    }
+    
 }
