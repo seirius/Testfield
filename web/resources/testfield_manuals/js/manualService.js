@@ -57,21 +57,18 @@ generalTestfield.service("ManualService", function (tfHttp, $compile, ModalServi
         });
     };
     
-    var introduceManual = function ($scope, container, manual) {
+    var introduceManual = function ($scope, manual) {
         manualService.setCurrentManual(manual);
-        var manualPageDir = $compile($("<manual-page>"))($scope);
-        container.empty().append(manualPageDir);
         setManualsPositions(manual);
         setManualsViewState(VIEW_STATE.EDIT);
         setManualsStyle(manual);
         emitManualLoaded($scope);
     };
     
-    var visualizeManual = function ($scope, container, manual) {
+    var visualizeManual = function ($scope, manual) {
         manualService.setCurrentManual(manual);
-        var manualView = $compile($("<manual-view>"))($scope);
-        container.empty().append(manualView);
         setManualsViewState(VIEW_STATE.VIEW);
+        setManualsStyle(manual);
         emitManualLoaded($scope);
     };
     
@@ -118,9 +115,9 @@ generalTestfield.service("ManualService", function (tfHttp, $compile, ModalServi
             });
         },
         
-        openManual: function (idManual, $scope, container) {
+        openManual: function (idManual, $scope) {
             return manualService.loadManual(idManual).then(function (data) {
-                introduceManual($scope, container, data.manual);
+                introduceManual($scope, data.manual);
                 return new Promise(function (resolve, reject) {
                     resolve(data);
                 });
@@ -129,13 +126,16 @@ generalTestfield.service("ManualService", function (tfHttp, $compile, ModalServi
         
         reloadManual: function ($scope) {
             manualService.loadManual(manualService.getCurrentManual().id).then(function (data) {
-                introduceManual($scope, $(".manualContainer"), data.manual);
+                introduceManual($scope, data.manual);
             });
         },
         
-        visualizeManual: function ($scope) {
-            manualService.loadManual(manualService.getCurrentManual().id).then(function (data) {
-                visualizeManual($scope, $(".manualContainer"), data.manual);
+        visualizeManual: function (idManual, $scope) {
+            return manualService.loadManual(idManual).then(function (data) {
+                visualizeManual($scope, data.manual);
+                return new Promise(function (resolve, reject) {
+                    resolve(data);
+                });
             });
         },
         

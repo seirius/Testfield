@@ -5,17 +5,17 @@ manualsTestfield.config(function ($locationProvider) {
     $locationProvider.html5Mode(true);
 });
 
-manualsTestfield.controller("manualContainerCtrl", function ($scope, $location, ManualService) {
+manualsTestfield.controller("manualContainerCtrl", function ($scope, $location, 
+            Testfield) {
     var loadManualByGet = function () {
         var id = parseInt($location.search().id);
         var visualize = $location.search().visualize;
         if (!isNaN(id)) {
-            ManualService.openManual(id, $scope, $(".manualContainer"))
-            .then(function () {
-                if (visualize === "true") {
-                    ManualService.visualizeManual($scope);
-                }
-            });
+            if (visualize === "true") {
+                $scope.canvas = Testfield.CANVAS.MANUAL_V;
+            } else {
+                $scope.canvas = Testfield.CANVAS.MANUAL;
+            }
         }
     };
     
@@ -25,9 +25,14 @@ manualsTestfield.controller("manualContainerCtrl", function ($scope, $location, 
     $location.search();
 });
 
-manualsTestfield.controller("manualPageCtrl", function ($scope, ManualService, ModalService) {
-    var manual = ManualService.getCurrentManual();
-    $scope.manual = manual;
+manualsTestfield.controller("manualPageCtrl", 
+        function ($scope, ManualService, ModalService, $location) {
+            
+    var id = parseInt($location.search().id);
+    ManualService.openManual(id, $scope)
+    .then(function (data) {
+        $scope.manual = data.manual;
+    });
     
     var keyups = 0;
     var titleSaved;
@@ -343,8 +348,12 @@ manualsTestfield
     });
 });
 
-manualsTestfield.controller("manualView", function ($scope, ManualService, $sce) {
-    $scope.manual = ManualService.getCurrentManual();
+manualsTestfield.controller("manualView", function ($scope, ManualService, $sce, $location) {
+    var id = parseInt($location.search().id);
+    ManualService.visualizeManual(id, $scope)
+    .then(function (data) {
+        $scope.manual = data.manual;
+    });
     
     $scope.getTrustedHtml = function (content) {
         return $sce.trustAsHtml(content);

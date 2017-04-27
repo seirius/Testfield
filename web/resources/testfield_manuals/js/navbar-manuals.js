@@ -26,7 +26,9 @@ manualsTestfield.controller("navbarManualsCtrl", function ($scope, $rootScope,
     };
     
     $scope.visualize = function () {
-        ManualService.visualizeManual($scope);
+        ManualService.visualizeManual(
+                ManualService.getCurrentManual().id, 
+                $scope);
     };
     
     $scope.addPage = function () {

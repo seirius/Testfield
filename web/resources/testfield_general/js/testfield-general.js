@@ -1,4 +1,4 @@
-var generalTestfield = angular.module("generalTestfield", []);
+var generalTestfield = angular.module("generalTestfield", ["filesTestfield"]);
 
 generalTestfield.service("tfHttp", function ($http) {
     var showError = true;
@@ -130,7 +130,7 @@ generalTestfield.service("UserService", function (tfHttp) {
     };
 });
 
-generalTestfield.service("Testfield", function ($window) {
+generalTestfield.service("Testfield", function ($window, FileService) {
     var DOMAIN_URL = "http://79.108.123.27:8090/Testfield";
     
     return {
@@ -140,6 +140,12 @@ generalTestfield.service("Testfield", function ($window) {
         
         getDomainUrl() {
             return DOMAIN_URL;
+        },
+        
+        CANVAS: {
+            MANUAL: "static/htmlParts/manuals/manualPagePart.html",
+            MANUAL_V: "static/htmlParts/manuals/manualView.html",
+            IMAGE_LIST: FileService.HTML_USR_IMG
         }
     };
 });

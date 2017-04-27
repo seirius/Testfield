@@ -1,9 +1,4 @@
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <html ng-app="manualsTestfield">
     <head>
         <title>Testfield - Manuals</title>
@@ -44,11 +39,16 @@ and open the template in the editor.
     </head>
     <body class="background-congruent">
         <div ng-include="'static/htmlParts/manuals/navbarManualsPart.html'"></div>
-        <div class="container-fluid principal-container">
+        <div class="container-fluid principal-container" ng-controller="manualContainerCtrl">
                 <div class="container">
                     <div class="row">
                         <div class="col-xs-12 content-container">
-                            <div ng-include="'static/htmlParts/manuals/manualPart.html'"></div>
+                            <div 
+                                 class="manualContainer" 
+                                 manual-canvas 
+                                 ng-include="canvas">
+                                     
+                            </div>
                         </div>
                     </div>
                 </div>

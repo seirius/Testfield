@@ -1,11 +1,11 @@
 var filesTestfield = angular.module("filesTestfield", ["generalTestfield"]);
 
 filesTestfield.controller("imageList", function ($scope, FilesService, Testfield) {
+    $scope.domainUrl = Testfield.getDomainUrl();
+    $scope.files = [{path: ""}];
+    
     FilesService.getUsersImages()
     .then(function (data) {
-        data.files.forEach(function (file) {
-            file.webPath = Testfield.getDomainUrl() + file.path;
-        });
         $scope.files = data.files;
     });
 });
