@@ -130,7 +130,7 @@ generalTestfield.service("UserService", function (tfHttp) {
     };
 });
 
-generalTestfield.service("Testfield", function ($window, FileService) {
+generalTestfield.service("Testfield", function ($window, FilesService) {
     var DOMAIN_URL = "http://79.108.123.27:8090/Testfield";
     
     return {
@@ -145,7 +145,7 @@ generalTestfield.service("Testfield", function ($window, FileService) {
         CANVAS: {
             MANUAL: "static/htmlParts/manuals/manualPagePart.html",
             MANUAL_V: "static/htmlParts/manuals/manualView.html",
-            IMAGE_LIST: FileService.HTML_USR_IMG
+            IMAGE_LIST: FilesService.HTML_USR_IMG
         }
     };
 });

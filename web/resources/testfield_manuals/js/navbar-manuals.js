@@ -22,13 +22,13 @@ manualsTestfield.controller("navbarManualsCtrl", function ($scope, $rootScope,
     };
     
     $scope.edit = function () {
-        ManualService.reloadManual($scope);
+        $location.search("visualize", null);
+        $location.search();
     };
     
     $scope.visualize = function () {
-        ManualService.visualizeManual(
-                ManualService.getCurrentManual().id, 
-                $scope);
+        $location.search("visualize", "true");
+        $location.search();
     };
     
     $scope.addPage = function () {
@@ -57,10 +57,12 @@ manualsTestfield.controller("navbarManualsCtrl", function ($scope, $rootScope,
     };
     
     $scope.openImageList = function () {
-        ModalService.openModal({
-            urlContent: FilesService.HTML_USR_IMG,
-            scope: $scope
-        });
+        $location.search("visualize", null);
+        $location.search("id", null);
+        $location.search("files");
+        $location.search();
+        $scope.manualLoaded = false;
+        $scope.editing = false;
     };
 });
 

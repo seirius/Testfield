@@ -16,6 +16,8 @@ manualsTestfield.controller("manualContainerCtrl", function ($scope, $location,
             } else {
                 $scope.canvas = Testfield.CANVAS.MANUAL;
             }
+        } else if ($location.search().files) {
+            $scope.canvas = Testfield.CANVAS.IMAGE_LIST;
         }
     };
     
