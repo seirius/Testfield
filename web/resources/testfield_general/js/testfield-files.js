@@ -28,5 +28,24 @@ filesTestfield.directive("displayImagesList", function (FilesService) {
     };
 });
 
+filesTestfield.service("FileService", function (tfHttp) {
+    return {
+        /**
+         * 
+         * @param {JSON} args {manualId, file}
+         * @returns {Promise}
+         */
+        uploadManualFile: function (args) {
+            return tfHttp.requestFile({
+                url: "/Testfield/request/upload/uploadManualFiles",
+                data: {
+                    manualId: args.manualId
+                },
+                files: args.files
+            });
+        }
+    };
+});
+
 
 

@@ -24,10 +24,10 @@ public class MainController {
 //        return "/static/htmlParts/login/registerPart.html";
 //    }
 //    
-//    @RequestMapping(value = "/part/choseApp", method = RequestMethod.GET)
-//    public String partChoseAPp(ModelMap model) {
-//        return "/static/htmlParts/choseAppPart.html";
-//    }
+    @RequestMapping(value = "/choseApp", method = RequestMethod.GET)
+    public String partChoseAPp() {
+        return "/static/choseApp.html";
+    }
 //    
 //    @RequestMapping(value = "/choseApp", method = RequestMethod.GET)
 //    public String choseAppRequest(ModelMap model) {

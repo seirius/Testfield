@@ -25,6 +25,17 @@
         
     </head>
     <body class="background-congruent">
-        <div ng-include="'part/choseApp'"></div>
+        <div class="container orbitron-font">
+            
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                    <h2>Testfield</h2>
+                </div>
+            </div>
+            
+            <div class="mainLoginContainer" ng-init="loginView = 'part/login'">
+                <div ng-include="loginView"></div>
+            </div>
+        </div>
     </body>
 </html>

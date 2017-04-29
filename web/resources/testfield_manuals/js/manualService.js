@@ -1,4 +1,4 @@
-/* global generalTestfield */
+var generalTestfield = angular.module("generalTestfield");
 
 generalTestfield.service("ManualService", function (tfHttp, $compile, ModalService) {
     var manualService = this;

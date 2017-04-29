@@ -13,23 +13,32 @@
         <script 
             data-main="/Testfield/resources/config" 
             src="resources/js/require/require.js"
-            data-dependency="login-main"
-            data-module="loginModule">
+            data-dependency="chose-app"
+            data-module="choseAppModule">
+                
         </script>
         
     </head>
     <body>
-        <div class="container-fluid">
-            <div class="container orbitron-font">
+        <div class="container orbitron-font">
 
-                <div class="row">
-                    <div class="col-xs-12 text-center">
-                        <h2>Testfield</h2>
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="bloque-aplicacion text-center cursor-pointer" linkable="/Testfield/manuals">
+
+                        <h1>Manuals</h1>
+
                     </div>
                 </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="bloque-aplicacion text-center cursor-pointer">
 
-                <ng-view></ng-view>
+                        <h1>Forum</h1>
+
+                    </div>
+                </div>
             </div>
+
         </div>
     </body>
 </html>

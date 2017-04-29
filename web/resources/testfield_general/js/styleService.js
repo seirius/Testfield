@@ -1,4 +1,4 @@
-/* global generalTestfield */
+var generalTestfield = angular.module("generalTestfield");
 
 generalTestfield.service("StyleService", function (tfHttp, $compile) {
     var styleService = this;
