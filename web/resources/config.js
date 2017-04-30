@@ -14,9 +14,12 @@ require.config({
         ],
         "login-main": "testfield_general/js/login-main",
         "testfield-general": "./testfield_general/js/testfield-general",
-        "testfield-files": "./testfield_general/js/testfield-files",
+        "testfield-files": "./testfield_files/js/testfield-files",
+        "file-service": "./testfield_files/js/fileService",
+        "testfield-files-specific": "./testfield_files/js/testfield-files-specific",
         "chose-app": "./testfield_general/js/chose-app",
         "summernote": "./summernote/summernote",
+        "summernote-util": "./summernote/summernote_util",
         "angular-sanitize": [
             "https://code.angularjs.org/1.2.20/angular-sanitize.min",
             "./js/angularjs/angular-sanitize"
@@ -59,6 +62,9 @@ require.config({
         "summernote": {
             deps: [ "jQuery" ]
         },
+        "summernote-util": {
+            deps: [ "summernote", "manuals-service", "file-service" ]
+        },
         "angular-sanitize": {
             deps: [ "angular" ]
         },
@@ -72,14 +78,21 @@ require.config({
             deps: [ "angular" ]
         },
         "testfield-files": {
-            deps: [ "testfield-general" ]
+            deps: [ "testfield-general", "angular-route" ]
+        },
+        "file-service": {
+            deps: [ "testfield-files" ]
+        },
+        "testfield-files-specific": {
+            deps: [ "file-service", "bootstrap" ]
         },
         "util": {
             deps: [ "jQuery" ]
         },
         "testfield-manuals": {
-            deps: [ "angular-sanitize", "angular-route", "summernote", 
-                "manuals-service", "testfield-files", "util", "bootstrap-slider" ]
+            deps: [ "angular-sanitize", "angular-route", "summernote-util",
+                "util", "bootstrap-slider", "style-service"
+            ]
         },
         "bootstrap": {
             deps: [ "jQuery" ]

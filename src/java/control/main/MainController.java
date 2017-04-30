@@ -28,6 +28,11 @@ public class MainController {
     public String partChoseAPp() {
         return "/static/choseApp.html";
     }
+    
+    @RequestMapping(value = "/files", method = RequestMethod.GET)
+    public String files() {
+        return "/static/files.html";
+    }
 //    
 //    @RequestMapping(value = "/choseApp", method = RequestMethod.GET)
 //    public String choseAppRequest(ModelMap model) {

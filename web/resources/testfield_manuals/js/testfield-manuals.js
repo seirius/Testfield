@@ -4,7 +4,7 @@ var manualsTestfield = angular.module("manualsTestfield", ["generalTestfield",
             "ngSanitize", "filesTestfield", "ngRoute"]);
 manualsTestfield.config(function ($routeProvider) {
     $routeProvider
-    .when("/", {
+    .when("/browse", {
         templateUrl: "static/htmlParts/manuals/browseManuals.html",
         controller: "manualsBrowserController"
     })
@@ -15,18 +15,93 @@ manualsTestfield.config(function ($routeProvider) {
     .when("/manual/:param/edit", {
         templateUrl: "static/htmlParts/manuals/manualPagePart.html",
         controller: "manualPageController"
-    });
+    })
+    .otherwise("/browse");
 });
 
+manualsTestfield.controller("navbarManualsCtrl", 
+["$scope", "$rootScope", "ManualService", "$location", "$routeParams", "$window",
+function ($scope, $rootScope, ManualService, $location, $routeParams, $window) {
+    $scope.manualLoaded = false;
+    
+    var loadEdit = function (id) {
+        $location.path("/manual/" + id + "/edit");
+    };
+    
+    var loadVisualize = function (id) {
+        $location.path("/manual/" + id);
+    };
+    
+    $scope.createManual = function () {
+        ManualService.createManual().then(function (data) {
+            loadEdit(data.manual.id);
+        });
+    };
+    
+    $scope.editing = true;
+    $rootScope.$on("manual-loaded", function () {
+        var viewState = ManualService.getCurrentManual().viewState;
+        $scope.editing = viewState === ManualService.VIEW_STATE.EDIT;
+        $scope.manualLoaded = $scope.editing;
+    });
+    
+    $scope.manualsList = function () {
+        ManualService.openManualsList($scope);
+    };
+    
+    $scope.edit = function () {
+        var id = parseInt($routeParams.param);
+        loadEdit(id);
+    };
+    
+    $scope.visualize = function () {
+        var id = parseInt($routeParams.param);
+        loadVisualize(id);
+    };
+    
+    $scope.addPage = function () {
+        ManualService.addPage(ManualService.getCurrentManual().id).then(function () {
+            ManualService.reloadManual($scope);
+        });
+    };
+    
+    $scope.manualsStyle = function () {
+        ManualService.openManualsStyle($scope);
+    };
+    
+    $scope.getJsonManual = function () {
+        ManualService.getJsonManual(ManualService.getCurrentManual().id)
+        .then(function (data) {
+            var jsonManual = new Blob([data.jsonManual], {
+                type: "application/json"
+            });
+            var jsonUrl = URL.createObjectURL(jsonManual);
+            window.open(jsonUrl);
+        });
+    };
+    
+    $scope.getHtmlManual = function () {
+        ManualService.getHtmlManual(ManualService.getCurrentManual().id);
+    };
+    
+    $scope.goToManuals = function () {
+        $window.location.href = "/Testfield/manuals";
+    };
+    $scope.goToForum = function () {
+        alert("Not implemented yet");
+    };
+    $scope.goToFiles = function () {
+        $window.location.href = "/Testfield/files";
+    };
+}]);
+
 manualsTestfield.controller("manualsBrowserController", 
-["$scope", "$routeParams",
-function ($scope, $routeParams) {
-    console.log($routeParams.param);
+["$scope",
+function ($scope) {
 }]);
 
 manualsTestfield.controller("manualPageController", 
-function ($scope, ManualService, ModalService, $routeParams) {
-            
+function ($scope, ManualService, ModalService, $routeParams, $location) {
     var id = parseInt($routeParams.param);
     ManualService.openManual(id, $scope)
     .then(function (data) {
@@ -71,20 +146,26 @@ function ($scope, ManualService, ModalService, $routeParams) {
             }
         });
     };
+    
+    $scope.$on("manual-loaded", function () {
+        $scope.manual = ManualService.getCurrentManual();
+    });
 
     $scope.pageSelected = function () {
 
     };
 });
 
-manualsTestfield.controller("manualListCtrl", function ($rootScope, $scope, ManualService, $location) {
+manualsTestfield.controller("manualListCtrl", 
+[ "$rootScope", "$scope", "ManualService", "$location",
+function ($rootScope, $scope, ManualService, $location) {
     $scope.manuals = ManualService.getManualsList();
 
     $scope.openManual = function (idManual) {
         $rootScope.$broadcast("close-tf-modal");
-        $location.search("id", idManual);
+        $location.path("/manual/" + idManual + "/edit");
     };
-});
+}]);
 
 manualsTestfield.directive("manualPage", function () {
     return {
@@ -678,84 +759,3 @@ var MANSC = (function () {
     
     return functions;
 })();
-
-manualsTestfield.controller("navbarManualsCtrl", function ($scope, $rootScope, 
-        ManualService, $location) {
-    $scope.manualLoaded = false;
-    
-    $scope.createManual = function () {
-        ManualService.createManual().then(function (data) {
-            $location.search("id", data.manual.id);
-        });
-    };
-    
-    $scope.editing = true;
-    $rootScope.$on("manual-loaded", function () {
-        var viewState = ManualService.getCurrentManual().viewState;
-        $scope.editing = viewState === ManualService.VIEW_STATE.EDIT;
-        $scope.manualLoaded = $scope.editing;
-    });
-    
-    $scope.manualsList = function () {
-        ManualService.openManualsList($scope);
-    };
-    
-    $scope.edit = function () {
-        $location.path("/manual/69/edit");
-    };
-    
-    $scope.visualize = function () {
-        $location.path("/manual/69");
-    };
-    
-    $scope.addPage = function () {
-        ManualService.addPage(ManualService.getCurrentManual().id).then(function () {
-            ManualService.reloadManual($scope);
-        });
-    };
-    
-    $scope.manualsStyle = function () {
-        ManualService.openManualsStyle($scope);
-    };
-    
-    $scope.getJsonManual = function () {
-        ManualService.getJsonManual(ManualService.getCurrentManual().id)
-        .then(function (data) {
-            var jsonManual = new Blob([data.jsonManual], {
-                type: "application/json"
-            });
-            var jsonUrl = URL.createObjectURL(jsonManual);
-            window.open(jsonUrl);
-        });
-    };
-    
-    $scope.getHtmlManual = function () {
-        ManualService.getHtmlManual(ManualService.getCurrentManual().id);
-    };
-    
-    $scope.openImageList = function () {
-//        $location.search("visualize", null);
-//        $location.search("id", null);
-//        $location.search("files");
-//        $location.search();
-//        $scope.manualLoaded = false;
-//        $scope.editing = false;
-    };
-});
-
-manualsTestfield.directive("logout", function (UserService, Testfield) {
-    return {
-        restrict: "A",
-        link: function (scope, element, attrs) {
-            element.click(function () {
-                UserService.logout().then(function (data) {
-                    if (data.logoutOk) {
-                        Testfield.goAfterLogout();
-                    } else {
-                        alert("Coldnt't logout.");
-                    }
-                });
-            });
-        }
-    };
-});

@@ -99,12 +99,10 @@ generalTestfield.service("ManualService", function (tfHttp, $compile, ModalServi
         openManualsList: function ($scope) {
             manualService.loadManuals().then(function (data) {
                 manualService.setManualsList(data.manuals);
-                var $modalList = $("<tf-modal>", {
-                    "url-content": "/Testfield/static/htmlParts/manuals/manualList.html"
+                ModalService.openModal({
+                    urlContent: "static/htmlParts/manuals/manualList.html",
+                    scope: $scope
                 });
-                
-                $modalList = $compile($modalList)($scope);
-                $("body").append($modalList);
             });
         },
         

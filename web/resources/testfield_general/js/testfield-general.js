@@ -130,7 +130,7 @@ generalTestfield.service("UserService", function (tfHttp) {
     };
 });
 
-generalTestfield.service("Testfield", function ($window, FilesService) {
+generalTestfield.service("Testfield", function ($window) {
     var DOMAIN_URL = "http://79.108.123.27:8090/Testfield";
 
     return {
@@ -290,3 +290,21 @@ generalTestfield.directive('head', ['$rootScope', '$compile',
         };
     }
 ]);
+
+
+generalTestfield.directive("logout", function (UserService, Testfield) {
+    return {
+        restrict: "A",
+        link: function (scope, element, attrs) {
+            element.click(function () {
+                UserService.logout().then(function (data) {
+                    if (data.logoutOk) {
+                        Testfield.goAfterLogout();
+                    } else {
+                        alert("Coldnt't logout.");
+                    }
+                });
+            });
+        }
+    };
+});
