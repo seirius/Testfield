@@ -36,7 +36,8 @@
     </head>
     <body class="background-congruent">
         <div ng-include="'static/htmlParts/manuals/navbarManualsPart.html'"></div>
-        <div class="container-fluid principal-container" ng-controller="manualContainerCtrl">
+        <ng-view></ng-view>
+<!--        <div class="container-fluid principal-container" ng-controller="manualContainerCtrl">
                 <div class="container">
                     <div class="row">
                         <div class="col-xs-12 content-container">
@@ -49,7 +50,7 @@
                         </div>
                     </div>
                 </div>
-        </div>
+        </div>-->
         
     </body>
 </html>

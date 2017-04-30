@@ -1,36 +1,33 @@
 /* global UTIL, summer_util, URL */
 
-var manualsTestfield = angular.module("manualsTestfield", ["generalTestfield", "ngSanitize", "filesTestfield"]);
-manualsTestfield.config(function ($locationProvider) {
-    $locationProvider.html5Mode(true);
+var manualsTestfield = angular.module("manualsTestfield", ["generalTestfield", 
+            "ngSanitize", "filesTestfield", "ngRoute"]);
+manualsTestfield.config(function ($routeProvider) {
+    $routeProvider
+    .when("/", {
+        templateUrl: "static/htmlParts/manuals/browseManuals.html",
+        controller: "manualsBrowserController"
+    })
+    .when("/manual/:param", {
+        templateUrl: "static/htmlParts/manuals/manualView.html",
+        controller: "manualViewController"
+    })
+    .when("/manual/:param/edit", {
+        templateUrl: "static/htmlParts/manuals/manualPagePart.html",
+        controller: "manualPageController"
+    });
 });
 
-manualsTestfield.controller("manualContainerCtrl", function ($scope, $location, 
-            Testfield) {
-    var loadManualByGet = function () {
-        var id = parseInt($location.search().id);
-        var visualize = $location.search().visualize;
-        if (!isNaN(id)) {
-            if (visualize === "true") {
-                $scope.canvas = Testfield.CANVAS.MANUAL_V;
-            } else {
-                $scope.canvas = Testfield.CANVAS.MANUAL;
-            }
-        } else if ($location.search().files) {
-            $scope.canvas = Testfield.CANVAS.IMAGE_LIST;
-        }
-    };
-    
-    $scope.$watch(function () {
-        return $location.search();
-    }, loadManualByGet, true);
-    $location.search();
-});
+manualsTestfield.controller("manualsBrowserController", 
+["$scope", "$routeParams",
+function ($scope, $routeParams) {
+    console.log($routeParams.param);
+}]);
 
-manualsTestfield.controller("manualPageCtrl", 
-        function ($scope, ManualService, ModalService, $location) {
+manualsTestfield.controller("manualPageController", 
+function ($scope, ManualService, ModalService, $routeParams) {
             
-    var id = parseInt($location.search().id);
+    var id = parseInt($routeParams.param);
     ManualService.openManual(id, $scope)
     .then(function (data) {
         $scope.manual = data.manual;
@@ -350,8 +347,9 @@ manualsTestfield
     });
 });
 
-manualsTestfield.controller("manualView", function ($scope, ManualService, $sce, $location) {
-    var id = parseInt($location.search().id);
+manualsTestfield.controller("manualViewController", 
+function ($scope, ManualService, $sce, $routeParams) {
+    var id = parseInt($routeParams.param);
     ManualService.visualizeManual(id, $scope)
     .then(function (data) {
         $scope.manual = data.manual;
@@ -703,13 +701,11 @@ manualsTestfield.controller("navbarManualsCtrl", function ($scope, $rootScope,
     };
     
     $scope.edit = function () {
-        $location.search("visualize", null);
-        $location.search();
+        $location.path("/manual/69/edit");
     };
     
     $scope.visualize = function () {
-        $location.search("visualize", "true");
-        $location.search();
+        $location.path("/manual/69");
     };
     
     $scope.addPage = function () {
@@ -738,12 +734,12 @@ manualsTestfield.controller("navbarManualsCtrl", function ($scope, $rootScope,
     };
     
     $scope.openImageList = function () {
-        $location.search("visualize", null);
-        $location.search("id", null);
-        $location.search("files");
-        $location.search();
-        $scope.manualLoaded = false;
-        $scope.editing = false;
+//        $location.search("visualize", null);
+//        $location.search("id", null);
+//        $location.search("files");
+//        $location.search();
+//        $scope.manualLoaded = false;
+//        $scope.editing = false;
     };
 });
 
