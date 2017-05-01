@@ -1,0 +1,21 @@
+/* 
+    Created on : 01-may-2017, 0:27:54
+    Author     : Andriy
+*/
+
+.files-block-container {
+    height: 300px;
+    overflow: auto;
+}
+
+.file-item {
+    width: 125px;
+    padding: 1px;
+    transition: all .2s ease-in-out;
+}
+
+.file-item:hover {
+    transform: scale(1.05);
+    outline: dodgerblue;
+}
+

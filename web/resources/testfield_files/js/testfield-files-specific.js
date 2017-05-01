@@ -3,7 +3,8 @@ define(function () {
     filesTestfield.config(function ($routeProvider) {
         $routeProvider.when("/browse", {
             templateUrl: "static/htmlParts/files/imagesList.html",
-            controller: "imageListController"
+            controller: "imageListController",
+            css: [ "resources/testfield_files/style/file-list.css" ]
         }).otherwise("/browse");
     });
     

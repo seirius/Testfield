@@ -38,6 +38,9 @@ require.config({
         ],
         "bootstrap-slider": [
             "./bootstrap/slider/bootstrap-slider"
+        ],
+        "masonry": [
+            "./js/masonry/masonry"
         ]
     },
     shim: {
@@ -77,9 +80,6 @@ require.config({
         "ui-bootstrap": {
             deps: [ "angular" ]
         },
-        "testfield-files": {
-            deps: [ "testfield-general", "angular-route" ]
-        },
         "file-service": {
             deps: [ "testfield-files" ]
         },
@@ -99,6 +99,9 @@ require.config({
         },
         "bootstrap-slider": {
             deps: [ "bootstrap" ]
+        },
+        "testfield-files": {
+            deps: [ "testfield-general", "angular-route" ]
         }
     }
 });
