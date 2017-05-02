@@ -81,7 +81,7 @@ require.config({
             deps: [ "angular" ]
         },
         "file-service": {
-            deps: [ "testfield-files" ]
+            deps: [ "testfield-files", "masonry" ]
         },
         "testfield-files-specific": {
             deps: [ "file-service", "bootstrap" ]

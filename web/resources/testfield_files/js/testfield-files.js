@@ -12,6 +12,15 @@ define(["js/masonry/masonry"], function (Masonry) {
         .then(function (data) {
             $scope.files = data.files;
         });
+        
+        $scope.nons = [
+            {a: "a"},
+            {a: "b"},
+            {a: "a"},
+            {a: "a"},
+            {a: "b"},
+            {a: "a"}
+        ];
     }]);
 
     filesTestfield.directive("masonrySet", 
@@ -19,10 +28,11 @@ define(["js/masonry/masonry"], function (Masonry) {
         return {
             restrict: "A",
             link: function (scope, element, attrs) {
-                new Masonry(element[0], {
-                    itemSelector: ".file-item",
-                    columnWidth: ".file-item"
-                });
+//                setTimeout(function () {
+//                    new Masonry(element.parent()[0], {
+//                        itemSelector: ".file-item"
+//                    });
+//                }, 1000);
             }
         };
     });
