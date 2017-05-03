@@ -35,6 +35,10 @@ public class Security {
     }
     
     public static String isSessionOpened(HttpSession session) throws ServiceException {
+        if (session == null) {
+            throw new ServiceException(ErrorMsgs.NO_SESSION);
+        }
+        
         String sessionUser = null;
         try {
             sessionUser = (String) session.getAttribute("user");
@@ -45,6 +49,7 @@ public class Security {
             throw e;
         } catch(Exception e) {
             System.err.println(e.getMessage());
+            throw new ServiceException("Unexpected error ocurred, try agian later.");
         }
         
         return sessionUser;

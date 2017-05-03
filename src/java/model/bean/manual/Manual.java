@@ -26,6 +26,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import model.bean.tag.Tag;
 import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
 import util.BeanValidator;
 import util.enums.ManualState;
 import util.enums.ManualVisibility;
@@ -174,6 +175,16 @@ public class Manual implements Serializable, WebBean {
     }
     
     @Transient
+    public boolean isVisible() {
+        return getManualVisibility() == ManualVisibility.VISIBLE;
+    }
+    
+    @Transient 
+    public ManualVisibility getManualVisibility() {
+        return ManualVisibility.toEnum(visibility);
+    }
+    
+    @Transient
     public void setCurrentState(ManualState currentState) {
         this.currentState = currentState.getValue();
     }
@@ -206,7 +217,7 @@ public class Manual implements Serializable, WebBean {
                     }
                 }
             }
-        } catch(Exception e) {
+        } catch(HibernateException e) {
             throw new BeanException("Error preparing the manual for web.", e);
         }
         

@@ -6,6 +6,7 @@
 
 package service;
 
+import javax.servlet.http.HttpSession;
 import util.exceptions.BeanException;
 import util.ErrorMsgs;
 import util.exceptions.ServiceException;
@@ -19,6 +20,7 @@ public class Service {
     public static boolean DEBUG = true;
     
     protected final ServiceManager MANAGER;
+    protected HttpSession session;
     
     public Service() {
         this.MANAGER = new ServiceManager();
@@ -47,4 +49,12 @@ public class Service {
         return exception;
     }
 
+    public HttpSession getSession() {
+        return session;
+    }
+
+    public void setSession(HttpSession session) {
+        this.session = session;
+    }
+    
 }

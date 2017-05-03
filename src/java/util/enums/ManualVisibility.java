@@ -28,16 +28,12 @@ public enum ManualVisibility {
         return text;
     }
     
-    public static ManualVisibility parse(int value) {
-        switch(value) {
-            case 0:
-                return VISIBLE;
-            
-            case 1:
-                return HIDDEN;
-                
-            default:
-                return null;
+    public static ManualVisibility toEnum(int value) {
+        for (ManualVisibility vis: values()) {
+            if (vis.getValue() == value) {
+                return vis;
+            }
         }
+        return null;
     }
 }

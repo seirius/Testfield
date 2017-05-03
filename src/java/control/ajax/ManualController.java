@@ -57,8 +57,9 @@ public class ManualController extends MyController {
     public @ResponseBody AjaxResponse loadManual(HttpSession session, @RequestBody Manual manual) {
         AjaxResponse ajaxResponse = new AjaxResponse();
         try {
-            Security.isSessionOpened(session);
-            ServiceReturn serviceReturn = new ManualService().loadManual(manual.getId());
+            ManualService manualService = new ManualService();
+            ServiceReturn serviceReturn = manualService
+                    .loadManual(manual.getId());
             ajaxResponse.digest(serviceReturn);
         } catch(ServiceException e) {
             ajaxResponse.setError(e);

@@ -83,6 +83,9 @@ public class ManualService extends Service {
             MANAGER.beginTransaction();
             
             Manual manual = MANAGER.getManualDAO().getManual(idManual);
+            if (!manual.isVisible()) {
+                Security.isSessionOpened(session);
+            }
             result.addItem("manual", manual, true);
             MANAGER.commit();
         } catch(Exception e) {
