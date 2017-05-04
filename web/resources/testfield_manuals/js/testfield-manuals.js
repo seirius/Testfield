@@ -40,9 +40,11 @@ function ($scope, $rootScope, ManualService, $location, $routeParams, $window) {
     
     $scope.editing = true;
     $rootScope.$on("manual-loaded", function () {
-        var viewState = ManualService.getCurrentManual().viewState;
+        var manual = ManualService.getCurrentManual();
+        var viewState = manual.viewState;
         $scope.editing = viewState === ManualService.VIEW_STATE.EDIT;
-        $scope.manualLoaded = $scope.editing;
+        $scope.manualLoaded = true;
+        $scope.manual = manual;
     });
     
     $scope.manualsList = function () {
@@ -67,6 +69,11 @@ function ($scope, $rootScope, ManualService, $location, $routeParams, $window) {
     
     $scope.manualsStyle = function () {
         ManualService.openManualsStyle($scope);
+    };
+    
+    $scope.openOptions = function () {
+        console.log($scope.manual);
+        ManualService.openManualOptions($scope);
     };
     
     $scope.getJsonManual = function () {
@@ -759,3 +766,8 @@ var MANSC = (function () {
     
     return functions;
 })();
+
+manualsTestfield.controller("manualOptionsController", 
+["$scope",
+function ($scope) {
+}]);

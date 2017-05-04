@@ -41,7 +41,7 @@ public class ManualDAO extends DAO {
             manual = new Manual();
             manual.setUserNick(userNick);
             manual.setTitle(title);
-            manual.setVisibility(visibilty);
+            manual.setManualsVisibility(visibilty);
             manual.setCurrentState(state);
             
             session.save(manual);

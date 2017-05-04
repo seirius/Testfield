@@ -106,6 +106,13 @@ generalTestfield.service("ManualService", function (tfHttp, $compile, ModalServi
             });
         },
         
+        openManualOptions: function ($scope) {
+            ModalService.openModal({
+                urlContent: "static/htmlParts/manuals/manualOptions.html",
+                scope: $scope
+            });
+        },
+        
         openManualsStyle: function ($scope) {
             ModalService.openModal({
                 urlContent: "/Testfield/static/htmlParts/manuals/manualStyle.html",
@@ -167,6 +174,24 @@ generalTestfield.service("ManualService", function (tfHttp, $compile, ModalServi
                     idManual: currentManual.id,
                     title: args.title
                 }
+            });
+            
+            return request.then(function (data) {
+                return new Promise(function (resolve) {
+                    manualService.setCurrentManual(data.manual);
+                    resolve(data);
+                });
+            });
+        },
+        
+        updateManualsVisibility: function (args) {
+            args = $.extend({
+                idManual: currentManual.idManual,
+                visibility: 1
+            }, args);
+            var request = tfHttp.requestParam({
+                url: "/Testfield/request/manual/updateVisibility",
+                data: args
             });
             
             return request.then(function (data) {

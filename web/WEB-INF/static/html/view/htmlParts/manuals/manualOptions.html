@@ -1,0 +1,33 @@
+<div 
+    class="row" 
+    ng-controller="manualOptionsController">
+    <div class="col-xs-12">
+        
+        <div class="row">
+            <div class="col-xs-6">
+                <label>Manual's visibility </label>
+            </div>
+            <div class="col-xs-6 text-center">
+                <div class="btn-group" role="toolbar">
+                    <div 
+                        class="btn" 
+                        ng-class="{
+                            'btn-success': manual.visibility === 0,
+                            'btn-default': manual.visibility !== 0
+                        }">
+                        Public
+                    </div>
+                    <div 
+                        class="btn" 
+                        ng-class="{
+                            'btn-success': manual.visibility === 1,
+                            'btn-default': manual.visibility !== 1
+                        }">
+                        Private
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>

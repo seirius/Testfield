@@ -75,4 +75,10 @@ public class Security {
         return gotPermission;
     }
     
+    public static void permissionModManualEx(Manual manual, String user) throws ServiceException {
+        if (!user.equals(manual.getUserNick())) {
+            throw new ServiceException(ErrorMsgs.NO_PERMISSION);
+        }
+    }
+    
 }

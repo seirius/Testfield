@@ -21,7 +21,7 @@ require.config({
         "summernote": "./summernote/summernote",
         "summernote-util": "./summernote/summernote_util",
         "angular-sanitize": [
-            "https://code.angularjs.org/1.2.20/angular-sanitize.min",
+//            "https://code.angularjs.org/1.2.20/angular-sanitize.min",
             "./js/angularjs/angular-sanitize"
         ],
         "testfield-manuals": "./testfield_manuals/js/testfield-manuals",

@@ -138,7 +138,7 @@ public class Manual implements Serializable, WebBean {
     }
     
     @Transient
-    public void setVisibility(ManualVisibility visibility) {
+    public void setManualsVisibility(ManualVisibility visibility) {
         this.visibility = visibility.getValue();
     }
 

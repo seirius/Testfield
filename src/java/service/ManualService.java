@@ -110,7 +110,7 @@ public class ManualService extends Service {
                 manual.setPages(null);
                 manual.setTags(null);
             });
-        } catch(Exception e) {
+        } catch(DAOException e) {
             MANAGER.rollback(); 
             throw treatException(e);
         } finally {
@@ -315,7 +315,7 @@ public class ManualService extends Service {
             result.addItem("widthTypes", MANAGER.getWidthTypeDAO().getWidthTypes());
             
             MANAGER.commit();
-        } catch(Exception e) {
+        } catch(DAOException e) {
             throw treatException(e);
         } finally {
             MANAGER.close();
@@ -596,6 +596,27 @@ public class ManualService extends Service {
             
             result.addItem("jsonManual", sJsonManual);
         } catch (DAOException | ServiceException e) {
+            throw treatException(e);
+        }
+        return result;
+    }
+    
+    public ServiceReturn updateManualsVisibility(int manualId, 
+            ManualVisibility visibility) throws Exception {
+        ServiceReturn result = new ServiceReturn();
+        try {
+            MANAGER.beginTransaction();
+            
+            String user = Security.isSessionOpened(session);
+            ManualDAO manualDao = (ManualDAO) MANAGER.getDAO(DAOList.MANUAL);
+            Manual manual = manualDao.getManual(manualId);
+            Security.permissionModManualEx(manual, user);
+            manual.setManualsVisibility(visibility);
+            manualDao.update(manual);
+            
+            MANAGER.commit();
+            result.addItem("manual", manual, true);
+        } catch (Exception e) {
             throw treatException(e);
         }
         return result;

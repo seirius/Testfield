@@ -17,6 +17,13 @@
 .overflow-auto {overflow: auto;}
 .cursor-pointer {cursor: pointer;}
 .display-block {display: block;}
+.hover-dodgerblue:hover {
+    color: dodgerblue;
+    border: 1px solid dodgerblue;
+}
+.prepare-fixed-navbar {
+    padding-top: 70px;
+}
 html {
   height: 100%;
 }

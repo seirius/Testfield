@@ -1,9 +1,15 @@
+body {
+    padding-bottom: 50px;
+}
+
+
 /*NAVBAR*/
 /*-------------------------------------------*/
 .navbar-testfield {
     background-color: #dbdbdb; /*#5A159A;*/
     border-radius: 0px;
 }
+
 
 .navbar-testfield .navbar-brand {
     color: #B97200;

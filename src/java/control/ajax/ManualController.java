@@ -22,6 +22,7 @@ import util.AjaxResponse;
 import util.Security;
 import util.ServiceReturn;
 import util.enums.DeleteOptions;
+import util.enums.ManualVisibility;
 import util.enums.MoveOptions;
 import util.exceptions.ServiceException;
 
@@ -58,6 +59,7 @@ public class ManualController extends MyController {
         AjaxResponse ajaxResponse = new AjaxResponse();
         try {
             ManualService manualService = new ManualService();
+            manualService.setSession(session);
             ServiceReturn serviceReturn = manualService
                     .loadManual(manual.getId());
             ajaxResponse.digest(serviceReturn);
@@ -294,6 +296,23 @@ public class ManualController extends MyController {
             String userNick = Security.isSessionOpened(session);
             ServiceReturn serviceReturn = new ManualService()
                     .createJsonFileFromManual(userNick, idManual);
+            ajaxResponse.digest(serviceReturn);
+        } catch(ServiceException e) {
+            ajaxResponse.setError(e);
+        } catch(Exception e) {
+            ajaxResponse.setErrorMsg(e);
+        }
+        return ajaxResponse; 
+    }
+    
+    @RequestMapping(value = "/manual/updateVisibility", method = RequestMethod.POST)
+    public @ResponseBody AjaxResponse updateVisibilty(HttpSession session, 
+            @RequestParam int idManual, @RequestParam int visibility) {
+        AjaxResponse ajaxResponse = new AjaxResponse();
+        try {
+            ManualVisibility manualsVisibility = ManualVisibility.toEnum(visibility);
+            ServiceReturn serviceReturn = new ManualService()
+                    .updateManualsVisibility(idManual, manualsVisibility);
             ajaxResponse.digest(serviceReturn);
         } catch(ServiceException e) {
             ajaxResponse.setError(e);

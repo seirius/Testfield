@@ -1,4 +1,4 @@
-<nav class="navbar navbar-testfield" ng-controller='navbarManualsCtrl'>
+<nav class="navbar navbar-testfield navbar-fixed-top" ng-controller='navbarManualsCtrl'>
     <div class="container-fluid">
 
         <div class="navbar-header">
@@ -34,12 +34,45 @@
                     <ul class="dropdown-menu">
                         <li><a ng-click="createManual()">Create</a></li>
                         <li><a ng-click="manualsList()">Open</a></li>
-                        <li><a ng-show="!editing" ng-click="edit()">Edit</a></li>
+                        <li><a ng-show="!editing && manualLoaded" ng-click="edit()">Edit</a></li>
                         <li><a ng-show="editing && manualLoaded" ng-click="visualize()">Visualize</a></li>
-                        <li><a ng-show="manualLoaded" ng-click="addPage()">Add page</a></li>
-                        <li><a ng-show="manualLoaded" ng-click="manualsStyle()">Set style</a></li>
-                        <li><a ng-show="manualLoaded" ng-click="getJsonManual()">Get Manual as JSON</a></li>
-                        <li><a ng-show="manualLoaded" ng-click="getHtmlManual()">Get Manual as HTML</a></li>
+                    </ul>
+
+                </li>
+            </ul>
+
+            <ul 
+                class="nav navbar-nav"
+                ng-show="manualLoaded">
+                <li>
+
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                        Options 
+                        <span class="caret"></span>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a ng-show="editing" ng-click="addPage()">Add page</a></li>
+                        <li><a ng-click="manualsStyle()">Set style</a></li>
+                        <li><a ng-click="openOptions()">Options</a></li>
+                    </ul>
+
+                </li>
+            </ul>
+
+            <ul 
+                class="nav navbar-nav"
+                ng-show="manualLoaded">
+                <li>
+
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                        Export 
+                        <span class="caret"></span>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a ng-click="getJsonManual()">Get Manual as JSON</a></li>
+                        <li><a ng-click="getHtmlManual()">Get Manual as HTML</a></li>
                     </ul>
 
                 </li>
