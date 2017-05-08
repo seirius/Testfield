@@ -768,6 +768,20 @@ var MANSC = (function () {
 })();
 
 manualsTestfield.controller("manualOptionsController", 
-["$scope",
-function ($scope) {
+["$scope", "ManualService",
+function ($scope, ManualService) {
+
+    $scope.isPublic = ManualService.isPublic;
+    $scope.isPrivate = ManualService.isPrivate;
+
+    $scope.changeVisibility = function () {
+        var visibility;
+        if (ManualService.isPublic($scope.manual)) {
+            visibility = ManualService.VISIBILITY.PRIVATE; 
+        } else {
+            visibility = ManualService.VISIBILITY.PUBLIC; 
+        }
+        ManualService.setCurrentsVisibility(visibility);
+    };
+    
 }]);

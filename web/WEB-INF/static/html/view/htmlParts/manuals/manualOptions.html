@@ -12,17 +12,19 @@
                     <div 
                         class="btn" 
                         ng-class="{
-                            'btn-success': manual.visibility === 0,
-                            'btn-default': manual.visibility !== 0
-                        }">
+                            'btn-success': isPublic(),
+                            'btn-default': !isPublic()
+                        }"
+                        ng-click="changeVisibility()">
                         Public
                     </div>
                     <div 
                         class="btn" 
                         ng-class="{
-                            'btn-success': manual.visibility === 1,
-                            'btn-default': manual.visibility !== 1
-                        }">
+                            'btn-success': isPrivate(),
+                            'btn-default': !isPrivate()
+                        }"
+                        ng-click="changeVisibility()">
                         Private
                     </div>
                 </div>

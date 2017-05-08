@@ -73,6 +73,10 @@ generalTestfield.service("ManualService", function (tfHttp, $compile, ModalServi
     };
     
     manualService = {
+        VISIBILITY: {
+            PUBLIC: 0,
+            PRIVATE: 1
+        },
         VIEW_STATE: VIEW_STATE,
         MOVE_OPTIONS: MOVE_OPTIONS,
         createManual: function () {
@@ -468,6 +472,30 @@ generalTestfield.service("ManualService", function (tfHttp, $compile, ModalServi
                     resolve(data);
                 });
             });
+        },
+        
+        isPublic: function (manual) {
+            var auxManual;
+            if (typeof manual === "undefined") {
+                auxManual = currentManual;
+            } else {
+                auxManual = manual;
+            }
+            return auxManual.visibility === manualService.VISIBILITY.PUBLIC;
+        },
+        
+        isPrivate: function (manual) {
+            var auxManual;
+            if (typeof manual === "undefined") {
+                auxManual = currentManual;
+            } else {
+                auxManual = manual;
+            }
+            return auxManual.visibility === manualService.VISIBILITY.PRIVATE;
+        },
+        
+        setCurrentsVisibility: function (visibility) {
+            currentManual.visibility = visibility;
         }
     };
     
