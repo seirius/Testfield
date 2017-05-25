@@ -10,11 +10,14 @@ generalTestfield.service("tfHttp", function ($http) {
                     var data = response.data;
                     if (data.errorCode === 0) {
                         resolve(data.data);
-                    } else {
+                    } else if (typeof data.errorCode !== "undefined" 
+                            && data.errorCode !== 0) {
                         if (showError) {
                             alert(data.errorMsg);
                         }
                         reject(data);
+                    } else {
+                        resolve(response);
                     }
 
                 }
@@ -22,7 +25,7 @@ generalTestfield.service("tfHttp", function ($http) {
                 showError = true;
             });
         }, function (response) {
-            alert(response.responseText);
+            alert(response);
         });
     };
 
@@ -179,35 +182,42 @@ generalTestfield.directive("linkable", function ($window) {
 generalTestfield.service("ModalService", function ($templateRequest, $compile) {
     return {
         openModal: function (args) {
-            var callbacks = args.callbacks;
-            callbacks = $.extend({
-                open: function () {},
-                close: function () {},
-                buttonClose: function () {}
-            }, callbacks);
+            return new Promise(function (resolve, reject) {
+                var callbacks = args.callbacks;
+                callbacks = $.extend({
+                    open: function () {},
+                    close: function () {},
+                    buttonClose: function () {}
+                }, callbacks);
 
-            $templateRequest("/Testfield/static/htmlParts/util/modalPart.html")
-            .then(function(modalHtml) {
-                var $modal = $(modalHtml);
-                $("body").append($modal);
+                $templateRequest("/Testfield/static/htmlParts/util/modalPart.html")
+                .then(function (modalHtml) {
+                    var $modal = $(modalHtml);
+                    $("body").append($modal);
 
-                $modal.on("hidden.bs.modal", function () {
-                    callbacks.close();
-                    $modal.remove();
+                    $modal.on("hidden.bs.modal", function () {
+                        callbacks.close();
+                        $modal.remove();
+                    });
+
+                    args.scope.$on("close-tf-modal", function () {
+                        $modal.modal("hide");
+                    });
+
+                    $modal.find("button[data-dismiss='modal']")
+                            .click(callbacks.buttonClose);
+
+                    if (typeof args.urlContent === "string") {
+                        $templateRequest(args.urlContent).then(function (content) {
+                            var $content = $compile(content)(args.scope);
+                            $modal.find(".modal-body").append($content);
+                            $modal.modal("show");
+                            resolve($modal);
+                        });
+                    } else {
+                        resolve($modal);
+                    }
                 });
-
-                $templateRequest(args.urlContent).then(function (content) {
-                    var $content = $compile(content)(args.scope);
-                    $modal.find(".modal-body").append($content);
-                    $modal.modal("show");
-                });
-
-                args.scope.$on("close-tf-modal", function () {
-                    $modal.modal("hide");
-                });
-
-                $modal.find("button[data-dismiss='modal']")
-                        .click(callbacks.buttonClose);
             });
         }
     };

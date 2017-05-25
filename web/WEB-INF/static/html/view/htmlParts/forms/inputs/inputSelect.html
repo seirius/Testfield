@@ -1,0 +1,11 @@
+<div class="form-group">
+    <label>{{input.label}}</label>
+    <select 
+        class="form-control"
+        ng-model="input.value"
+        ng-change="hola()">
+        <option ng-repeat="value in input.values" ng-value="value">
+            {{input.texts[$index]}}
+        </option>
+    </select>
+</div>

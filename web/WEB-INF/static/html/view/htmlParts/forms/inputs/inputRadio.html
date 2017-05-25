@@ -1,0 +1,11 @@
+<label>{{input.label}}</label>
+<label 
+    class="radio-inline"
+    ng-repeat="value in input.values">
+    <input 
+        type="radio" 
+        name="{{input.name}}" 
+        ng-value="value"
+        ng-model="input.values[$index]">
+    {{input.texts[$index]}}
+</label>

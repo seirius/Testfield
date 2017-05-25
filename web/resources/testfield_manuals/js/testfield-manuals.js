@@ -21,7 +21,9 @@ manualsTestfield.config(function ($routeProvider) {
 
 manualsTestfield.controller("navbarManualsCtrl", 
 ["$scope", "$rootScope", "ManualService", "$location", "$routeParams", "$window",
-function ($scope, $rootScope, ManualService, $location, $routeParams, $window) {
+"FormService", "ModalService",
+function ($scope, $rootScope, ManualService, $location, $routeParams, $window,
+    FormService, ModalService) {
     $scope.manualLoaded = false;
     
     var loadEdit = function (id) {
@@ -99,6 +101,18 @@ function ($scope, $rootScope, ManualService, $location, $routeParams, $window) {
     };
     $scope.goToFiles = function () {
         $window.location.href = "/Testfield/files";
+    };
+    
+    $scope.requestForm = function () {
+        FormService.requestForm({
+            form: "testForm"
+        }).then(function (data) {
+            $scope.form = data.form;
+            ModalService.openModal({
+                urlContent: "/Testfield/static/htmlParts/forms/formBuilder.html",
+                scope: $scope
+            });
+        });
     };
 }]);
 
@@ -773,7 +787,7 @@ function ($scope, ManualService) {
 
     $scope.isPublic = ManualService.isPublic;
     $scope.isPrivate = ManualService.isPrivate;
-
+    
     $scope.changeVisibility = function () {
         var visibility;
         if (ManualService.isPublic($scope.manual)) {

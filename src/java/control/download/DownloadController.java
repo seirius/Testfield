@@ -25,7 +25,7 @@ import util.ServiceReturn;
 @Controller
 public class DownloadController {
     
-    @RequestMapping(value = "/manual", method = RequestMethod.GET)
+    @RequestMapping(value = "/manual", method = RequestMethod.POST)
     public void requestManualsDownload(@RequestParam int id, ModelMap model, 
             HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -64,7 +64,7 @@ public class DownloadController {
         }
     }
     
-    @RequestMapping(value = "/prepare-manual", method = RequestMethod.GET)
+    @RequestMapping(value = "/prepare-manual", method = RequestMethod.POST)
     public String prepareManual(@RequestParam int id, ModelMap model, 
             HttpServletRequest request) {
         try {

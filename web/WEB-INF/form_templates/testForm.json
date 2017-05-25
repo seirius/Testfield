@@ -1,0 +1,87 @@
+{
+    "inputs": [
+        {
+            "label": "Input password",
+            "name": "test1",
+            "value": "asdfasfasf",
+            "type": "text",
+            "typeName": "password" 
+        },
+        {
+            "label": "Input text",
+            "name": "test2",
+            "value": "hola",
+            "type": "text",
+            "typeName": "text"
+        },
+        {
+            "label": "Input date",
+            "name": "test3",
+            "value": "new Date(23, 06, 1991)",
+            "type": "text",
+            "typeName": "text"
+        },
+        {
+            "label": "Selector",
+            "name": "select",
+            "type": "select",
+            "value": "hola",
+            "values": [
+                "hola", "adios", "Hello world"
+            ],
+            "texts": [
+                "hola1", "adios1", "Hellow world1"
+            ]
+        },
+        {
+            "label": "Textarea",
+            "name": "textarea",
+            "type": "textarea",
+            "value": "Hola amigosss",
+            "rows": "10"
+        },
+        {
+            "label": "Best moba",
+            "name": "mobas",
+            "type": "radio",
+            "values": [
+                "Dota", "LoL", "HoN"
+            ],
+            "texts": [
+                "hola1", "adios1", "Hellow world1"
+            ]
+        },
+        {
+            "label": "Checkbox",
+            "name": "checkbox",
+            "type": "checkbox",
+            "value": true
+        },
+        {
+            "label": "Best mobas",
+            "names": [
+                "lol", "hon", "dota"
+            ],
+            "type": "checkboxGroup",
+            "values": [
+                true, false, false
+            ],
+            "texts": [
+                "LoL", "HoN", "D"
+            ]
+        }
+    ],
+    "buttons": [
+        {
+            "type": "submit",
+            "class": "btn-primary",
+            "text": "Submit"
+        },
+        {
+            "type": "button",
+            "class": "btn-default",
+            "text": "cancel",
+            "click": "cancelForm"
+        }
+    ]
+}

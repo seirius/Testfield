@@ -41,6 +41,9 @@ require.config({
         ],
         "masonry": [
             "./js/masonry/masonry"
+        ],
+        "form-service": [
+            "./testfield_general/js/forms/formService"
         ]
     },
     shim: {
@@ -89,9 +92,14 @@ require.config({
         "util": {
             deps: [ "jQuery" ]
         },
+        "form-service": {
+            deps: [
+                "angular", "testfield-general"
+            ]
+        },
         "testfield-manuals": {
             deps: [ "angular-sanitize", "angular-route", "summernote-util",
-                "util", "bootstrap-slider", "style-service"
+                "util", "bootstrap-slider", "style-service", "form-service"
             ]
         },
         "bootstrap": {

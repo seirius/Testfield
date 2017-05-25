@@ -1,0 +1,12 @@
+<label>{{input.label}}</label>
+<div 
+    ng-repeat="value in input.values track by $index"
+    class="checkbox">
+    <label>
+        <input 
+            type="checkbox"
+            ng-model="form.inputs[$parent.$index].values[$index]"
+            >
+        {{input.texts[$index]}}
+    </label>
+</div>

@@ -1,0 +1,16 @@
+<div ng-controller="formController">
+    <form >
+        <div 
+            class="row" 
+            ng-repeat="input in form.inputs">
+            <div class="col-xs-12">
+                <ng-include src="getInputHtml(input)"></ng-include>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <ng-include src="'static/htmlParts/forms/buttons/buttons.html'"></ng-include>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,11 @@
+<div ng-class="{
+    'btn-group': form.buttons.length > 0
+}" class="pull-right">
+    <button 
+        ng-repeat="button in form.buttons" 
+        type="{{button.type}}" 
+        class="btn {{button.class}}"
+        ng-click="$scope[button.click]()">
+        {{button.text}}
+    </button>
+</div>
