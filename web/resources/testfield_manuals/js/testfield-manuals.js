@@ -110,10 +110,26 @@ function ($scope, $rootScope, ManualService, $location, $routeParams, $window,
             $scope.form = data.form;
             ModalService.openModal({
                 urlContent: "/Testfield/static/htmlParts/forms/formBuilder.html",
-                scope: $scope
+                scope: $scope,
+                callbacks: {
+                    close: function () {
+                        $scope.form = {};
+                        $scope.formSubmitCallback = undefined;
+                    }
+                }
+            }).then(function ($modal) {
+                $scope.formSubmitCallback = function () {
+                    console.log("submitted");
+                    $modal.modal("hide");
+                };
+                $scope.cancelForm = function () {
+                    console.log("cancelled");
+                    $modal.modal("hide");
+                };
             });
         });
     };
+    
 }]);
 
 manualsTestfield.controller("manualsBrowserController", 

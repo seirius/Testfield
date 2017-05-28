@@ -1,5 +1,8 @@
 <div ng-controller="formController">
-    <form >
+    <form 
+        name="{{form.name}}" 
+        novalidate 
+        ng-submit="submit()">
         <div 
             class="row" 
             ng-repeat="input in form.inputs">

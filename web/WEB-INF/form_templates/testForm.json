@@ -1,11 +1,12 @@
 {
+    "name": "testForm",
     "inputs": [
         {
             "label": "Input password",
             "name": "test1",
-            "value": "asdfasfasf",
+            "value": "",
             "type": "text",
-            "typeName": "password" 
+            "typeName": "password"
         },
         {
             "label": "Input text",
@@ -25,12 +26,12 @@
             "label": "Selector",
             "name": "select",
             "type": "select",
-            "value": "hola",
+            "value": "",
             "values": [
-                "hola", "adios", "Hello world"
+                "", "hola", "adios", "Hello world"
             ],
             "texts": [
-                "hola1", "adios1", "Hellow world1"
+                "Select", "hola1", "adios1", "Hellow world1"
             ]
         },
         {
@@ -55,7 +56,8 @@
             "label": "Checkbox",
             "name": "checkbox",
             "type": "checkbox",
-            "value": true
+            "value": true,
+            "required": true
         },
         {
             "label": "Best mobas",
@@ -75,7 +77,8 @@
         {
             "type": "submit",
             "class": "btn-primary",
-            "text": "Submit"
+            "text": "Submit",
+            "click": "hola"
         },
         {
             "type": "button",
@@ -83,5 +86,21 @@
             "text": "cancel",
             "click": "cancelForm"
         }
-    ]
+    ],
+    "validation": {
+        "test1": {
+            "required": true,
+            "minLength": 10,
+            "maxLength": 30
+        },
+        "test2": {
+            "required": true
+        },
+        "textarea": {
+            "required": true
+        },
+        "select": {
+            "required": true
+        }
+    }
 }

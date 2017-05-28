@@ -11,13 +11,22 @@ generalTestfield.service("FormService", function (tfHttp) {
                 },
                 method: "GET"
             });
+        },
+        sendForm: function (form) {
+            return tfHttp.request({
+                url: "/Testfield/request/sendForm",
+                data: {
+                    form: form
+                },
+                method: "POST"
+            });
         }
     };
 });
 
 generalTestfield.controller("formController", 
-["$scope",
-function ($scope) {
+["$scope", "FormService",
+function ($scope, FormService) {
     $scope.getInputHtml = function (input) {
         switch(input.type) {
             case "text":
@@ -39,5 +48,14 @@ function ($scope) {
                 return "static/htmlParts/forms/inputs/inputCheckboxGroup.html";
         }
     };
-    console.log($scope.form);
+    $scope.submit = function () {
+        if ($scope[$scope.form.name].$valid) {
+            FormService.sendForm($scope.form)
+            .then(function (data) {
+                if ($scope.formSubmitCallback) {
+                    $scope.formSubmitCallback(data);
+                }
+            });
+        }
+    };
 }]);  

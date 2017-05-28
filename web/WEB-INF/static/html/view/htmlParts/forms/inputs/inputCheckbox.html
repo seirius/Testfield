@@ -2,7 +2,15 @@
     <label>
         <input type="checkbox"
                name="{{input.name}}"
-               ng-model="form.inputs[$parent.$index].value">
+               ng-model="input.value"
+               ng-required="form.validation[input.name].required">
         {{input.label}}
     </label>
+    <p 
+        class="form-text text-muted"
+        ng-show="this[form.name][input.name].$error.required 
+                && (!this[form.name][input.name].$pristine || this[form.name].$submitted)"
+        >
+        {{input.label}} is required
+    </p>
 </div>

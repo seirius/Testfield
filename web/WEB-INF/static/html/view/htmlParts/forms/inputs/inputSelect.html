@@ -1,11 +1,23 @@
-<div class="form-group">
+<div 
+    class="form-group"
+    ng-class="{
+        'has-error': !this[form.name][input.name].$valid && (!this[form.name][input.name].$pristine || this[form.name].$submitted)
+    }">
     <label>{{input.label}}</label>
     <select 
         class="form-control"
         ng-model="input.value"
-        ng-change="hola()">
-        <option ng-repeat="value in input.values" ng-value="value">
+        ng-required="form.validation[input.name].required"
+        name="{{input.name}}">
+        <option ng-repeat="value in input.values" value="{{value}}">
             {{input.texts[$index]}}
         </option>
     </select>
+    <p 
+        class="form-text text-muted"
+        ng-show="this[form.name][input.name].$error.required 
+                && (!this[form.name][input.name].$pristine || this[form.name].$submitted)"
+        >
+        {{input.label}} is required
+    </p>
 </div>

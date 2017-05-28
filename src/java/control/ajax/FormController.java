@@ -2,12 +2,11 @@ package control.ajax;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import javax.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,8 +26,7 @@ public class FormController {
     private ServletContext servletContext;
     
     @RequestMapping(value = "/form", method = RequestMethod.GET)
-    public @ResponseBody AjaxResponse requestForm(ModelMap model, 
-            @RequestParam String formName) {
+    public @ResponseBody AjaxResponse requestForm(@RequestParam String formName) {
         AjaxResponse ajaxResponse = new AjaxResponse();
         try {
             String realPath = servletContext
@@ -42,7 +40,19 @@ public class FormController {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode form = mapper.readValue(jsonFile, ObjectNode.class);
             ajaxResponse.add("form", form);
-        } catch (IOException e) {
+        } catch (Exception e) {
+            ajaxResponse.setErrorMsg(e);
+        }
+        return ajaxResponse;
+    }
+    
+    @RequestMapping(value = "/sendForm", method = RequestMethod.POST)
+    public @ResponseBody AjaxResponse sendForm(@RequestBody ObjectNode form) {
+        AjaxResponse ajaxResponse = new AjaxResponse();
+        try {
+            System.out.println(form);
+            ajaxResponse.add("form", form);
+        } catch (Exception e) {
             ajaxResponse.setErrorMsg(e);
         }
         return ajaxResponse;

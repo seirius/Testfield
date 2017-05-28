@@ -4,5 +4,6 @@
         class="form-control"
         name="{{input.name}}"
         rows="{{input.rows}}"
-        ng-model="input.value">{{input.value}}</textarea>
+        ng-model="input.value"
+        ng-required="form.validation[input.name].required">{{input.value}}</textarea>
 </div>

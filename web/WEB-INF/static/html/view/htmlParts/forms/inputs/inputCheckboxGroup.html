@@ -6,7 +6,7 @@
         <input 
             type="checkbox"
             ng-model="form.inputs[$parent.$index].values[$index]"
-            >
+            ng-required="form.validation[input.name].required">
         {{input.texts[$index]}}
     </label>
 </div>
