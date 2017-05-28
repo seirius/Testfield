@@ -3,7 +3,7 @@
     ng-class="{
         'has-error': !this[form.name][input.name].$valid && (!this[form.name][input.name].$pristine || this[form.name].$submitted)
     }">
-    <label>{{input.label}}</label>
+    <label ng-hide="input.showLabel === false">{{input.label}}</label>
     <select 
         class="form-control"
         ng-model="input.value"

@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package util;
 
 import java.util.HashMap;
+import templates.validation.FormValidationException;
 
 /**
  *
@@ -52,8 +48,17 @@ public class AjaxResponse {
     }
     
     public void setErrorMsg(Exception e) {
-        System.err.println("-- ERROR: " + e.getMessage());
-        errorCode = -1;
+        if (e instanceof FormValidationException) {
+            FormValidationException ex = (FormValidationException) e;
+            int code = ex.getValidationCode().getCode();
+            System.err.println(String.format("-- WARNING: Form Validation %d - %s", 
+                    code, 
+                    ex.getLabelName()));
+            errorCode = code;
+        } else {
+            System.err.println("-- ERROR: " + e.getMessage());
+            errorCode = -1;
+        }
         errorMsg = ErrorMsgs.DEFAULT_MSG;
     }
     

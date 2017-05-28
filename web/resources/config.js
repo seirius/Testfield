@@ -57,7 +57,7 @@ require.config({
             deps: [ "angular", "testfield-general" ]
         },
         "login-main": {
-            deps: [ "angular-route" ]
+            deps: [ "angular-route", "form-service" ]
         },
         "testfield-general": {
             deps: [ "angular" ]

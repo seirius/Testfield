@@ -35,8 +35,8 @@ function ($scope, $rootScope, ManualService, $location, $routeParams, $window,
     };
     
     $scope.createManual = function () {
-        ManualService.createManual().then(function (data) {
-            loadEdit(data.manual.id);
+        ManualService.createManual().then(function (response) {
+            loadEdit(response.data.manual.id);
         });
     };
     
@@ -80,8 +80,8 @@ function ($scope, $rootScope, ManualService, $location, $routeParams, $window,
     
     $scope.getJsonManual = function () {
         ManualService.getJsonManual(ManualService.getCurrentManual().id)
-        .then(function (data) {
-            var jsonManual = new Blob([data.jsonManual], {
+        .then(function (response) {
+            var jsonManual = new Blob([response.data.jsonManual], {
                 type: "application/json"
             });
             var jsonUrl = URL.createObjectURL(jsonManual);
@@ -106,8 +106,8 @@ function ($scope, $rootScope, ManualService, $location, $routeParams, $window,
     $scope.requestForm = function () {
         FormService.requestForm({
             form: "testForm"
-        }).then(function (data) {
-            $scope.form = data.form;
+        }).then(function (response) {
+            $scope.form = response.data.form;
             ModalService.openModal({
                 urlContent: "/Testfield/static/htmlParts/forms/formBuilder.html",
                 scope: $scope,
@@ -141,8 +141,8 @@ manualsTestfield.controller("manualPageController",
 function ($scope, ManualService, ModalService, $routeParams, $location) {
     var id = parseInt($routeParams.param);
     ManualService.openManual(id, $scope)
-    .then(function (data) {
-        $scope.manual = data.manual;
+    .then(function (response) {
+        $scope.manual = response.data.manual;
     });
     
     var keyups = 0;
@@ -158,8 +158,8 @@ function ($scope, ManualService, ModalService, $routeParams, $location) {
     $scope.saveTitle = function () {
         ManualService.saveTitle({
             title: $scope.manual.title
-        }).then(function (data) {
-            console.log(data);
+        }).then(function (response) {
+            console.log(response.data);
         });
         
         titleSaved = true;
@@ -459,8 +459,8 @@ manualsTestfield
     };
     
     StyleService.getFontFamilies()
-    .then(function (data) {
-        $scope.fontFamilies = data.fontFamilies;
+    .then(function (response) {
+        $scope.fontFamilies = response.data.fontFamilies;
         $scope.style.fontFamily = manual.manualConf.fontFamily.id.toString();
     });
 });
@@ -469,8 +469,8 @@ manualsTestfield.controller("manualViewController",
 function ($scope, ManualService, $sce, $routeParams) {
     var id = parseInt($routeParams.param);
     ManualService.visualizeManual(id, $scope)
-    .then(function (data) {
-        $scope.manual = data.manual;
+    .then(function (response) {
+        $scope.manual = response.data.manual;
     });
     
     $scope.getTrustedHtml = function (content) {

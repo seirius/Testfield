@@ -6,14 +6,16 @@
             "name": "test1",
             "value": "",
             "type": "text",
-            "typeName": "password"
+            "typeName": "password",
+            "placeholder": "Password"
         },
         {
             "label": "Input text",
             "name": "test2",
             "value": "hola",
             "type": "text",
-            "typeName": "text"
+            "typeName": "text",
+            "placeholder": "User"
         },
         {
             "label": "Input date",
@@ -56,8 +58,7 @@
             "label": "Checkbox",
             "name": "checkbox",
             "type": "checkbox",
-            "value": true,
-            "required": true
+            "value": false
         },
         {
             "label": "Best mobas",
@@ -73,20 +74,23 @@
             ]
         }
     ],
-    "buttons": [
-        {
-            "type": "submit",
-            "class": "btn-primary",
-            "text": "Submit",
-            "click": "hola"
-        },
-        {
-            "type": "button",
-            "class": "btn-default",
-            "text": "cancel",
-            "click": "cancelForm"
-        }
-    ],
+    "buttons": {
+        "buttons": [
+            {
+                "type": "submit",
+                "class": "btn-primary",
+                "text": "Submit",
+                "click": "hola"
+            },
+            {
+                "type": "button",
+                "class": "btn-default",
+                "text": "cancel",
+                "click": "cancelForm"
+            }
+        ],
+        "place": "right"
+    },
     "validation": {
         "test1": {
             "required": true,
@@ -100,6 +104,12 @@
             "required": true
         },
         "select": {
+            "required": true
+        },
+        "checkbox": {
+            "required": true
+        },
+        "lol": {
             "required": true
         }
     }

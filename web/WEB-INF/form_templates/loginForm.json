@@ -1,0 +1,47 @@
+{
+    "name": "loginForm",
+    "service": "USER.login",
+    "inputs": [
+        {
+            "label": "User",
+            "name": "user",
+            "value": "",
+            "type": "text",
+            "typeName": "text",
+            "placeholder": "User",
+            "showLabel": false
+        },
+        {
+            "label": "Password",
+            "name": "password",
+            "value": "",
+            "type": "text",
+            "typeName": "password",
+            "placeholder": "Password",
+            "showLabel": false
+        }
+    ],
+    "buttons": {
+        "buttons": [
+            {
+                "type": "submit",
+                "class": "btn-default",
+                "text": "Enter",
+                "click": "submitLogin"
+            }
+        ],
+        "place": "center"
+    },
+    "validation": {
+        "user": {
+            "required": true,
+            "minLength": 3,
+            "maxLength": 30
+        },
+        "password": {
+            "required": true,
+            "minLength": 5,
+            "maxLength": 30
+        }
+    }
+}

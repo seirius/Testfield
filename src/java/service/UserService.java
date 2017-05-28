@@ -1,5 +1,7 @@
 package service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import dao.UserDAO;
 import model.bean.user.UserTestfield;
 import util.ServiceReturn;
@@ -46,6 +48,17 @@ public class UserService extends Service {
         return user;
     }
     
+    public ServiceReturn login(ObjectNode form) throws Exception {
+        JsonNode formJson = form.get("form");
+        JsonNode inputs = formJson.get("inputs");
+        String userNick = inputs.get(0).get("value").asText();
+        String pw = inputs.get(1).get("value").asText();
+        UserTestfield user = new UserTestfield();
+        user.setUserNick(userNick);
+        user.setPassword(pw);
+        return login(user);
+    }
+    
     /**
      * Check if the user exists in the Database by userNick and password 
      * 
@@ -66,7 +79,7 @@ public class UserService extends Service {
                 throw new ServiceException("User or Password incorrect.");
             }
             
-            result.addItem("user", user);
+            session.setAttribute("user", user.getUserNick());
             MANAGER.commit();
         } catch(DAOException | ServiceException e) {
             MANAGER.rollback();

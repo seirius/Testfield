@@ -6,7 +6,6 @@ define(function () {
         $routeProvider
         .when("/", {
             templateUrl: "static/htmlParts/login/loginPart.html",
-//            css: loginCss,
             controller: "loginCtrl"
         })
         .when("/register", {
@@ -16,24 +15,32 @@ define(function () {
     });
 
     loginModule.controller("loginCtrl", function ($scope, $window, 
-                            UserService, tfHttp, $location) {
+                            UserService, tfHttp, $location, FormService) {
+        FormService.requestForm({
+            form: "loginForm"
+        }).then(function (response) {
+            $scope.form = response.data.form;
+        });
 
-        $scope.submitLogin = function () {
-            if ($scope.login.user.$invalid) {
-                $scope.errorMessage = "User must be at least 3-30 characters";
-            } else if ($scope.login.password.$invalid) {
-                $scope.errorMessage = "Password must be at least 5-30 characters";
-            } else {
-                tfHttp.showError();
-                var login = UserService.login($scope.user, $scope.password);
-                login.then(function (data) {
-                    if (data.loginOk) {
-                        $window.location.href = "/Testfield/choseApp";
-                    }
-                }, function (data) {
-                    $scope.errorMessage = data.errorMsg;
-                });
+        $scope.submitLogin = function (data) {
+            if (data.errorCode === 0) {
+                $window.location.href = "/Testfield/choseApp";
             }
+//            if ($scope.login.user.$ invalid) {
+//                $scope.errorMessage = "User must be at least 3-30 characters";
+//            } else if ($scope.login.password.$invalid) {
+//                $scope.errorMessage = "Password must be at least 5-30 characters";
+//            } else {
+//                tfHttp.showError();
+//                var login = UserService.login($scope.user, $scope.password);
+//                login.then(function (data) {
+//                    if (data.loginOk) {
+//                        $window.location.href = "/Testfield/choseApp";
+//                    }
+//                }, function (data) {
+//                    $scope.errorMessage = data.errorMsg;
+//                });
+//            }
 
         };
         $scope.goRegister = function () {

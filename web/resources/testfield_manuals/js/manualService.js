@@ -101,8 +101,8 @@ generalTestfield.service("ManualService", function (tfHttp, $compile, ModalServi
         },
         
         openManualsList: function ($scope) {
-            manualService.loadManuals().then(function (data) {
-                manualService.setManualsList(data.manuals);
+            manualService.loadManuals().then(function (response) {
+                manualService.setManualsList(response.data.manuals);
                 ModalService.openModal({
                     urlContent: "static/htmlParts/manuals/manualList.html",
                     scope: $scope
@@ -125,25 +125,25 @@ generalTestfield.service("ManualService", function (tfHttp, $compile, ModalServi
         },
         
         openManual: function (idManual, $scope) {
-            return manualService.loadManual(idManual).then(function (data) {
-                introduceManual($scope, data.manual);
+            return manualService.loadManual(idManual).then(function (response) {
+                introduceManual($scope, response.data.manual);
                 return new Promise(function (resolve, reject) {
-                    resolve(data);
+                    resolve(response);
                 });
             });
         },
         
         reloadManual: function ($scope) {
-            manualService.loadManual(manualService.getCurrentManual().id).then(function (data) {
-                introduceManual($scope, data.manual);
+            manualService.loadManual(manualService.getCurrentManual().id).then(function (response) {
+                introduceManual($scope, response.data.manual);
             });
         },
         
         visualizeManual: function (idManual, $scope) {
-            return manualService.loadManual(idManual).then(function (data) {
-                visualizeManual($scope, data.manual);
+            return manualService.loadManual(idManual).then(function (response) {
+                visualizeManual($scope, response.data.manual);
                 return new Promise(function (resolve, reject) {
-                    resolve(data);
+                    resolve(response);
                 });
             });
         },
@@ -180,10 +180,10 @@ generalTestfield.service("ManualService", function (tfHttp, $compile, ModalServi
                 }
             });
             
-            return request.then(function (data) {
+            return request.then(function (response) {
                 return new Promise(function (resolve) {
-                    manualService.setCurrentManual(data.manual);
-                    resolve(data);
+                    manualService.setCurrentManual(response.data.manual);
+                    resolve(response);
                 });
             });
         },
@@ -198,10 +198,10 @@ generalTestfield.service("ManualService", function (tfHttp, $compile, ModalServi
                 data: args
             });
             
-            return request.then(function (data) {
+            return request.then(function (response) {
                 return new Promise(function (resolve) {
-                    manualService.setCurrentManual(data.manual);
-                    resolve(data);
+                    manualService.setCurrentManual(response.data.manual);
+                    resolve(response);
                 });
             });
         },
@@ -213,10 +213,10 @@ generalTestfield.service("ManualService", function (tfHttp, $compile, ModalServi
                     idBlock: idBlock,
                     content: content
                 }
-            }).then(function (data) {
+            }).then(function (response) {
                 return new Promise(function (resolve) {
-                    manualService.setCurrentManual(data.manual);
-                    resolve(data);
+                    manualService.setCurrentManual(response.data.manual);
+                    resolve(response);
                 });
             });
         },
@@ -237,10 +237,10 @@ generalTestfield.service("ManualService", function (tfHttp, $compile, ModalServi
             return tfHttp.requestParam({
                 url: "/Testfield/request/manual/addRow",
                 data: args
-            }).then(function (data) {
+            }).then(function (response) {
                 return new Promise(function (resolve) {
-                    manualService.setCurrentManual(data.manual);
-                    resolve(data);
+                    manualService.setCurrentManual(response.data.manual);
+                    resolve(response);
                 });
             });
         },
@@ -260,10 +260,10 @@ generalTestfield.service("ManualService", function (tfHttp, $compile, ModalServi
             return tfHttp.requestParam({
                 url: "/Testfield/request/manual/addPage",
                 data: args
-            }).then(function (data) {
+            }).then(function (response) {
                 return new Promise(function (resolve) {
-                    manualService.setCurrentManual(data.manual);
-                    resolve(data);
+                    manualService.setCurrentManual(response.data.manual);
+                    resolve(response);
                 });
             });
         },
@@ -302,10 +302,10 @@ generalTestfield.service("ManualService", function (tfHttp, $compile, ModalServi
                 argsStr: [
                     "widthTypes"
                 ]
-            }).then(function (data) {
+            }).then(function (response) {
                 return new Promise(function (resolve) {
-                    manualService.setCurrentManual(data.manual);
-                    resolve(data);
+                    manualService.setCurrentManual(response.data.manual);
+                    resolve(response);
                 });
             });
         },
@@ -340,10 +340,10 @@ generalTestfield.service("ManualService", function (tfHttp, $compile, ModalServi
                 argsStr: [
                     "widthTypes"
                 ]
-            }).then(function (data) {
+            }).then(function (response) {
                 return new Promise(function (resolve) {
-                    manualService.setCurrentManual(data.manual);
-                    resolve(data);
+                    manualService.setCurrentManual(response.data.manual);
+                    resolve(response);
                 });
             });
         },
@@ -465,11 +465,11 @@ generalTestfield.service("ManualService", function (tfHttp, $compile, ModalServi
                 data: args
             });
             
-            return request.then(function (data) {
+            return request.then(function (response) {
                 return new Promise(function (resolve) {
-                    manualService.setCurrentManual(data.manual);
-                    setManualsStyle(data.manual);
-                    resolve(data);
+                    manualService.setCurrentManual(response.data.manual);
+                    setManualsStyle(response.data.manual);
+                    resolve(response);
                 });
             });
         },

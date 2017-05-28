@@ -9,7 +9,7 @@ generalTestfield.service("tfHttp", function ($http) {
                 if (typeof response !== "undefined" && typeof response.data !== "undefined") {
                     var data = response.data;
                     if (data.errorCode === 0) {
-                        resolve(data.data);
+                        resolve(data);
                     } else if (typeof data.errorCode !== "undefined" 
                             && data.errorCode !== 0) {
                         if (showError) {
@@ -307,8 +307,8 @@ generalTestfield.directive("logout", function (UserService, Testfield) {
         restrict: "A",
         link: function (scope, element, attrs) {
             element.click(function () {
-                UserService.logout().then(function (data) {
-                    if (data.logoutOk) {
+                UserService.logout().then(function (response) {
+                    if (response.data.logoutOk) {
                         Testfield.goAfterLogout();
                     } else {
                         alert("Coldnt't logout.");

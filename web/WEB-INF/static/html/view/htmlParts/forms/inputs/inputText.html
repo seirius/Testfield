@@ -3,14 +3,15 @@
     ng-class="{
         'has-error': !this[form.name][input.name].$valid && (!this[form.name][input.name].$pristine || this[form.name].$submitted)
     }">
-    <label>{{input.label}}</label>
+    <label ng-hide="input.showLabel === false">{{input.label}}</label>
     <input class="form-control" 
         type="{{input.typeName}}" 
         name="{{input.name}}"
         ng-model="input.value"
         ng-required="form.validation[input.name].required"
         ng-maxLength="form.validation[input.name].maxLength"
-        ng-minLength="form.validation[input.name].minLength">
+        ng-minLength="form.validation[input.name].minLength"
+        placeholder="{{input.placeholder}}">
     <p 
         class="form-text text-muted"
         ng-show="this[form.name][input.name].$error.required 

@@ -3,6 +3,7 @@ var generalTestfield = angular.module("generalTestfield");
 generalTestfield.service("FormService", function (tfHttp) {
     
     return {
+        FORM_B_URL: "static/htmlParts/forms/formBuilder.html",
         requestForm: function (args) {
             return tfHttp.requestParam({
                 url: "/Testfield/request/form",
@@ -20,6 +21,18 @@ generalTestfield.service("FormService", function (tfHttp) {
                 },
                 method: "POST"
             });
+        },
+        getSubmitBtnData: function (form) {
+            var btn;
+            if (form.buttons && form.buttons.buttons) {
+                form.buttons.buttons.some(function (button) {
+                    if (button.type === "submit" && button.click) {
+                        btn = button;
+                        return true;
+                    }
+                });
+            }
+            return btn;
         }
     };
 });
@@ -52,8 +65,9 @@ function ($scope, FormService) {
         if ($scope[$scope.form.name].$valid) {
             FormService.sendForm($scope.form)
             .then(function (data) {
-                if ($scope.formSubmitCallback) {
-                    $scope.formSubmitCallback(data);
+                var submit = FormService.getSubmitBtnData($scope.form);
+                if (submit) {
+                    $scope[submit.click](data);
                 }
             });
         }
