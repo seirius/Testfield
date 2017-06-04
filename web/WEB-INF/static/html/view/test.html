@@ -4,26 +4,24 @@
         <title>TODO supply a title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="/Testfield/resources/js/masonry/masonry.js"></script>
+        <link rel="stylesheet" href="/Testfield/resources/bootstrap/css/bootstrap.css">
         <script src="/Testfield/resources/js/jquery/jquery.js"></script>
-        <link rel="stylesheet" href="/Testfield/resources/testfield_files/style/file-list.css">
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min"></script>
     </head>
     <body>
-        <div class="files-block-container">
-            <div class="nonsItem anon"></div>
-            <div class="nonsItem anon"></div>
-            <div class="nonsItem anon"></div>
-            <div class="nonsItem non"></div>
-            <div class="nonsItem anon"></div>
-            <div class="nonsItem anon"></div>
-            <div class="nonsItem non"></div>
-            <div class="nonsItem anon"></div>
-            <div class="nonsItem non"></div>
-            <div class="nonsItem anon"></div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div id="VideoContainer"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-offset-4 col-xs-4">
+                    <button class="btn btn-primary btn-block" click="launchEpisode(30002);">Launch</button>
+                </div>
+            </div>
         </div>
-        
         <script>
-            new Masonry($(".files-block-container")[0], {});
         </script>
     </body>
 </html>

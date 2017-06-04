@@ -1,24 +1,34 @@
 {
     "name": "loginForm",
-    "service": "USER.login",
+    "service": "SB_USER.login",
     "inputs": [
         {
+            "@type": "InputText",
             "label": "User",
             "name": "user",
             "value": "",
-            "type": "text",
             "typeName": "text",
             "placeholder": "User",
-            "showLabel": false
+            "showLabel": false,
+            "validation": {
+                "required": true,
+                "minLength": 3,
+                "maxLength": 30
+            }
         },
         {
+            "@type": "InputText",
             "label": "Password",
             "name": "password",
             "value": "",
-            "type": "text",
             "typeName": "password",
             "placeholder": "Password",
-            "showLabel": false
+            "showLabel": false,
+            "validation": {
+                "required": true,
+                "minLength": 5,
+                "maxLength": 30
+            }
         }
     ],
     "buttons": {
@@ -31,17 +41,5 @@
             }
         ],
         "place": "center"
-    },
-    "validation": {
-        "user": {
-            "required": true,
-            "minLength": 3,
-            "maxLength": 30
-        },
-        "password": {
-            "required": true,
-            "minLength": 5,
-            "maxLength": 30
-        }
     }
 }

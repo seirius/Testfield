@@ -9,9 +9,9 @@
         name="{{input.name}}"
         rows="{{input.rows}}"
         ng-model="input.value"
-        ng-required="form.validation[input.name].required"
-        ng-maxLength="form.validation[input.name].maxLength"
-        ng-minLength="form.validation[input.name].minLength"
+        ng-required="input.validation.required"
+        ng-maxLength="input.validation.maxLength"
+        ng-minLength="input.validation.minLength"
         placeholder="{{input.placeholder}}">{{input.value}}</textarea>
     <p 
         class="form-text text-muted"
@@ -25,13 +25,13 @@
         ng-show="this[form.name][input.name].$error.minlength
                 && (!this[form.name][input.name].$pristine || this[form.name].$submitted)"
         >
-        Minimum length is {{form.validation[input.name].minLength}}
+        Minimum length is {{input.validation.minLength}}
     </p>
     <p 
         class="form-text text-muted"
         ng-show="this[form.name][input.name].$error.maxlength
                 && (!this[form.name][input.name].$pristine || this[form.name].$submitted)"
         >
-        Maximum length is {{form.validation[input.name].maxLength}}
+        Maximum length is {{input.validation.maxLength}}
     </p>
 </div>

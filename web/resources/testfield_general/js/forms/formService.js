@@ -8,9 +8,16 @@ generalTestfield.service("FormService", function (tfHttp) {
             return tfHttp.requestParam({
                 url: "/Testfield/request/form",
                 data: {
-                    formName: args.form
+                    formName: args.formName
                 },
                 method: "GET"
+            });
+        },
+        requestFormPost: function (args) {
+            return tfHttp.request({
+                url: "/Testfield/request/formPost",
+                data: args,
+                method: "POST"
             });
         },
         sendForm: function (form) {
@@ -19,6 +26,13 @@ generalTestfield.service("FormService", function (tfHttp) {
                 data: {
                     form: form
                 },
+                method: "POST"
+            });
+        },
+        serverValidation: function (input) {
+            return tfHttp.request({
+                url: "/Testfield/request/serverValidation",
+                data: input,
                 method: "POST"
             });
         },
@@ -41,24 +55,21 @@ generalTestfield.controller("formController",
 ["$scope", "FormService",
 function ($scope, FormService) {
     $scope.getInputHtml = function (input) {
-        switch(input.type) {
-            case "text":
+        switch(input["@type"]) {
+            case "InputText":
                 return "static/htmlParts/forms/inputs/inputText.html";
                 
-            case "select":
+            case "InputSelect":
                 return "static/htmlParts/forms/inputs/inputSelect.html";
                 
-            case "textarea":
+            case "InputTextarea":
                 return "static/htmlParts/forms/inputs/inputTextarea.html";
             
-            case "radio": 
+            case "InputRadio": 
                 return "static/htmlParts/forms/inputs/inputRadio.html";
             
-            case "checkbox": 
+            case "InputCheckbox": 
                 return "static/htmlParts/forms/inputs/inputCheckbox.html";
-            
-            case "checkboxGroup": 
-                return "static/htmlParts/forms/inputs/inputCheckboxGroup.html";
         }
     };
     $scope.submit = function () {
@@ -72,4 +83,67 @@ function ($scope, FormService) {
             });
         }
     };
+    
+    $scope.buttonClick = function (buttonType, buttonFunction) {
+        if (buttonType !== "submit") {
+            buttonFunction();
+        }
+    };
 }]);  
+
+generalTestfield.directive("inputVerify", function () {
+    return {
+        restrict: "A",
+        require: "ngModel",
+        link: function (scope, element, attrs, ngModel) {
+            if (!ngModel || attrs.inputVerify.length === 0) return;
+            
+            var modelInput = scope[scope.form.name][attrs.inputVerify];
+            
+            ngModel.$validators.inputVerify = function (modelValue, viewValue) {
+                return modelInput.$viewValue === viewValue;
+            };
+            
+            modelInput.$validators.modelVerify = function () {
+                ngModel.$validate();
+                return true;
+            };
+        }
+    };
+});
+
+generalTestfield.directive("server", function ($q, FormService) {
+    return {
+        restrict: "A",
+        require: "ngModel",
+        link: function (scope, element, attrs, ngModel) {
+            if (attrs.server.length === 0) return;
+            
+            ngModel.$asyncValidators.server = function (modelValue, viewValue) {
+                var defer = $q.defer();
+                
+                if (ngModel.$isEmpty(viewValue)) {
+                    return $q.resolve();
+                }
+                
+                var input;
+                scope.form.inputs.some(function (auxInput) {
+                    if (auxInput.name === ngModel.$name) {
+                        input = auxInput;
+                        return true;
+                    }
+                });
+                
+                FormService.serverValidation(input).then(function (response) {
+                    if (response.data.ok) {
+                        defer.resolve();
+                    } else {
+                        defer.reject();
+                    }
+                });
+                
+                return defer.pormise;
+            };
+        }
+    };
+});

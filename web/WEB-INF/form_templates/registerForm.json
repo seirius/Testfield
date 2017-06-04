@@ -1,0 +1,75 @@
+{
+    "name": "registerForm",
+    "service": "SB_USER.register",
+    "inputs": [
+        {
+            "@type": "InputText",
+            "label": "User",
+            "name": "user",
+            "value": "",
+            "typeName": "text",
+            "placeholder": "User",
+            "showLabel": false,
+            "validation": {
+                "required": true,
+                "minLength": 3,
+                "maxLength": 30,
+                "server": "SV_USER.userDuplicate"
+            }
+        },
+        {
+            "@type": "InputText",
+            "label": "Password",
+            "name": "password",
+            "value": "",
+            "typeName": "password",
+            "placeholder": "Password",
+            "showLabel": false,
+            "validation": {
+                "required": true,
+                "minLength": 5,
+                "maxLength": 30
+            }
+        },
+        {
+            "@type": "InputText",
+            "label": "Repeat password",
+            "name": "repeatPassword",
+            "value": "",
+            "typeName": "password",
+            "placeholder": "Repeat password",
+            "showLabel": false,
+            "validation": {
+                "required": true,
+                "minLength": 5,
+                "maxLength": 30,
+                "inputVerify": "password"
+            }
+        },
+        {
+            "@type": "InputText",
+            "label": "Email",
+            "name": "email",
+            "value": "",
+            "typeName": "email",
+            "placeholder": "Email",
+            "showLabel": false,
+            "validation": {
+                "required": true,
+                "minLength": 5,
+                "maxLength": 80
+            }
+        }
+    ],
+    "buttons": {
+        "buttons": [
+            {
+                "type": "submit",
+                "class": "btn-success",
+                "text": "Create",
+                "click": "submitRegister"
+            }
+        ],
+        "place": "center"
+    }
+}

@@ -70,7 +70,36 @@ function ($scope, $rootScope, ManualService, $location, $routeParams, $window,
     };
     
     $scope.manualsStyle = function () {
-        ManualService.openManualsStyle($scope);
+        FormService.requestFormPost({
+            formName: "manualOptionsForm",
+            data: {
+                data: {
+                    manualId: ManualService.getCurrentManual().id
+                }
+            }
+        }).then(function (response) {
+            $scope.form = response.data.form;
+            $scope.form.formSendData = {
+                data: {
+                    manualId: ManualService.getCurrentManual().id
+                }
+            };
+            console.log($scope.form);
+            ModalService.openModal({
+                urlContent: FormService.FORM_B_URL,
+                scope: $scope,
+                callbacks: {
+                    close: function () {
+                        $scope.form = {};
+                    }
+                }
+            }).then(function ($modal) {
+                $scope.submitStyles = function (response) {
+                    ManualService.setCurrentManual(response.data.manual);
+                    $modal.modal("hide");
+                };
+            });
+        });
     };
     
     $scope.openOptions = function () {
@@ -105,7 +134,7 @@ function ($scope, $rootScope, ManualService, $location, $routeParams, $window,
     
     $scope.requestForm = function () {
         FormService.requestForm({
-            form: "testForm"
+            formName: "testForm"
         }).then(function (response) {
             $scope.form = response.data.form;
             ModalService.openModal({

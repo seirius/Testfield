@@ -21,6 +21,8 @@ import model.bean.manual.pojo.ManualStylePojo;
 import model.bean.style.FontColor;
 import model.bean.style.FontFamily;
 import model.bean.widthtype.WidthTypeHelper;
+import templates.forms.Form;
+import templates.forms.FormData;
 import util.ErrorMsgs;
 import util.Security;
 import util.ServiceReturn;
@@ -84,7 +86,7 @@ public class ManualService extends Service {
             
             Manual manual = MANAGER.getManualDAO().getManual(idManual);
             if (!manual.isVisible()) {
-                Security.isSessionOpened(session);
+                Security.isSessionOpened(request.getSession());
             }
             result.addItem("manual", manual, true);
             MANAGER.commit();
@@ -518,44 +520,6 @@ public class ManualService extends Service {
         return result;
     }
     
-    public ServiceReturn updateManualsStyle(String userNick, 
-            ManualStylePojo stylePojo) throws Exception {
-        ServiceReturn result = new ServiceReturn();
-        try {
-            MANAGER.beginTransaction();
-            
-            Manual manual = MANAGER.getManualDAO().getManual(stylePojo.manualId);
-            if (!Security.permissionModManual(manual, userNick)) {
-                throw new ServiceException(ErrorMsgs.ACC_DEN);
-            }
-            
-            ManualConfDAO manualConfDao = 
-                    (ManualConfDAO) MANAGER.getDAO(DAOList.MANUAL_CONF);
-            FontFamilyDAO fontFamilyDao = 
-                    (FontFamilyDAO) MANAGER.getDAO(DAOList.FONT_FAMILY);
-            ManualConf manualConf = manual.getManualConf();
-            FontColor fontColor = manualConf.getFontColor();
-            fontColor.setRGB(stylePojo);
-            FontFamily fontFamily = fontFamilyDao.getFontFamily(stylePojo.fontFamily);
-            if (fontFamily == null) {
-                throw new ServiceException("Font family doesn't exist.");
-            }
-            manualConf.setFontFamily(fontFamily);
-            
-            manualConf.setFontColor(fontColor);
-            manualConfDao.update(manualConf);
-            
-            result.addItem("manual", manual, true);
-            MANAGER.commit();
-        } catch (DAOException | ServiceException e) {
-            MANAGER.rollback();
-            throw treatException(e);
-        } finally {
-            MANAGER.close();
-        }
-        return result;
-    }
-    
     public ServiceReturn createJsonFileFromManual(String userNick, 
             int manualId) throws Exception {
         ServiceReturn result = new ServiceReturn();
@@ -607,7 +571,7 @@ public class ManualService extends Service {
         try {
             MANAGER.beginTransaction();
             
-            String user = Security.isSessionOpened(session);
+            String user = Security.isSessionOpened(request.getSession());
             ManualDAO manualDao = (ManualDAO) MANAGER.getDAO(DAOList.MANUAL);
             Manual manual = manualDao.getManual(manualId);
             Security.permissionModManualEx(manual, user);

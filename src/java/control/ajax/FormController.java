@@ -1,22 +1,16 @@
 package control.ajax;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.lang.reflect.Method;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import service.Service;
-import templates.FormService;
-import templates.validation.FormValidator;
+import service.FormService;
+import templates.forms.inputs.Input;
 import util.AjaxResponse;
-import util.ServiceNicks;
 import util.ServiceReturn;
 
 /**
@@ -26,15 +20,30 @@ import util.ServiceReturn;
 @Controller
 public class FormController {
     
-    @Autowired
-    private ServletContext servletContext;
-    
     @RequestMapping(value = "/form", method = RequestMethod.GET)
-    public @ResponseBody AjaxResponse requestForm(@RequestParam String formName) {
+    public @ResponseBody AjaxResponse requestForm(@RequestParam String formName,
+            HttpServletRequest request) {
         AjaxResponse ajaxResponse = new AjaxResponse();
         try {
-            ObjectNode form = FormService.loadJsonForm(servletContext, formName);
-            ajaxResponse.add("form", form);
+            FormService formService = new FormService();
+            formService.setRequest(request);
+            ServiceReturn serviceReturn = formService.loadForm(formName);
+            ajaxResponse.digest(serviceReturn);
+        } catch (Exception e) {
+            ajaxResponse.setErrorMsg(e);
+        }
+        return ajaxResponse;
+    }
+    
+    @RequestMapping(value = "/formPost", method = RequestMethod.POST)
+    public @ResponseBody AjaxResponse requestFormPost(@RequestBody ObjectNode form,
+            HttpServletRequest request) {
+        AjaxResponse ajaxResponse = new AjaxResponse();
+        try {
+            FormService formService = new FormService();
+            formService.setRequest(request);
+            ServiceReturn serviceReturn = formService.loadForm(form);
+            ajaxResponse.digest(serviceReturn);
         } catch (Exception e) {
             ajaxResponse.setErrorMsg(e);
         }
@@ -43,30 +52,32 @@ public class FormController {
     
     @RequestMapping(value = "/sendForm", method = RequestMethod.POST)
     public @ResponseBody AjaxResponse sendForm(@RequestBody ObjectNode form, 
-            HttpSession session) {
+            HttpServletRequest request) {
         AjaxResponse ajaxResponse = new AjaxResponse();
         try {
-            JsonNode formJson = form.get("form");
-            String formName = formJson.get("name").asText();
-            JsonNode inputs = formJson.get("inputs");
-            FormValidator formValidator = new FormValidator(servletContext, formName, inputs);
-            formValidator.validate();
-            
-            String[] serviceLink = formJson.get("service").asText().split("\\.");
-            String service = serviceLink[0];
-            String method = serviceLink[1];
-            
-            Class<?> clazz = Class.forName(ServiceNicks.toEnum(service).getClassName());
-            Object serviceClass = clazz.newInstance();
-            ((Service) serviceClass).setSession(session);
-            
-            Method classMethod = serviceClass.getClass().getMethod(method, ObjectNode.class);
-            ServiceReturn serviceReturn = (ServiceReturn) classMethod.invoke(serviceClass, form);
+            FormService formService = new FormService();
+            formService.setRequest(request);
+            ServiceReturn serviceReturn = formService.sendForm(form);
             ajaxResponse.digest(serviceReturn);
         } catch (Exception e) {
             ajaxResponse.setErrorMsg(e);
         }
         return ajaxResponse;
     }
+    
+    @RequestMapping(value = "/serverValidation", method = RequestMethod.POST)
+    public @ResponseBody AjaxResponse serverValidation(@RequestBody Input input,
+            HttpServletRequest request) {
+        AjaxResponse ajaxResponse = new AjaxResponse();
+        try {
+            FormService formService = new FormService();
+            formService.setRequest(request);
+            ServiceReturn serviceReturn = formService.serverValidation(input);
+            ajaxResponse.digest(serviceReturn);
+        } catch (Exception e) {
+            ajaxResponse.setErrorMsg(e);
+        }
+        return ajaxResponse;
+    } 
     
 }

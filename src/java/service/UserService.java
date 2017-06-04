@@ -1,9 +1,10 @@
 package service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import dao.UserDAO;
 import model.bean.user.UserTestfield;
+import templates.forms.Form;
+import templates.forms.inputs.InputText;
 import util.ServiceReturn;
 import util.exceptions.DAOException;
 import util.exceptions.ServiceException;
@@ -48,14 +49,12 @@ public class UserService extends Service {
         return user;
     }
     
-    public ServiceReturn login(ObjectNode form) throws Exception {
-        JsonNode formJson = form.get("form");
-        JsonNode inputs = formJson.get("inputs");
-        String userNick = inputs.get(0).get("value").asText();
-        String pw = inputs.get(1).get("value").asText();
+    public ServiceReturn login(Form form) throws Exception {
+        InputText userInput = form.getInputByName("user").getAsText();
+        InputText userPassword = form.getInputByName("password").getAsText();
         UserTestfield user = new UserTestfield();
-        user.setUserNick(userNick);
-        user.setPassword(pw);
+        user.setUserNick(userInput.getValue(String.class));
+        user.setPassword(userPassword.getValue(String.class));
         return login(user);
     }
     
@@ -79,7 +78,7 @@ public class UserService extends Service {
                 throw new ServiceException("User or Password incorrect.");
             }
             
-            session.setAttribute("user", user.getUserNick());
+            request.getSession().setAttribute("user", user.getUserNick());
             MANAGER.commit();
         } catch(DAOException | ServiceException e) {
             MANAGER.rollback();

@@ -7,10 +7,11 @@
     <select 
         class="form-control"
         ng-model="input.value"
-        ng-required="form.validation[input.name].required"
-        name="{{input.name}}">
-        <option ng-repeat="value in input.values" value="{{value}}">
-            {{input.texts[$index]}}
+        ng-required="input.validation.required"
+        name="{{input.name}}"
+        ng-value="input.value">
+        <option ng-repeat="option in input.options" value="{{option.value}}">
+            {{option.text}}
         </option>
     </select>
     <p 

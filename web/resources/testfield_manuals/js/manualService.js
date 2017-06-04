@@ -84,7 +84,6 @@ generalTestfield.service("ManualService", function (tfHttp, $compile, ModalServi
                 url: "/Testfield/request/manual/createManual"
             });
         },
-        
         loadManual: function (idManual) {
             return tfHttp.request({
                 url: "/Testfield/request/manual/loadManual",
@@ -150,6 +149,7 @@ generalTestfield.service("ManualService", function (tfHttp, $compile, ModalServi
         
         setCurrentManual: function (manual) {
             currentManual = manual;
+            setManualsStyle(manual);
         },
         
         getCurrentManual: function () {

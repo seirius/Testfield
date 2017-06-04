@@ -8,7 +8,11 @@ public enum ServiceNicks {
     FILE("FILE", "service.FileService"),
     MANUAL("MANUAL", "service.ManualService"),
     STYLE("STYLE", "service.StyleService"),
-    USER("USER", "service.UserService");
+    USER("USER", "service.UserService"),
+    CH_STYLE("CH_STYLE", "templates.forms.chargers.StyleCharger"),
+    SB_MANUAL("SB_MANUAL", "templates.submitter.ManualSubmitter"),
+    SB_USER("SB_USER", "templates.submitter.UserSubmitter"),
+    SV_USER("SV_USER", "templates.validation.server_validator.UserSV");
     
     private final String nick;
     private final String className;

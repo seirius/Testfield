@@ -10,7 +10,7 @@
             ng-repeat="button in form.buttons.buttons" 
             type="{{button.type}}" 
             class="btn {{button.class}}"
-            ng-click="this[button.click]()">
+            ng-click="buttonClick(button.type, this[button.click])">
             {{button.text}}
         </button>
     </div>

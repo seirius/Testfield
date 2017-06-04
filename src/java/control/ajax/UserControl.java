@@ -21,23 +21,11 @@ import util.exceptions.ServiceException;
  */
 @Controller
 public class UserControl extends MyController {
-
-    @Autowired
-    private ServletContext context;
-    
-//    private int maxConnections;
     
     @PostConstruct
     @Override
     public void init() {
         super.init();
-        
-//        maxConnections = 0;
-//        try {
-//            maxConnections = Integer.parseInt(context.getInitParameter("maxConnections"));
-//        } catch(NumberFormatException e) {
-//            System.err.println("Context.maxConnections is not an Integer.");
-//        }
     }
     
     @RequestMapping(value = "/login", method = RequestMethod.POST)

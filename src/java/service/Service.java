@@ -6,7 +6,8 @@
 
 package service;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
+import templates.validation.FormValidationException;
 import util.exceptions.BeanException;
 import util.ErrorMsgs;
 import util.exceptions.ServiceException;
@@ -20,7 +21,7 @@ public class Service {
     public static boolean DEBUG = true;
     
     protected final ServiceManager MANAGER;
-    protected HttpSession session;
+    protected HttpServletRequest request;
     
     public Service() {
         this.MANAGER = new ServiceManager();
@@ -37,9 +38,9 @@ public class Service {
             e.printStackTrace();
         }
         
-        if (e instanceof BeanException) {
-            exception = e;
-        } else if (e instanceof ServiceException) {
+        if (e instanceof BeanException ||
+                e instanceof ServiceException || 
+                e instanceof FormValidationException) {
             exception = e;
         } else {
             System.err.println("Exception: " + e.getMessage());
@@ -49,12 +50,13 @@ public class Service {
         return exception;
     }
 
-    public HttpSession getSession() {
-        return session;
+    public HttpServletRequest getRequest() {
+        return request;
     }
 
-    public void setSession(HttpSession session) {
-        this.session = session;
+    public void setRequest(HttpServletRequest request) {
+        this.request = request;
     }
     
+
 }

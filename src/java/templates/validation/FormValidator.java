@@ -1,12 +1,11 @@
 package templates.validation;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
 import java.util.Iterator;
 import javax.servlet.ServletContext;
-import templates.FormService;
+import service.FormService;
 
 /**
  *
@@ -22,7 +21,7 @@ public class FormValidator {
             JsonNode inputs) throws IOException {
         this.formFileName = formFileName;
         this.inputs = inputs;
-        form = FormService.loadJsonForm(servletContext, formFileName);
+        form = FormService.loadForm(servletContext, formFileName, ObjectNode.class);
     }
     
     public void validate() throws FormValidationException {
