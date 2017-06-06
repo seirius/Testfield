@@ -13,7 +13,7 @@ import templates.forms.Form;
 import templates.forms.FormData;
 import templates.forms.inputs.Input;
 import templates.validation.Validation;
-import templates.validation.server_validator.SVException;
+import templates.validation.server_validator.ServerValidator;
 import util.FileUtil;
 import util.ServiceNicks;
 import util.ServiceReturn;
@@ -87,10 +87,13 @@ public class FormService extends Service {
         Class<?> clazz = Class.forName(ServiceNicks.toEnum(svName)
                 .getClassName());
         Object svClass = clazz.newInstance();
+        ServerValidator sv = (ServerValidator) svClass;
+        sv.setManager(MANAGER);
+        sv.setRequest(request);
 
-        Method classMethod = svClass.getClass()
+        Method classMethod = sv.getClass()
                 .getMethod(svMethod, Input.class);
-        return (ServiceReturn) classMethod.invoke(svClass, input);
+        return (ServiceReturn) classMethod.invoke(sv, input);
     }
     
     public ServiceReturn loadForm(String formName) throws Exception {

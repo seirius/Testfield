@@ -11,6 +11,8 @@ public class Validation {
     private Integer maxLength;
     private String inputVerify;
     private String server;
+    
+    private NgModelOptions ngModelOptions;
 
     public Boolean getRequired() {
         return required;
@@ -50,6 +52,14 @@ public class Validation {
 
     public void setServer(String server) {
         this.server = server;
+    }
+
+    public NgModelOptions getNgModelOptions() {
+        return ngModelOptions;
+    }
+
+    public void setNgModelOptions(NgModelOptions ngModelOptions) {
+        this.ngModelOptions = ngModelOptions;
     }
     
 }

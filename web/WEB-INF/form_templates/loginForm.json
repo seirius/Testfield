@@ -12,8 +12,11 @@
             "showLabel": false,
             "validation": {
                 "required": true,
+                "maxLength": 30,
                 "minLength": 3,
-                "maxLength": 30
+                "ngModelOptions": {
+                    "updateOn": "submit"
+                }
             }
         },
         {
@@ -26,8 +29,11 @@
             "showLabel": false,
             "validation": {
                 "required": true,
+                "maxLength": 50,
                 "minLength": 5,
-                "maxLength": 30
+                "ngModelOptions": {
+                    "updateOn": "submit"
+                }
             }
         }
     ],

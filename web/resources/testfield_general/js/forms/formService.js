@@ -2,23 +2,43 @@ var generalTestfield = angular.module("generalTestfield");
 
 generalTestfield.service("FormService", function (tfHttp) {
     
+    var controlValidation = function (response) {
+        if (response.errorCode !== 0) {
+            return;
+        }
+        
+        response.data.form.inputs.forEach(function (input) {
+            if (typeof input.validation === "undefined") {
+                input.validation = {
+                    ngModelOptions: {}
+                };
+            } else if (typeof input.validation.ngModelOptions === "undefined") {
+                input.validation.ngModelOptions = {};
+            }
+        });
+    };
+    
     return {
         FORM_B_URL: "static/htmlParts/forms/formBuilder.html",
         requestForm: function (args) {
-            return tfHttp.requestParam({
+            var promise = tfHttp.requestParam({
                 url: "/Testfield/request/form",
                 data: {
                     formName: args.formName
                 },
                 method: "GET"
             });
+            promise.then(controlValidation);
+            return promise;
         },
         requestFormPost: function (args) {
-            return tfHttp.request({
+            var promise = tfHttp.request({
                 url: "/Testfield/request/formPost",
                 data: args,
                 method: "POST"
             });
+            promise.then(controlValidation);
+            return promise;
         },
         sendForm: function (form) {
             return tfHttp.request({
@@ -142,7 +162,7 @@ generalTestfield.directive("server", function ($q, FormService) {
                     }
                 });
                 
-                return defer.pormise;
+                return defer.promise;
             };
         }
     };

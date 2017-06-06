@@ -13,6 +13,7 @@
         ng-required="input.validation.required"
         ng-minlength="input.validation.minLength"
         ng-maxlength="input.validation.maxLength"
+        ng-model-options="input.validation.ngModelOptions"
         input-verify="{{input.validation.inputVerify}}"
         server="{{input.validation.server}}"
         placeholder="{{input.placeholder}}">
@@ -23,6 +24,7 @@
         ng-required="input.validation.required"
         ng-min="input.validation.minLength"
         ng-max="input.validation.maxLength"
+        ng-model-options="input.validation.ngModelOptions"
         input-verify="{{input.validation.inputVerify}}"
         server="{{input.validation.server}}"
         placeholder="{{input.placeholder}}">
@@ -74,5 +76,12 @@
                 && (!this[form.name][input.name].$pristine || this[form.name].$submitted)"
         >
         Doesn't match
+    </p>
+    <p 
+        class="form-text text-muted"
+        ng-show="this[form.name][input.name].$error.server
+                && (!this[form.name][input.name].$pristine || this[form.name].$submitted)"
+        >
+        Duplicated input
     </p>
 </div>

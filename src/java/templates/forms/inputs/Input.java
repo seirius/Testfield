@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import service.FormService;
 import templates.forms.Form;
 import templates.validation.FormValidationException;
+import templates.validation.NgModelOptions;
 import templates.validation.Validation;
 import templates.validation.ValidationCode;
 import util.exceptions.ServiceException;
@@ -18,13 +19,18 @@ import util.exceptions.ServiceException;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = InputText.class, name = "InputText"),
-    @JsonSubTypes.Type(value = InputSelect.class, name = "InputSelect"),
-    @JsonSubTypes.Type(value = InputTextarea.class, name = "InputTextarea"),
-    @JsonSubTypes.Type(value = InputRadio.class, name = "InputRadio"),
+    @JsonSubTypes.Type(value = InputText.class, name = "InputText")
+    ,
+    @JsonSubTypes.Type(value = InputSelect.class, name = "InputSelect")
+    ,
+    @JsonSubTypes.Type(value = InputTextarea.class, name = "InputTextarea")
+    ,
+    @JsonSubTypes.Type(value = InputRadio.class, name = "InputRadio")
+    ,
     @JsonSubTypes.Type(value = InputCheckbox.class, name = "InputCheckbox")
 })
 public abstract class Input {
+
     @JsonIgnore
     protected Form form;
     protected String label;
@@ -61,12 +67,12 @@ public abstract class Input {
     public Object getValue() {
         return value;
     }
-    
+
     @JsonIgnore
     public <T> T getValue(Class<T> clazz) {
         return clazz.cast(value);
     }
-    
+
     public void setValue(Object value) {
         this.value = value;
     }
@@ -94,7 +100,7 @@ public abstract class Input {
     public void setValidation(Validation validation) {
         this.validation = validation;
     }
-    
+
     @JsonIgnore
     public void launchController() throws ServiceException {
         if (controller != null) {
@@ -102,60 +108,59 @@ public abstract class Input {
             FormService.callCharger(ctrl[0], ctrl[1], form, this);
         }
     }
-    
-    @JsonIgnore 
-    public void validate() throws FormValidationException {}
-    
+
+    @JsonIgnore
+    public void validate() throws FormValidationException {
+    }
+
     @JsonIgnore
     public InputText getAsText() {
         return (InputText) this;
     }
-    
+
     @JsonIgnore
     public InputSelect getAsSelect() {
         return (InputSelect) this;
     }
-    
+
     public void required() throws FormValidationException {
-        if (validation != null 
-                && validation.getRequired() != null 
+        if (validation != null
+                && validation.getRequired() != null
                 && validation.getRequired()) {
-            if (value == null 
-                    || ( 
-                    value instanceof String 
-                    && 
-                    ((String) value).trim().length() == 0)) {
+            if (value == null
+                    || (value instanceof String
+                    && ((String) value).trim().length() == 0)) {
                 throw new FormValidationException(label, ValidationCode.REQUIRED);
             }
         }
     }
-    
+
     @JsonIgnore
     public void minLength() throws FormValidationException {
-        if (validation != null 
-                && validation.getMinLength() != null 
-                && value != null 
-                && value instanceof String 
+        if (validation != null
+                && validation.getMinLength() != null
+                && value != null
+                && value instanceof String
                 && ((String) value).length() < validation.getMinLength()) {
             throw new FormValidationException(label, ValidationCode.MIN_LENGTH);
         }
     }
-    
+
     @JsonIgnore
     public void maxLength() throws FormValidationException {
-        if (validation != null 
-                && validation.getMaxLength() != null 
-                && value != null 
-                && value instanceof String 
+        if (validation != null
+                && validation.getMaxLength() != null
+                && value != null
+                && value instanceof String
                 && ((String) value).length() > validation.getMaxLength()) {
             throw new FormValidationException(label, ValidationCode.MAX_LENGTH);
         }
     }
-    
+
     @JsonIgnore
     public void minNumberLength() throws FormValidationException {
-        if (validation != null 
-                && validation.getMinLength() != null 
+        if (validation != null
+                && validation.getMinLength() != null
                 && value != null) {
             if (value instanceof Integer) {
                 Integer aux = (Integer) value;
@@ -163,7 +168,7 @@ public abstract class Input {
                     throw new FormValidationException(label, ValidationCode.MIN_LENGTH);
                 }
             }
-            
+
             if (value instanceof Double) {
                 Double aux = (Double) value;
                 if (aux < validation.getMinLength()) {
@@ -172,11 +177,11 @@ public abstract class Input {
             }
         }
     }
-    
+
     @JsonIgnore
     public void maxNumberLength() throws FormValidationException {
-        if (validation != null 
-                && validation.getMaxLength() != null 
+        if (validation != null
+                && validation.getMaxLength() != null
                 && value != null) {
             if (value instanceof Integer) {
                 Integer aux = (Integer) value;
@@ -184,7 +189,7 @@ public abstract class Input {
                     throw new FormValidationException(label, ValidationCode.MIN_LENGTH);
                 }
             }
-            
+
             if (value instanceof Double) {
                 Double aux = (Double) value;
                 if (aux > validation.getMaxLength()) {
@@ -193,10 +198,10 @@ public abstract class Input {
             }
         }
     }
-    
+
     @JsonIgnore
     public void inputVerify() throws FormValidationException {
-        if (validation != null 
+        if (validation != null
                 && validation.getInputVerify() != null) {
             String modelInputName = validation.getInputVerify();
             Input modelInput = form.getInputByName(modelInputName);
@@ -206,10 +211,10 @@ public abstract class Input {
             }
         }
     }
-    
+
     @JsonIgnore
     public void cloneValue(Input input) {
         this.value = input.getValue();
     }
-    
- }
+
+}
