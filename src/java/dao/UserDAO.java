@@ -11,7 +11,6 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import util.exceptions.BeanException;
 import util.exceptions.DAOException;
-import util.exceptions.ServiceException;
 
 /**
  * @author Andriy Yednarovych
@@ -66,6 +65,31 @@ public class UserDAO extends DAO {
             
         } catch(Exception e) {
             throw new DAOException(e);
+        }
+        
+        return user;
+    }
+    
+    public UserTestfield getUserByEmail(String email) throws Exception {
+        UserTestfield user = null;
+        
+        String hql = ""
+                + "from UserTestfield userT "
+                + "where userT.userNick in ("
+                + " select userI.userNick "
+                + " from UserInfo userI "
+                + " where userI.email = :email "
+                + ")"
+                + "";
+        Query query = session.createQuery(hql);
+        query.setString("email", email);
+        
+        List<UserTestfield> users = query.list();
+        int userNumber = users.size();
+        if (userNumber == 1) {
+            user = users.get(0);
+        } else if (userNumber > 1) {
+            throw new Exception("More than one user with same email!.");
         }
         
         return user;

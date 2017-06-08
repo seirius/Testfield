@@ -8,6 +8,7 @@ package service;
 
 import javax.servlet.http.HttpServletRequest;
 import templates.validation.FormValidationException;
+import templates.validation.server_validator.SVException;
 import util.exceptions.BeanException;
 import util.ErrorMsgs;
 import util.exceptions.ServiceException;
@@ -37,10 +38,10 @@ public class Service {
         if (DEBUG) {
             e.printStackTrace();
         }
-        
-        if (e instanceof BeanException ||
-                e instanceof ServiceException || 
-                e instanceof FormValidationException) {
+        if (e.getCause() instanceof BeanException ||
+                e.getCause() instanceof ServiceException || 
+                e.getCause() instanceof FormValidationException ||
+                e.getCause() instanceof SVException) {
             exception = e;
         } else {
             System.err.println("Exception: " + e.getMessage());

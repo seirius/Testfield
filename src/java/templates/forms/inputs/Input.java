@@ -211,6 +211,13 @@ public abstract class Input {
             }
         }
     }
+    
+    @JsonIgnore
+    public void server() throws FormValidationException {
+        if (validation != null && validation.getServer() != null) {
+            String svName = validation.getServer();
+        }
+    }
 
     @JsonIgnore
     public void cloneValue(Input input) {

@@ -2,6 +2,7 @@ package util;
 
 import java.util.HashMap;
 import templates.validation.FormValidationException;
+import templates.validation.server_validator.SVException;
 
 /**
  *
@@ -48,18 +49,22 @@ public class AjaxResponse {
     }
     
     public void setErrorMsg(Exception e) {
-        if (e instanceof FormValidationException) {
+        if (e.getCause() instanceof FormValidationException) {
             FormValidationException ex = (FormValidationException) e;
             int code = ex.getValidationCode().getCode();
             System.err.println(String.format("-- WARNING: Form Validation %d - %s", 
                     code, 
                     ex.getLabelName()));
             errorCode = code;
+            errorMsg = e.getCause().getMessage();
+        } else if (e.getCause() instanceof SVException) {
+            errorCode = -200;
+            errorMsg = e.getCause().getMessage();
         } else {
             System.err.println("-- ERROR: " + e.getMessage());
             errorCode = -1;
+            errorMsg = ErrorMsgs.DEFAULT_MSG;
         }
-        errorMsg = ErrorMsgs.DEFAULT_MSG;
     }
     
     public void add(String elementName, Object element) {

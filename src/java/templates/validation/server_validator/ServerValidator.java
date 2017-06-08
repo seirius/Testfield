@@ -9,8 +9,8 @@ import util.ServiceManager;
  */
 public class ServerValidator {
     
-    private ServiceManager manager;
-    private HttpServletRequest request;
+    protected ServiceManager manager;
+    protected HttpServletRequest request;
     
     public ServiceManager getManager() {
         return manager;

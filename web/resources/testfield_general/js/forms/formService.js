@@ -154,11 +154,12 @@ generalTestfield.directive("server", function ($q, FormService) {
                     }
                 });
                 
+                input.value = modelValue;
                 FormService.serverValidation(input).then(function (response) {
                     if (response.data.ok) {
-                        defer.resolve();
+                        defer.resolve(modelValue);
                     } else {
-                        defer.reject();
+                        defer.reject(modelValue);
                     }
                 });
                 

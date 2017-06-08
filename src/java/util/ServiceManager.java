@@ -39,6 +39,17 @@ public class ServiceManager {
         return dao;
     }
     
+    public <T> T getDAO(Class<T> daoClass) {
+        DAO dao = null;
+        try {
+            Constructor<?> constructor = daoClass.getConstructor(Session.class);
+            dao = (DAO) constructor.newInstance(new Object[] {session});
+        } catch (Exception e) {
+            ErrorMsgs.sysLogThis(e);
+        }
+        return daoClass.cast(dao);
+    }
+    
     public UserDAO getUserDAO() {
         return new UserDAO(session);
     }

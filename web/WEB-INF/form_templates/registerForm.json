@@ -67,7 +67,7 @@
                 "required": true,
                 "minLength": 5,
                 "maxLength": 80,
-                "server": "SV_USER.userDuplicate",
+                "server": "SV_USER.emailDuplicate",
                 "ngModelOptions": {
                     "debounce": 500
                 }
