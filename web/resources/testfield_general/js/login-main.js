@@ -39,8 +39,9 @@ loginModule.controller("registerCtrl", ["$scope", "UserService", "$location",
             $scope.form = response.data.form;
         });
 
-        $scope.submitRegister = function () {
-
+        $scope.submitRegister = function (data) {
+            console.log(data);
+            $scope.goLogin();
 //            $scope.$broadcast("show-errors-event");
 //
 //            if ($scope.register.$invalid) {

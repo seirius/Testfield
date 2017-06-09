@@ -12,7 +12,8 @@ generalTestfield.service("FormService", function (tfHttp) {
                 input.validation = {
                     ngModelOptions: {}
                 };
-            } else if (typeof input.validation.ngModelOptions === "undefined") {
+            } else if (typeof input.validation.ngModelOptions === "undefined"
+                    || input.validation.ngModelOptions === null) {
                 input.validation.ngModelOptions = {};
             }
         });

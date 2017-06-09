@@ -30,18 +30,26 @@ public class Form {
     private List<Input> inputs;
     private JsonNode buttons;
 
-    @JsonIgnore 
-    public void validate() throws FormValidationException, IOException {
-        Form dataForm = FormService.loadForm(request.getServletContext(), name);
-        for (Input dataInput: inputs) {
-            Input origInput = dataForm.getInputByName(dataInput.getName());
-            if (origInput == null) {
+    @JsonIgnore
+    public void copyValuesTo(Form form) throws FormValidationException {
+        for (Input input: inputs) {
+            Input foreignInput = form.getInputByName(input.getName());
+            if (foreignInput == null) {
                 throw new FormValidationException("Not valid form (HUH).", ValidationCode.ERR);
             }
-            if (!origInput.getClass().equals(dataInput.getClass())) {
+            if (!foreignInput.getClass().equals(input.getClass())) {
                 throw new FormValidationException("Not valid form (HUE)", ValidationCode.ERR);
             }
-            origInput.cloneValue(dataInput);
+            foreignInput.cloneValue(input);
+        }
+    }
+    
+    @JsonIgnore 
+    public void validate() throws FormValidationException, IOException {
+        Form originalForm = FormService.loadForm(request.getServletContext(), name);
+        copyValuesTo(originalForm);
+        for (Input origInput: originalForm.getInputs()) {
+            origInput.setForm(originalForm);
             origInput.validate();
         }
     }

@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import service.FormService;
 import templates.forms.Form;
 import templates.validation.FormValidationException;
-import templates.validation.NgModelOptions;
 import templates.validation.Validation;
 import templates.validation.ValidationCode;
 import util.exceptions.ServiceException;
