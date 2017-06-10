@@ -34,6 +34,7 @@ public class InputSelect extends Input {
     public void validate() throws FormValidationException {
         required();
         inputVerify();
+        server();
     }
 
 }

@@ -110,8 +110,17 @@ function ($scope, FormService) {
             buttonFunction();
         }
     };
+    
+    $scope.inputsLoaded = 0;
+    $scope.inputLoaded = function (input) {
+        $scope.inputsLoaded++;
+        if ($scope.inputsLoaded === $scope.form.inputs.length
+                && $scope.formRendered) {
+            $scope.formRendered();
+        }
+    };
 }]);  
-
+ 
 generalTestfield.directive("inputVerify", function () {
     return {
         restrict: "A",
@@ -166,6 +175,21 @@ generalTestfield.directive("server", function ($q, FormService) {
                 
                 return defer.promise;
             };
+        }
+    };
+});
+
+generalTestfield.directive('onRepeatEnd', function ($timeout) {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+            if (scope.$last === true) {
+                $timeout(function () {
+                    if (scope[attr.onRepeatEnd]) {
+                        scope[attr.onRepeatEnd]();
+                    }
+                });
+            }
         }
     };
 });

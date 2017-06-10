@@ -9,6 +9,7 @@ import templates.forms.Form;
 import templates.validation.FormValidationException;
 import templates.validation.Validation;
 import templates.validation.ValidationCode;
+import util.ServiceReturn;
 import util.exceptions.ServiceException;
 
 /**
@@ -213,8 +214,17 @@ public abstract class Input {
     
     @JsonIgnore
     public void server() throws FormValidationException {
-        if (validation != null && validation.getServer() != null) {
-            String svName = validation.getServer();
+        try {
+            if (validation != null && validation.getServer() != null) {
+                ServiceReturn result = new FormService().serverValidation(this);
+                if (!result.getAsBoolean("ok")) {
+                    throw new FormValidationException(label, ValidationCode.SERVER);
+                }
+            }
+        } catch(FormValidationException e) {
+            throw e;
+        } catch(Exception e) {
+            throw new FormValidationException(label, ValidationCode.SERVER, e);
         }
     }
 

@@ -19,6 +19,13 @@ public class FormValidationException extends Exception {
         this.validationCode = validationCode;
     }
     
+    public FormValidationException(String labelName, ValidationCode validationCode,
+            Exception e) {
+        super(e);
+        this.labelName = labelName;
+        this.validationCode = validationCode;
+    }
+    
     public FormValidationException(String msg, Throwable e) {
         super(msg, e);
     }

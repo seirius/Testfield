@@ -5,9 +5,9 @@
         ng-submit="submit()">
         <div 
             class="row" 
-            ng-repeat="input in form.inputs">
+            ng-repeat="input in form.inputs" on-repeat-end="formRepeatEnd">
             <div class="col-xs-12">
-                <ng-include src="getInputHtml(input)"></ng-include>
+                <ng-include src="getInputHtml(input)" onload="inputLoaded(input)"></ng-include>
             </div>
         </div>
         <div class="row">

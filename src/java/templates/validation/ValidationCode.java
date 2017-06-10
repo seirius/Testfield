@@ -5,7 +5,8 @@ package templates.validation;
  * @author Andriy
  */
 public enum ValidationCode {
-    ERR(100), REQUIRED(101), MIN_LENGTH(102), MAX_LENGTH(103), INPUT_VER(104);
+    ERR(100), REQUIRED(101), MIN_LENGTH(102), MAX_LENGTH(103), INPUT_VER(104),
+    SERVER(105);
     
     private final int code;
     

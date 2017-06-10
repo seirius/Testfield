@@ -1,7 +1,9 @@
 package templates.forms.inputs;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import templates.forms.inputs.subinputs.Option;
+import templates.validation.FormValidationException;
 
 /**
  *
@@ -18,4 +20,10 @@ public class InputRadio extends Input {
         this.radios = radios;
     }
     
+    @JsonIgnore
+    @Override
+    public void validate() throws FormValidationException {
+        required();
+        server();
+    }
 }

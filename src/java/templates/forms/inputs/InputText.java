@@ -23,6 +23,7 @@ public class InputText extends Input {
     public void validate() throws FormValidationException {
         required();
         inputVerify();
+        server();
         switch(typeName) {
             case "text":
                 minLength();

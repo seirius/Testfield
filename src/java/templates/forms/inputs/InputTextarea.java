@@ -25,6 +25,7 @@ public class InputTextarea extends Input {
         minLength();
         maxLength();
         inputVerify();
+        server();
     }
     
     

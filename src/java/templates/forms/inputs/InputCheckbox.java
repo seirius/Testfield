@@ -22,5 +22,6 @@ public class InputCheckbox extends Input {
     @Override
     public void validate() throws FormValidationException {
         required();
+        server();
     }
 }

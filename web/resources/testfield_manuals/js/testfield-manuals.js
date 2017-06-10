@@ -84,7 +84,6 @@ function ($scope, $rootScope, ManualService, $location, $routeParams, $window,
                     manualId: ManualService.getCurrentManual().id
                 }
             };
-            console.log($scope.form);
             ModalService.openModal({
                 urlContent: FormService.FORM_B_URL,
                 scope: $scope,

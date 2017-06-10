@@ -161,7 +161,7 @@ public class FormService extends Service {
     }
 
     public ServiceReturn serverValidation(Input input) throws Exception {
-        ServiceReturn result = new ServiceReturn();
+        ServiceReturn result = null;
         try {
             MANAGER.beginTransaction();
             Validation validation = input.getValidation();
