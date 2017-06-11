@@ -1,7 +1,10 @@
 package test;
 
-import templates.forms.inputs.InputSelect;
-import templates.forms.inputs.InputText;
+import hibernate.HibernateUtil;
+import model.bean.manual.Manual;
+import org.hibernate.Query;
+import org.hibernate.Session;
+
 
 /**
  *
@@ -12,7 +15,15 @@ public class Test {
 
     public static void main(String[] args) {
         try {
-            System.out.println(new InputText().getClass().equals(new InputText().getClass()));
+            Session session = HibernateUtil.getSessionFactory().openSession();
+            String hql = ""
+                    + "from Manual "
+                    + "where id = :id"
+                    + "";
+            Query query = session.createQuery(hql);
+            query.setInteger("id", 69);
+            Manual manual = (Manual) query.list().get(0);
+            System.out.println(manual);
         } catch (Exception e) {
             e.printStackTrace();
         }

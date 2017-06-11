@@ -1,7 +1,9 @@
 package templates.forms.chargers;
 
+import dao.ManualBlockDAO;
 import dao.ManualDAO;
 import model.bean.manual.Manual;
+import model.bean.manual.ManualBlock;
 import templates.forms.Form;
 import templates.forms.FormData;
 import util.enums.DAOList;
@@ -22,15 +24,24 @@ public abstract class Charger {
     }
     
     protected Manual shareManual(int manualId) throws DAOException {
-        Manual manual = null;
         FormData formData = form.getFormLoadData();
-        manual = formData.getAs("manual", Manual.class);
+        Manual manual = formData.getAs("manual", Manual.class);
         if (manual == null) {
             manual = ((ManualDAO) form.getManager()
                     .getDAO(DAOList.MANUAL))
                     .getManual(manualId);
         }
         return manual;
+    }
+    
+    protected ManualBlock shareManualBlock(String idBlock) throws DAOException {
+        FormData formData = form.getFormLoadData();
+        ManualBlock manualBlock = formData.getAs("manualBlock", ManualBlock.class);
+        if (manualBlock == null) {
+            manualBlock = (form.getManager().getDAO(ManualBlockDAO.class))
+                    .getBlock(idBlock);
+        }
+        return manualBlock;
     }
 
 

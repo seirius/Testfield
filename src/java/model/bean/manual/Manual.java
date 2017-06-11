@@ -212,8 +212,7 @@ public class Manual implements Serializable, WebBean {
                         return this;
                     }
                     for (ManualBlock block: blocks) {
-                        Hibernate.initialize(block.getWidthTypes());
-                        Hibernate.initialize(block.getRelBlockWidthTypes());
+                        block.prepareForWeb();
                     }
                 }
             }

@@ -16,8 +16,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import model.bean.widthtype.RelBlockWidthType;
 import model.bean.widthtype.WidthType;
+import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
 import org.hibernate.annotations.GenericGenerator;
 import util.enums.BlockWidthTypeEnum;
+import util.exceptions.BeanException;
+import util.interfaces.WebBean;
 
 /**
  *
@@ -26,7 +30,7 @@ import util.enums.BlockWidthTypeEnum;
 
 @Entity
 @Table(name = "manual_block", catalog = "testfield")
-public class ManualBlock implements Serializable {
+public class ManualBlock implements Serializable, WebBean {
     
     @Id
     @Column(name = "ID", nullable = false, unique = true, length = 60)
@@ -131,6 +135,18 @@ public class ManualBlock implements Serializable {
         }
         
         return clazz;
+    }
+
+    @Override
+    @Transient
+    public WebBean prepareForWeb() throws BeanException {
+        try {
+            Hibernate.initialize(widthTypes);
+            Hibernate.initialize(relBlockWidthTypes);
+        } catch(HibernateException e) {
+            throw new BeanException("Error preparing the manual for web.", e);
+        }
+        return this;
     }
     
 }

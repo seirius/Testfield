@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package util.enums;
 
 /**
@@ -40,6 +35,15 @@ public enum BlockWidthTypeEnum {
     public static BlockWidthTypeEnum getWidthTypeEnum(int value) {
         for (BlockWidthTypeEnum val: values()) {
             if (val.getValue() == value) {
+                return val;
+            }
+        }
+        return null;
+    }
+    
+    public static BlockWidthTypeEnum getWidthTypeEnum(String css) {
+        for (BlockWidthTypeEnum val: values()) {
+            if (val.getCss().equalsIgnoreCase(css)) {
                 return val;
             }
         }

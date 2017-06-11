@@ -1,0 +1,85 @@
+{
+    "name": "blockOptions",
+    "service": "SB_MANUAL.updateBlockOptions",
+    "inputs": [
+        {
+            "@type": "InputText",
+            "label": "XS",
+            "name": "xs",
+            "value": 12,
+            "typeName": "number",
+            "placeholder": "",
+            "controller": "CH_MANUAL.loadBlockSize",
+            "showLabel": true,
+            "validation": {
+                "minLength": 2,
+                "maxLength": 12
+            }
+        },
+        {
+            "@type": "InputText",
+            "label": "SM",
+            "name": "sm",
+            "value": "",
+            "typeName": "number",
+            "placeholder": "",
+            "controller": "CH_MANUAL.loadBlockSize",
+            "showLabel": true,
+            "validation": {
+                "minLength": 2,
+                "maxLength": 12
+            }
+        },
+        {
+            "@type": "InputText",
+            "label": "MD",
+            "name": "md",
+            "value": "",
+            "typeName": "number",
+            "placeholder": "",
+            "controller": "CH_MANUAL.loadBlockSize",
+            "showLabel": true,
+            "validation": {
+                "minLength": 2,
+                "maxLength": 12
+            }
+        },
+        {
+            "@type": "InputText",
+            "label": "LG",
+            "name": "lg",
+            "value": "",
+            "typeName": "number",
+            "placeholder": "",
+            "controller": "CH_MANUAL.loadBlockSize",
+            "showLabel": true,
+            "validation": {
+                "minLength": 2,
+                "maxLength": 12
+            }
+        }
+    ],
+    "buttons": {
+        "buttons": [
+            {
+                "type": "button",
+                "class": "btn-primary",
+                "text": "Move left",
+                "click": "moveLeft"
+            },
+            {
+                "type": "submit",
+                "class": "btn-default",
+                "text": "Submit changes",
+                "click": "submitOptions"
+            },
+            {
+                "type": "button",
+                "class": "btn-primary",
+                "text": "Move right",
+                "click": "moveRight"
+            }
+        ],
+        "place": "center"
+    }
+}

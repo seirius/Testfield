@@ -93,12 +93,30 @@ function ($scope, FormService) {
                 return "static/htmlParts/forms/inputs/inputCheckbox.html";
         }
     };
+    $scope.getInputHtmlM = function (input) {
+        switch(input["@type"]) {
+            case "InputText":
+                return "static/htmlParts/forms/inputs/inputTextM.html";
+                
+            case "InputSelect":
+                return "static/htmlParts/forms/inputs/inputSelectM.html";
+                
+            case "InputTextarea":
+                return "static/htmlParts/forms/inputs/inputTextareaM.html";
+            
+            case "InputRadio": 
+                return "static/htmlParts/forms/inputs/inputRadioM.html";
+            
+            case "InputCheckbox": 
+                return "static/htmlParts/forms/inputs/inputCheckboxM.html";
+        }
+    };
     $scope.submit = function () {
         if ($scope[$scope.form.name].$valid) {
             FormService.sendForm($scope.form)
             .then(function (data) {
                 var submit = FormService.getSubmitBtnData($scope.form);
-                if (submit) {
+                if (submit && submit.click && $scope[submit.click]) {
                     $scope[submit.click](data);
                 }
             });

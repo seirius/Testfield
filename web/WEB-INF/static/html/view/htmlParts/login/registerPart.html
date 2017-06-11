@@ -10,18 +10,17 @@
             </div>
             <div class="panel-body">
 
-                <div class="row">
+                <div class="row" ng-show="showSuccess">
                     <div class="col-xs-12">
 
-                        <div class="alert alert-danger" ng-show="showError">
-                            <a href="#" class="close" ng-click="showError = false">&times;</a>
-                            <strong>{{errorMessage}}</strong>
+                        <div class="alert alert-success text-center">
+                            <strong>Success!</strong> Registration complete.
                         </div>
 
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row" ng-show="!showSuccess">
                     <div class="col-xs-12">
                         <ng-include src="'static/htmlParts/forms/formBuilder.html'"></ng-include>
                     </div>

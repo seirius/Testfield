@@ -13,6 +13,7 @@ require.config({
             "js/angularjs/angular-route"
         ],
         "login-main": "testfield_general/js/login-main",
+        "login-main-m": "testfield_general/js/login-main",
         "testfield-general": "./testfield_general/js/testfield-general",
         "testfield-files": "./testfield_files/js/testfield-files",
         "file-service": "./testfield_files/js/fileService",
@@ -44,6 +45,16 @@ require.config({
         ],
         "form-service": [
             "./testfield_general/js/forms/formService"
+        ],
+        "materialize": [
+            "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min",
+            "resources/materialize/js/materialize.min"
+        ],
+        "angular-materialize": [
+            "https://cdnjs.cloudflare.com/ajax/libs/angular-materialize/0.2.2/angular-materialize.min"
+        ],
+        "hammerjs": [
+            "./hammerjs/hammer"
         ]
     },
     shim: {
@@ -59,8 +70,20 @@ require.config({
         "login-main": {
             deps: [ "angular-route", "form-service" ]
         },
+        "login-main-m": {
+            deps: [ "angular-route", "form-service" ]
+        },
+        "hammerjs": {
+            deps: ["angular"]
+        },
+        "materialize": {
+            deps: ["hammerjs", "angular-materialize"]
+        },
+        "angular-materialize": {
+            deps: ["angular"]
+        },
         "testfield-general": {
-            deps: [ "angular" ]
+            deps: [ "angular", "materialize" ]
         },
         "chose-app": {
             deps: [ "angular-route" ]

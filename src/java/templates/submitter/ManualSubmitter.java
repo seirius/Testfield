@@ -1,17 +1,23 @@
 package templates.submitter;
 
 import dao.FontFamilyDAO;
+import dao.ManualBlockDAO;
 import dao.ManualConfDAO;
 import model.bean.manual.Manual;
+import model.bean.manual.ManualBlock;
 import model.bean.manual.ManualConf;
 import model.bean.style.FontColor;
 import model.bean.style.FontFamily;
+import model.bean.widthtype.RelBlockWidthType;
+import org.hibernate.Session;
 import templates.forms.Form;
 import templates.forms.FormData;
+import templates.forms.inputs.Input;
 import util.ErrorMsgs;
 import util.Security;
 import util.ServiceManager;
 import util.ServiceReturn;
+import util.enums.BlockWidthTypeEnum;
 import util.enums.DAOList;
 
 /**
@@ -61,6 +67,37 @@ public class ManualSubmitter extends Submitter {
             result.addItem("manual", manual, true);
         } catch (SubmitterException e) {
             throw e;
+        } catch (Exception e) {
+            throw new SubmitterException(e);
+        }
+        return result;
+    }
+    
+    public ServiceReturn updateBlockOptions(Form form) throws SubmitterException {
+        ServiceReturn result = new ServiceReturn();
+        try {
+            FormData formData = form.getFormSendData();
+            String idBlock = formData.getAs("idBlock", String.class);
+            Session session = form.getManager().getSession();
+            for (BlockWidthTypeEnum type: BlockWidthTypeEnum.values()) {
+                Input input = form.getInputByName(type.getCss());
+                RelBlockWidthType relType = new RelBlockWidthType();
+                relType.setManual(idBlock);
+                relType.setWidthType(type.getValue());
+                if (input.getValue() != null) {
+                    relType.setAmount(input.getValue(Integer.class));
+                    session.saveOrUpdate(relType);
+                } else {
+                    session.delete(relType);
+                }
+            }
+            
+            ManualBlock manualBlock = form
+                    .getManager()
+                    .getDAO(ManualBlockDAO.class)
+                    .getBlock(idBlock);
+            
+            result.addItem("manualBlock", manualBlock, true);
         } catch (Exception e) {
             throw new SubmitterException(e);
         }

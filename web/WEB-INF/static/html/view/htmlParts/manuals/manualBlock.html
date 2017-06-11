@@ -1,12 +1,13 @@
 <div 
     class="manual-block manual-block-style" 
-    block-options="vertical delete modify"
+    block-options
     ng-class="{
         'last': manualBlock.isLast, 
         'first': manualBlock.isFirst,
         'is-editing': isEditing
     }"
     tabindex="-1">
+    <div ng-include="'static/htmlParts/manuals/blockOptions.html'"></div>
     <div 
         editable 
         sn-keyup="saveBlock" 

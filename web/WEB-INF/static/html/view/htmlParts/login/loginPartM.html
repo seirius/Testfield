@@ -1,0 +1,21 @@
+<div ng-show="showLogin" class="row margin-top-3">
+    <div class="col s12 m8 l6 offset-m2 offset-l3">
+        <div class="card grey lighten-4">
+            <div class="card-content">
+                <div class="card-title right-align">
+                    <span class="font-size-2">Login</span>
+                </div>
+                <ng-include src="'static/htmlParts/forms/formBuilderM.html'"></ng-include>
+                <div 
+                    class="card-action">
+                    <a href ng-click="goRegister()">
+                        Create new account
+                    </a><br>
+                    <a href ng-click="goRegister()">
+                        Forgot your password?
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

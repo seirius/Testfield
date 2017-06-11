@@ -1,0 +1,17 @@
+<div ng-show="showRegister" class="row margin-top-3">
+    <div class="col s12 m6 offset-m3">
+        <div class="card green lighten-5">
+            <div class="card-content">
+                <div class="card-title right-align">
+                    <span class="font-size-2">New user</span>
+                </div>
+                <ng-include src="'static/htmlParts/forms/formBuilderM.html'"></ng-include>
+                <div class="card-action">
+                    <a href ng-click="goLogin()">
+                        Return to login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -11,7 +11,6 @@
             <div 
                 ng-class="{'last': manualPage.isLast, 'first': manualPage.isFirst}"
                 class="manual-page manual-page-style" 
-                block-options="horizontal delete add"
                 ng-controller="pageCtrl"
                 ng-init="initPage(manualPage)"
                 >
@@ -26,7 +25,6 @@
                         
                         <div 
                             class="manual-row manual-row-style" 
-                            block-options="horizontal add delete"
                             ng-class="{'last': manualRow.isLast, 'first': manualRow.isFirst}">
                             
                             <div class="row">
@@ -34,7 +32,7 @@
                                     ng-repeat="manualBlock in manualRow.blocks" 
                                     ng-controller="manualBlockCtrl"
                                     ng-init="initBlock(manualBlock)"
-                                    block-class
+                                    block-classes
                                     >
                                     <div 
                                         ng-include="'static/htmlParts/manuals/manualBlock.html'">

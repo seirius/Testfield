@@ -10,6 +10,7 @@ public enum ServiceNicks {
     STYLE("STYLE", "service.StyleService"),
     USER("USER", "service.UserService"),
     CH_STYLE("CH_STYLE", "templates.forms.chargers.StyleCharger"),
+    CH_MANUAL("CH_MANUAL", "templates.forms.chargers.ManualCharger"),
     SB_MANUAL("SB_MANUAL", "templates.submitter.ManualSubmitter"),
     SB_USER("SB_USER", "templates.submitter.UserSubmitter"),
     SV_USER("SV_USER", "templates.validation.server_validator.UserSV");

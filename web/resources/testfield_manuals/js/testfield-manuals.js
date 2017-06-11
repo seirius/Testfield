@@ -132,10 +132,20 @@ function ($scope, $rootScope, ManualService, $location, $routeParams, $window,
     };
     
     $scope.requestForm = function () {
-        FormService.requestForm({
-            formName: "testForm"
+        FormService.requestFormPost({
+            formName: "blockOptions",
+            data: {
+                data: {
+                    idBlock: "05f830d5-8f18-45f6-b23d-40a88ee42e62"
+                }
+            }
         }).then(function (response) {
             $scope.form = response.data.form;
+            $scope.form.formSendData = {
+                data: {
+                    idBlock: "05f830d5-8f18-45f6-b23d-40a88ee42e62"
+                }
+            };
             ModalService.openModal({
                 urlContent: "/Testfield/static/htmlParts/forms/formBuilder.html",
                 scope: $scope,
@@ -259,14 +269,14 @@ manualsTestfield.directive("summernoteEditPanel", function ($templateRequest) {
     };
 });
 
-manualsTestfield.controller("manualBlockCtrl", function ($scope, $rootScope, ManualService, $sce) {
+manualsTestfield.controller("manualBlockCtrl", 
+function ($scope, $rootScope, ManualService, $sce, FormService, ModalService) {
     $scope.showModButton = true;
+    $scope.options = {
+        showModify: false
+    };
     $scope.$sce = $sce;
     $scope.manualBlock.manualBlockTrustedHtml = $sce.trustAsHtml($scope.manualBlock.content);
-    
-    var loadBlockSize = function () {
-        $scope.blockSize = MANSC.getBlockSizes($scope.block);
-    };
     
     var keyups = 0;
     $scope.keyup = function () {
@@ -287,11 +297,8 @@ manualsTestfield.controller("manualBlockCtrl", function ($scope, $rootScope, Man
 
     $scope.initBlock = function (block) {
         $scope.block = block;
-        loadBlockSize();
     };
     
-    $scope.popoverClosed = loadBlockSize;
-
     $scope.delete = function () {
         ManualService.deleteBlock($scope.block.id).then(function () {
             ManualService.reloadManual($scope);
@@ -311,13 +318,45 @@ manualsTestfield.controller("manualBlockCtrl", function ($scope, $rootScope, Man
     };
     
     $scope.modifyElement = function () {
-        ManualService.modifyBlockSize({
-            idBlock: $scope.block.id,
-            widthTypes: MANSC.getWidthTypes($scope.blockSize)
-        }).then(function () {
-            ManualService.reloadManual($scope);
+        FormService.requestFormPost({
+            formName: "blockOptions",
+            data: {
+                data: {
+                    idBlock: $scope.block.id
+                }
+            }
+        }).then(function (response) {
+            $scope.form = response.data.form;
+            $scope.form.formSendData = {
+                data: {
+                    idBlock: $scope.block.id
+                }
+            };
+            ModalService.openModal({
+                urlContent: "/Testfield/static/htmlParts/forms/formBuilder.html",
+                scope: $scope,
+                callbacks: {
+                    close: function () {
+                        $scope.form = {};
+                        $scope.formSubmitCallback = undefined;
+                    }
+                }
+            }).then(function ($modal) {
+                $scope.formSubmitCallback = function () {
+                    console.log("submitted");
+                    $modal.modal("hide");
+                };
+                $scope.cancelForm = function () {
+                    console.log("cancelled");
+                    $modal.modal("hide");
+                };
+            });
         });
     };
+    
+    $scope.submitOptions = function (response) {
+        $scope.block = response.data.manualBlock;
+    };  
     
 });
 
@@ -387,13 +426,6 @@ manualsTestfield.controller("rowCtrl", function ($scope, $rootScope, ManualServi
     };
 
     $scope.addElement = function () {
-        ManualService.addBlock({
-            idRow: $scope.row.id,
-            widthTypes: MANSC.getWidthTypes($scope.blockSize),
-            blockOrder: 0
-        }).then(function () {
-            ManualService.reloadManual($scope);
-        });
     };
     
     $scope.popoverClosed = resetBlockSize;
@@ -414,85 +446,6 @@ manualsTestfield.controller("rowCtrl", function ($scope, $rootScope, ManualServi
 
 });
 
-manualsTestfield.directive("blockOptions", function ($templateRequest, $compile) {
-    var blockOptions = {
-        restrict: "A",
-        link: function (scope, element, attrs) {
-            var options = attrs.blockOptions;
-            var $element = $(element);
-            
-            $templateRequest("static/htmlParts/manuals/blockOptions.html").then(function (html) {
-                MANSC.functionalityByType({
-                    $element: $element,
-                    $templateRequest: $templateRequest,
-                    $scope: scope,
-                    $compile: $compile,
-                    html: html
-                });
-                
-                MANSC.elementHover($element, options);
-            });
-        }
-    };
-
-    return blockOptions;
-});
-
-manualsTestfield.directive("blockClass", function () {
-    var blockClass = {
-        restrict: "A",
-        link: function (scope, element, attrs) {
-            var $element = $(element);
-            var classes = MANSC.getClassesByWidthTypes(scope.block.widthTypes, 
-                scope.block.relBlockWidthTypes);
-            classes.forEach(function (value) {
-                $element.addClass(value);
-            });
-        }
-    };
-
-    return blockClass;
-});
-
-manualsTestfield
-        .controller(
-            "manualStyleCtrl", 
-            function ($scope, $rootScope, StyleService, ManualService) {
-    
-    var manual = ManualService.getCurrentManual();
-    
-    $scope.submitStyles = function () {
-        if ($scope.manualStyleForm.$invalid) {
-            alert("nop");
-        } else if ($scope.manualStyleForm.$pristine) {
-            console.log("Not touched");
-            $rootScope.$broadcast("close-tf-modal");
-        } else {
-            $rootScope.$broadcast("close-tf-modal");
-            var args = $.extend({
-                manualId: ManualService.getCurrentManual().id,
-                R: 0,
-                G: 0,
-                B: 0,
-                fontFamily: 0
-            }, $scope.style);
-            ManualService.updateStyles(args);
-        }
-    };
-    $scope.style = {
-        R: manual.manualConf.fontColor.r,
-        G: manual.manualConf.fontColor.g,
-        B: manual.manualConf.fontColor.b,
-        fontFamily: ""
-    };
-    
-    StyleService.getFontFamilies()
-    .then(function (response) {
-        $scope.fontFamilies = response.data.fontFamilies;
-        $scope.style.fontFamily = manual.manualConf.fontFamily.id.toString();
-    });
-});
-
 manualsTestfield.controller("manualViewController", 
 function ($scope, ManualService, $sce, $routeParams) {
     var id = parseInt($routeParams.param);
@@ -505,325 +458,6 @@ function ($scope, ManualService, $sce, $routeParams) {
         return $sce.trustAsHtml(content);
     };
 });
-
-var MANSC = (function () {
-    
-    function findElementByOption($element, elementOption) {
-        var optionClass = "";
-        var options = [
-            "delete", 
-            "vertical",
-            "horizontal",
-            "add",
-            "modify"
-        ];
-        
-        var addClassToOptions = function (clas) {
-            optionClass += clas + ",";
-        };
-        
-        options.forEach(function (option) {
-            if (elementOption.indexOf(option) > -1) {
-                switch(option) {
-                    case "delete":
-                        addClassToOptions(".delete");
-                        break;
-
-                    case "vertical":
-                        addClassToOptions(".arrows-left");
-                        addClassToOptions(".arrows-right");
-                        break;
-
-                    case "horizontal":
-                        addClassToOptions(".arrows-up");
-                        addClassToOptions(".arrows-down");
-                        break;
-
-                    case "add":
-                        addClassToOptions(".add-element");
-                        break;
-
-                    case "modify":
-                        addClassToOptions(".modify-element");
-                        break;
-                }
-            }
-        });
-        
-        if (optionClass.length > 0) {
-            optionClass = optionClass.substring(0, optionClass.length - 1);
-        }
-        
-        return $element.children(optionClass);
-    }
-    
-    function elementPopover(args) {
-        args.$templateRequest("static/htmlParts/manuals/popoverBlocks.html")
-                .then(function (html) {
-                    var $funElement = args.$element.find(args.classToFind);
-                    var popoverContent = args.$compile(html)(args.$scope);
-                    $funElement.popover({
-                        content: popoverContent,
-                        placement: "left",
-                        html: true
-                    });
-                    
-                    var getBlockSizes = function () {
-                        return popoverContent.find("[name='blockSize']");
-                    };
-
-                    var clickSet = false;
-                    $funElement.on("shown.bs.popover", function () {
-                        var $button = popoverContent.find(args.nameToFind);
-                        
-
-                        if (!clickSet) {
-                            getBlockSizes().each(function () {
-                                var $thisElement = $(this);
-                                var elementVal = $thisElement.val().length === 0 ? 0 : parseInt($thisElement.val());
-                                $thisElement.slider({
-                                    min: 0,
-                                    max: 12,
-                                    step: 2,
-                                    value: elementVal
-                                });
-                                $thisElement.on("slide", function (ui) {
-                                    $thisElement.val(ui.value).trigger("input");
-                                });
-                            });
-                            $button.click(function () {
-                                $funElement.click();
-                            });
-                            clickSet = true;
-                        }
-                    });
-                    //Reset the values of the slider when is again opened.
-                    $funElement.on("show.bs.popover", function () {
-                        if (clickSet) {
-                            getBlockSizes().each(function () {
-                                var $thisElement = $(this);
-                                var elementVal = $thisElement.val().length === 0 ? 0 : parseInt($thisElement.val());
-                                $thisElement.slider("setValue", elementVal);
-                            });
-                        }
-                    });
-                    $funElement.on("hidden.bs.popover", function () {
-                        args.$scope.popoverClosed();
-                    });
-                });
-    }
-    
-    function pageFunctionality(args) {
-        var $html = $("<div>").append(args.html);
-        $html.find(".add-element").attr("ng-click", "addElement()");
-        $html.find(".delete").attr("ng-click", "delete()");
-        $html.find(".arrows-up").attr("ng-click", "moveUp()");
-        $html.find(".arrows-down").attr("ng-click", "moveDown()");
-        
-        var htmlP = $html.html();
-        args.$element.prepend(args.$compile(htmlP)(args.$scope));
-    }
-    
-    function rowsFunctionality(args) {
-        var $html = $("<div>").append(args.html);
-        $html.find(".delete").attr("ng-click", "delete()");
-        $html.find(".arrows-up").attr("ng-click", "moveUp()");
-        $html.find(".arrows-down").attr("ng-click", "moveDown()");
-        
-        var htmlP = $html.html();
-        args.$element.prepend(args.$compile(htmlP)(args.$scope));
-        
-        args = $.extend(args, {
-            classToFind: ".add-element",
-            nameToFind: "[name='addElement']"
-        });
-        elementPopover(args);
-    }
-    
-    function blocksFunctionality(args) {
-        var $html = $("<div>").append(args.html);
-        $html.find(".delete").attr("ng-click", "delete()");
-        $html.find(".arrows-left").attr("ng-click", "moveLeft()");
-        $html.find(".arrows-right").attr("ng-click", "moveRight()");
-        $html.find(".modify-element").attr("ng-click", "modify()");
-        
-        var htmlP = $html.html();
-        args.$element.prepend(args.$compile(htmlP)(args.$scope));
-        
-        args = $.extend(args, {
-            classToFind: ".modify-element",
-            nameToFind: "[name='modifyElement']"
-        });
-        elementPopover(args);
-    }
-    
-    var functions = {
-        
-        blockOptions: function ($element, options, showHide) {
-            var $elementOptions = findElementByOption($element, options);
-            $elementOptions.each(function (index, option) {
-                var $option = $(option);
-                var isLast = $element.hasClass("last");
-                var isFirst = $element.hasClass("first");
-                var isArrowFoward = $option.hasClass("arrows-right") || $option.hasClass("arrows-down");
-                var isArrowBackward = $option.hasClass("arrows-left") || $option.hasClass("arrows-up");
-                
-                if (showHide && !(isLast && isArrowFoward) && !(isFirst && isArrowBackward)) {
-                    $option.removeClass("hidden");
-                } else {
-                    $option.addClass("hidden");
-                }
-            });
-        },
-         
-        blockOptionsHover: function (args, inside, $parentElement) {
-            args.types.forEach(function (type) {
-                if (args.options.indexOf(type.option) > -1) {
-                    type.elements.forEach(function (element) {
-                        var isLast = $parentElement.hasClass("last");
-                        var isFirst = $parentElement.hasClass("first");
-                        var isArrowFoward = element.hasClass("arrows-right") || element.hasClass("arrows-down");
-                        var isArrowBackward = element.hasClass("arrows-left") || element.hasClass("arrows-up");
-
-                        if (inside && !(isLast && isArrowFoward) && !(isFirst && isArrowBackward)) {
-                            element.removeClass("hidden");
-                        } else {
-                            element.addClass("hidden");
-                        }
-
-                    });
-                }
-            });
-        },
-        
-        getClassesByWidthTypes: function (widthTypes, relWidthTypes) {
-            var classes = [];
-
-            widthTypes.forEach(function (widthType) {
-
-                relWidthTypes.some(function (relWidthType) {
-
-                    if (widthType.widthType === relWidthType.id.widthType) {
-                        classes.push(MANSC.getClassByWidthType(widthType, relWidthType));
-                    }
-
-                });
-
-            });
-
-            return classes;
-        },
-        
-        getClassByWidthType: function (widthType, relWidthType) {
-            var classAux = "";
-            switch (widthType.description) {
-
-                case "Phones":
-                    classAux = "col-xs-";
-                    break;
-
-                case "Tablets":
-                    classAux = "col-sm-";
-                    break;
-
-                case "Default":
-                    classAux = "col-md-";
-                    break;
-
-                case "Large display":
-                    classAux = "col-lg-";
-                    break;
-
-                default:
-                    throw "Width Type not supported.";
-            }
-
-            return classAux + relWidthType.amount;
-        },
-        
-        functionalityByType: function (args) {
-            if (args.$element.hasClass("manual-row")) {
-                rowsFunctionality(args);
-            } else if (args.$element.hasClass("manual-block")) {
-                blocksFunctionality(args);
-            } else if (args.$element.hasClass("manual-page")) {
-                pageFunctionality(args);
-            }
-        },
-        
-        getWidthTypes: function (blockSize) {
-            var widthTypes = [];
-            if (blockSize.xs > 0) {
-                widthTypes.push({
-                    widthTypeId: 1,
-                    amount: blockSize.xs
-                });
-            }
-            if (blockSize.sm > 0) {
-                widthTypes.push({
-                    widthTypeId: 2,
-                    amount: blockSize.sm
-                });
-            }
-            if (blockSize.md > 0) {
-                widthTypes.push({
-                    widthTypeId: 3,
-                    amount: blockSize.md
-                });
-            }
-            if (blockSize.lg > 0) {
-                widthTypes.push({
-                    widthTypeId: 4,
-                    amount: blockSize.lg
-                });
-            }
-            
-            return widthTypes;
-        },
-        
-        getBlockSizes: function (block) {
-            var blockSizes = {
-                xs: 0,
-                sm: 0,
-                md: 0,
-                lg: 0
-            };
-            block.relBlockWidthTypes.forEach(function (widthType) {
-                switch(widthType.id.widthType) {
-                    case UTIL.WIDTH_TYPES.XS:
-                        blockSizes.xs = widthType.amount;
-                        break;
-                        
-                    case UTIL.WIDTH_TYPES.SM:
-                        blockSizes.sm = widthType.amount;
-                        break;
-                        
-                    case UTIL.WIDTH_TYPES.MD:
-                        blockSizes.md = widthType.amount;
-                        break;
-                        
-                    case UTIL.WIDTH_TYPES.LG:
-                        blockSizes.lg = widthType.amount;
-                        break;
-                }
-            });
-            return blockSizes;
-        },
-        
-        elementHover: function ($element, options) {
-            $element.hover(
-                function () {
-                    MANSC.blockOptions($element, options, true);
-                },
-                function () {
-                    MANSC.blockOptions($element, options, false);
-                }
-            );
-        }
-    }; 
-    
-    return functions;
-})();
 
 manualsTestfield.controller("manualOptionsController", 
 ["$scope", "ManualService",
@@ -842,4 +476,62 @@ function ($scope, ManualService) {
         ManualService.setCurrentsVisibility(visibility);
     };
     
+}]);
+
+manualsTestfield.directive("blockClasses", function () {
+    var getClassByWidthType = function (widthType) {
+        var clazz;
+        switch(widthType) {
+            case 1:
+                clazz = "col-xs-";
+                break;
+            case 2:
+                clazz = "col-sm-";
+                break;
+            case 3:
+                clazz = "col-md-";
+                break;
+            case 4:
+                clazz = "col-lg-";
+                break;
+        }
+        return clazz;
+    };
+    
+    var setClasses = function (scope, element) {
+        scope.block.relBlockWidthTypes.forEach(function (relBlock) {
+            var preClass = getClassByWidthType(relBlock.id.widthType);
+            element.removeClass (function (index, className) {
+                return (className.match (/(^|\s)col-\S+/g) || []).join(' ');
+            });
+            element.addClass(preClass + relBlock.amount);
+        });
+    };
+
+    return {
+        restrict: "A",
+        link: function (scope, element, attrs) {
+            setClasses(scope, element);
+            scope.$watch("block.relBlockWidthTypes", function () {
+                setClasses(scope, element);
+            });
+        }
+    };
+});
+
+manualsTestfield.directive("blockOptions", 
+["FormService", "ModalService", 
+function (FormService, ModalService) {
+    return {
+        restrict: "A",
+        link: function (scope, element, attrs) {
+            element.hover(function () {
+                scope.options.showModify = true;
+                scope.$apply();
+            }, function () {
+                scope.options.showModify = false;
+                scope.$apply();
+            });
+        }
+    };
 }]);

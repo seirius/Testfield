@@ -13,6 +13,11 @@ public class MainController {
     public String indexRequest(ModelMap model) {
         return "/static/index.html";
     }
+    
+    @RequestMapping(value = "/indexM", method = RequestMethod.GET)
+    public String indexMRequest(ModelMap model) {
+        return "/static/indexM.html";
+    }
 //    
 //    @RequestMapping(value = "/part/login", method = RequestMethod.GET)
 //    public String partLogin(ModelMap model) {

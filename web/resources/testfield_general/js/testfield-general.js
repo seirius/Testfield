@@ -1,4 +1,4 @@
-var generalTestfield = angular.module("generalTestfield", []);
+var generalTestfield = angular.module("generalTestfield", ["ui.materialize"]);
 
 generalTestfield.service("tfHttp", function ($http) {
     var showError = true;
@@ -181,7 +181,7 @@ generalTestfield.directive("linkable", function ($window) {
 
 generalTestfield.service("ModalService", function ($templateRequest, $compile) {
     return {
-        openModal: function (args) {
+        openModalB: function (args) {
             return new Promise(function (resolve, reject) {
                 var callbacks = args.callbacks;
                 callbacks = $.extend({
@@ -212,6 +212,47 @@ generalTestfield.service("ModalService", function ($templateRequest, $compile) {
                             var $content = $compile(content)(args.scope);
                             $modal.find(".modal-body").append($content);
                             $modal.modal("show");
+                            resolve($modal);
+                        });
+                    } else {
+                        resolve($modal);
+                    }
+                });
+            });
+        },
+        openModal: function (args) {
+            return new Promise(function (resolve) {
+                var callbacks = args.callbacks;
+                callbacks = $.extend({
+                    open: function () {},
+                    close: function () {},
+                    buttonClose: function () {}
+                }, callbacks);
+                
+                $templateRequest("/Testfield/static/htmlParts/util/modalPart.html")
+                .then(function (modalHtml) {
+                    var $modal = $(modalHtml);
+                    $("body").append($modal);
+                    
+                    $modal.modal({
+                        complete: function () {
+                            callbacks.close();
+                            $modal.remove();
+                        },
+                        ready: function (modal, trigger) {
+                            callbacks.open(modal, trigger);
+                        }
+                    });
+                    $modal.find("a[class='modal-action modal-close']")
+                            .click(callbacks.buttonClose);
+                    
+
+
+                    if (typeof args.urlContent === "string") {
+                        $templateRequest(args.urlContent).then(function (content) {
+                            var $content = $compile(content)(args.scope);
+                            $modal.find(".modal-body").append($content);
+                            $modal.modal("open");
                             resolve($modal);
                         });
                     } else {
