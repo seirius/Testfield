@@ -4,8 +4,8 @@
     "inputs": [
         {
             "@type": "InputText",
-            "label": "XS",
-            "name": "xs",
+            "label": "Phones",
+            "name": "s",
             "value": 12,
             "typeName": "number",
             "placeholder": "",
@@ -18,8 +18,8 @@
         },
         {
             "@type": "InputText",
-            "label": "SM",
-            "name": "sm",
+            "label": "Tablets",
+            "name": "m",
             "value": "",
             "typeName": "number",
             "placeholder": "",
@@ -32,22 +32,8 @@
         },
         {
             "@type": "InputText",
-            "label": "MD",
-            "name": "md",
-            "value": "",
-            "typeName": "number",
-            "placeholder": "",
-            "controller": "CH_MANUAL.loadBlockSize",
-            "showLabel": true,
-            "validation": {
-                "minLength": 2,
-                "maxLength": 12
-            }
-        },
-        {
-            "@type": "InputText",
-            "label": "LG",
-            "name": "lg",
+            "label": "Large display",
+            "name": "l",
             "value": "",
             "typeName": "number",
             "placeholder": "",

@@ -483,16 +483,13 @@ manualsTestfield.directive("blockClasses", function () {
         var clazz;
         switch(widthType) {
             case 1:
-                clazz = "col-xs-";
+                clazz = "col s";
                 break;
             case 2:
-                clazz = "col-sm-";
-                break;
-            case 3:
-                clazz = "col-md-";
+                clazz = "col m";
                 break;
             case 4:
-                clazz = "col-lg-";
+                clazz = "col l";
                 break;
         }
         return clazz;
@@ -501,9 +498,9 @@ manualsTestfield.directive("blockClasses", function () {
     var setClasses = function (scope, element) {
         scope.block.relBlockWidthTypes.forEach(function (relBlock) {
             var preClass = getClassByWidthType(relBlock.id.widthType);
-            element.removeClass (function (index, className) {
-                return (className.match (/(^|\s)col-\S+/g) || []).join(' ');
-            });
+            element.removeClass("col s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 s12 " + 
+                    "m1 m2 m3 m4 m5 m6 m7 m8 m9 m10 m11 m12 " + 
+                    "l1 l2 l3 l4 l5 l6 l7 l8 l9 l10 l11 l12");
             element.addClass(preClass + relBlock.amount);
         });
     };

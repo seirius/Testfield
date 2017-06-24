@@ -38,6 +38,11 @@ public class MainController {
     public String files() {
         return "/static/files.html";
     }
+    
+    @RequestMapping(value = "/yunamagedon", method = RequestMethod.GET)
+    public String yunamagedon() {
+        return "/static/htmlParts/yunamagedon/yunamagedon.html";
+    }
 //    
 //    @RequestMapping(value = "/choseApp", method = RequestMethod.GET)
 //    public String choseAppRequest(ModelMap model) {

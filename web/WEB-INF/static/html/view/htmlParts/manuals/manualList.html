@@ -1,10 +1,7 @@
 <div class="manual-list">
-    <div class="row" ng-controller="manualListCtrl">
-        <div class="col s12">
-            <div class="collection">
-                <a class="collection-item" ng-repeat="manual in manuals" ng-click="openManual(manual.id)">{{manual.title}}</a>
-            </div>
-
+    <div ng-controller="manualListCtrl">
+        <div class="collection">
+            <a class="collection-item" ng-repeat="manual in manuals" ng-click="openManual(manual.id)">{{manual.title}}</a>
         </div>
     </div>
 </div>

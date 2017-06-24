@@ -53,7 +53,7 @@ public class ManualService extends Service {
             ManualRow manualRow = MANAGER.getManualRowDAO().insert(manualPage.getId(), 1);
             
             List<WidthTypeHelper> widthTypes = new ArrayList<>();
-            widthTypes.add(new WidthTypeHelper(BlockWidthTypeEnum.MD, 12));
+            widthTypes.add(new WidthTypeHelper(BlockWidthTypeEnum.XS, 12));
             
             MANAGER.getManualBlockDAO().insert(manualRow.getId(), "Write something new here!", 1, widthTypes);
             result.addItem("manual", manual, true);

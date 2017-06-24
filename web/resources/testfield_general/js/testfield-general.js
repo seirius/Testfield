@@ -246,7 +246,9 @@ generalTestfield.service("ModalService", function ($templateRequest, $compile) {
                     $modal.find("a[class='modal-action modal-close']")
                             .click(callbacks.buttonClose);
                     
-
+                    args.scope.$on("close-tf-modal", function () {
+                        $modal.modal("close");
+                    });
 
                     if (typeof args.urlContent === "string") {
                         $templateRequest(args.urlContent).then(function (content) {

@@ -5,10 +5,9 @@ package util.enums;
  * @author Andriy
  */
 public enum BlockWidthTypeEnum {
-    XS(1, "Phones", "xs"), 
-    SM(2, "Tablets", "sm"), 
-    MD(3, "Default", "md"), 
-    LG(4, "Large display", "lg");
+    XS(1, "Phones", "s"), 
+    SM(2, "Tablets", "m"), 
+    LG(4, "Large display", "l");
     
     private final int value;
     private final String text;
