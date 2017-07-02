@@ -16,15 +16,26 @@ require.config({
         "Entity": [
             "/Testfield/resources/yunamagedon/src/entities/Entity"
         ],
-        "Aang": [
-            "/Testfield/resources/yunamagedon/src/entities/Aang"
+        "Player": [
+            "/Testfield/resources/yunamagedon/src/entities/Player"
+        ],
+        "Game": [
+            "/Testfield/resources/yunamagedon/src/Game"
+        ],
+        "gameUtil": [
+            "/Testfield/resources/yunamagedon/src/util/gameUtil"
         ]
     },
     "shim": {
         "yunamagedon": {
-            deps: [ "jQuery", "pixi", "p2" ]
+            deps: [ "jQuery", "pixi", "p2", "Game" ]
         },
-        "Aang": {
+        "Game": {
+            deps: [
+                "Player", "gameUtil"
+            ]
+        },
+        "Player": {
             deps: [ "Entity" ]
         }
     }
