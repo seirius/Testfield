@@ -1,4 +1,4 @@
-/* global PIXI */
+/* global PIXI, C_STATIC */
 
 class Game {
     constructor(w, h) {
@@ -13,11 +13,14 @@ class Game {
         game.mouse = {
             position: new Vector(0, 0),
             isDown: false,
-            isUp: true
+            isUp: true,
+            isRightDown: false
         };
-        window.onresize = function () {
-            game.resize();
-        };
+        game.rubber = new PIXI.Graphics();
+        game.stage.addChild(game.rubber);
+        game.startRubber = null;
+        game.lastLoop = new Date();
+        game.fpss = 0;
         game.init();
     }
     
@@ -25,7 +28,6 @@ class Game {
         var game = this;
         game.renderer.render(game.stage);
         document.body.appendChild(game.renderer.view);
-        game.resize();
         game.gameLoop();
         game.stage.interactive = true;
         game.stage.on("mousedown", function (e) {
@@ -39,6 +41,15 @@ class Game {
         game.stage.on("mousemove", function (e) {
             game.mouse.position = new Vector(e.data.global.x, e.data.global.y);
         });
+        game.stage.hitArea = new PIXI.Rectangle(0, 0, game.w, game.h);
+        game.renderer.view.addEventListener("contextmenu", function (e) {
+            e.preventDefault();
+            game.mouse.isRightDown = true;
+            return false;
+        });
+        setInterval(function () {
+            console.log("fps", game.fpss);
+        }, 5000);
     }
     
     keyboard (keyCode) {
@@ -73,19 +84,6 @@ class Game {
         return key;
     }
 
-    resize() {
-        var game = this;
-        if (window.innerWidth / window.innerHeight >= game.ratio) {
-            var w = window.innerWidth * game.ratio;
-            var h = window.innerHeight;
-        } else {
-            var w = window.innerWidth;
-            var h = window.innerWidth / game.ratio;
-        }
-        game.renderer.view.style.width = w + 'px';
-        game.renderer.view.style.height = h + 'px';
-        game.updateHitArea();
-    }
     
     updateHitArea() {
         var game = this;
@@ -111,7 +109,73 @@ class Game {
             }
         }
         
+        if (game.mouse.isRightDown) {
+            console.log("move!");
+        }
+        
+        game.rubberBand();
+        
         game.renderer.render(game.stage);
+        
+        game.mouse.isRightDown = false;
+        
+        var thisLoop = new Date();
+        game.fpss = 1000 / (thisLoop - game.lastLoop);
+        game.lastLoop = thisLoop;
     }
+    
+    rubberBand() {
+        var game = this;
+        game.rubber.clear();
+        if (game.mouse.isDown) {
+            if (!game.startRubber) {
+                game.startRubber = new Vector(game.mouse.position);
+                game.unselectUnits();
+            }
+            game.rubber.lineStyle(1, 0xFF3300);
+            var width = game.mouse.position.x - game.startRubber.x;
+            var height = game.mouse.position.y - game.startRubber.y;
+            game.rubber.drawRect(game.startRubber.x, game.startRubber.y, width, height);
+        } else if (game.startRubber) {
+            game.selectUnits();
+            game.startRubber = null;
+        }
+    }
+    
+    selectUnits() {
+        var game = this;
+        var w = game.mouse.position.x - game.startRubber.x;
+        var h = game.mouse.position.y - game.startRubber.y;
+        var oX = w < 0 ? game.startRubber.x + w : game.startRubber.x;
+        var oY = h < 0 ? game.startRubber.y + h : game.startRubber.y;
+        var eX = oX + Math.abs(w);
+        var eY = oY + Math.abs(h);
+        var i = 0;
+        for (i; i < game.entities.length; i++) {
+            var entity = game.entities[i];
+            var pos = entity.getComponent(C_STATIC.type.POSITION);
+            if (pos 
+                    && pos.position.x > oX 
+                    && pos.position.x < eX
+                    && pos.position.y > oY 
+                    && pos.position.y < eY
+                    && entity.onSelect) {
+                entity.onSelect();
+            }
+        }
+    }
+    
+    unselectUnits() {
+        var game = this;
+        var i = 0;
+        for (i; i < game.entities.length; i++) {
+            var entity = game.entities[i];
+            if (entity.unSelect) {
+                entity.unSelect();
+            }
+        }
+    }
+    
+    
 }
 

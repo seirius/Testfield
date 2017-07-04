@@ -19,11 +19,17 @@ require.config({
         "Player": [
             "/Testfield/resources/yunamagedon/src/entities/Player"
         ],
+        "Unit": [
+            "/Testfield/resources/yunamagedon/src/entities/Unit"
+        ],
         "Game": [
             "/Testfield/resources/yunamagedon/src/Game"
         ],
         "gameUtil": [
             "/Testfield/resources/yunamagedon/src/util/gameUtil"
+        ],
+        "Component": [
+            "/Testfield/resources/yunamagedon/src/components/Component"
         ]
     },
     "shim": {
@@ -32,10 +38,16 @@ require.config({
         },
         "Game": {
             deps: [
-                "Player", "gameUtil"
+                "Player", "Unit", "gameUtil"
             ]
         },
+        "Entity": {
+            deps: [ "Component" ]
+        },
         "Player": {
+            deps: [ "Entity" ]
+        },
+        "Unit": {
             deps: [ "Entity" ]
         }
     }

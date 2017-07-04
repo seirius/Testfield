@@ -1,53 +1,48 @@
-/* global game */
+/* global game, PIXI, VECTOR */
 
 class Player extends Entity {
     constructor(x, y) {
-        super(x, y);
+        super();
         var player = this;
+        player.c_pos = new C_Position(x, y);
+        player.addComponent(player.c_pos);
+        player.graphics = new C_Graphic();
+        player.addComponent(player.graphics);
+        
+        player.startRubber = null;
         player.rubber = null;
-        player.rubberFP = new Vector(0, 0);
+        player.lastDirection = null;
     }
     
     init () {
-        var player = this;
         super.init();
-        player.left = game.keyboard(37);
-        player.up = game.keyboard(38);
-        player.right = game.keyboard(39);
-        player.down = game.keyboard(40);
-        
+//        player.left = game.keyboard(37);
+//        player.up = game.keyboard(38);
+//        player.right = game.keyboard(39);
+//        player.down = game.keyboard(40);
+    }
+    
+    onDraw (graphics) {
+        var player = this;
+        graphics.lineStyle(1, 0xFFFFFF);
+        graphics.drawCircle(player.c_pos.position.x, player.c_pos.position.y, 4);
+        graphics.endFill();
     }
     
     update () {
         var player = this;
         super.update();
         
-        if (player.left.isDown) {
-            player.position.x -= player.v;
-        }
-        if (player.right.isDown) {
-            player.position.x += player.v;
-        }
-        if (player.up.isDown) {
-            player.position.y -= player.v;
-        }
-        if (player.down.isDown) {
-            player.position.y += player.v;
+        if (game.mouse.isRightDown) {
+            player.lastDirection = new Vector(game.mouse.position);
+            player.c_pos.setCourse(VECTOR.directionVector(player.c_pos.position, game.mouse.position, 2));
         }
         
-        if (game.mouse.isDown) {
-            var w = game.mouse.position.x - player.rubberFP.x;
-            var h = game.mouse.position.y - player.rubberFP.y;
-            if (!player.rubber) {
-                player.rubberFP = new Vector(game.mouse.position);
-                player.rubber = new Entity(player.rubberFP.x, player.rubberFP.y, 10, 10);
+        if (player.c_pos.moving) {
+            var distance = VECTOR.distance(player.c_pos.position, player.lastDirection);
+            if (distance < player.c_pos.v * player.c_pos.v) {
+                player.c_pos.stop();
             }
-            player.rubber.sprite.width = parseInt(w);
-            player.rubber.sprite.height = parseInt(h);
-            console.log(player.rubber.sprite.width);
-        } else if (player.rubber) {
-            player.rubber.die();
-            player.rubber = null;
         }
     }
 }

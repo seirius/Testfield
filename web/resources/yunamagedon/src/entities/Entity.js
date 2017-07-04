@@ -1,60 +1,85 @@
-/* global PIXI, stage, entities, game */
+/* global PIXI, stage, entities, game, Component */
 
 class Entity {
     
-    constructor (x, y, width, height) {
+    constructor () {
         var entity = this;
-        entity.position = new Vector(x, y);
-        entity.v = 1;
-        entity.dead = false;
-        if (width && height) {
-            entity.size = {
-                width: width,
-                height: height
-            };
-        }
+        entity.components = [];
         entity.init();
+    }
+    
+    addComponent (component) {
+        if (! (component instanceof Component)) {
+            console.log("addComponent", "component is not a Component");
+        } else {
+            var entity = this;
+            entity.components.push(component);
+            component.entity = entity;
+        }
+    }
+    
+    removeComponent (component) {
+        if (! (component instanceof Component)) {
+            console.log("addComponent", "component is not a Component");
+        } else {
+            var entity = this;
+            var i = entity.components.length;
+            for (i; i > 0; i--) {
+                var comp = entity.components[i - 1];
+                if (comp.id === component.id) {
+                    entity.components.splice(i, 1);
+                }
+            }
+        }
+    }
+    
+    removeComponentByType (type) {
+        var entity = this;
+        var i = entity.components.length;
+        for (i; i > 0; i--) {
+            var comp = entity.components[i - 1];
+            if (comp.type === type) {
+                entity.components.splice(i, 1);
+            }
+        }
+    }
+    
+    getComponent(type) {
+        var entity = this;
+        var i = 0;
+        for (i; i < entity.components.length; i++) {
+            if (entity.components[i].type === type) {
+                return entity.components[i];
+            }
+        }
+        return null;
     }
     
     init () {
         var entity = this;
         game.entities.push(entity);
-        entity.sprite = new PIXI.Graphics();
-        if (entity.size) {
-            entity.sprite.lineStyle(4, 0xFF3300, 1);
-            entity.sprite.drawRect(
-                0,
-                0,
-                entity.size.width,
-                entity.size.height
-            );
-        } else {
-            entity.sprite.beginFill(0xFFFFFF);
-            entity.sprite.drawCircle(0, 0, 32);
-        }
-        entity.sprite.endFill();
-        entity.sprite.x = entity.position.x;
-        entity.sprite.y = entity.position.y;
-        game.stage.addChild(entity.sprite);
     }
     
     update() {
         var entity = this;
-        entity.sprite.x = entity.position.x;
-        entity.sprite.y = entity.position.y;
-        if (entity.size) {
-            entity.sprite.width = entity.size.width;
-            entity.sprite.height = entity.size.height;
+        var i = 0;
+        for (i; i < entity.components.length; i++) {
+            entity.components[i].update();
         }
     }
     
     die () {
-        this.dead = true;
+        var entity = this;
+        entity.dead = true;
+        var i = 0;
+        for (i; i < entity.components.length; i++) {
+            entity.components[i].die();
+        }
     }
     
     remove() {
-        var entity = this;
-        game.stage.removeChild(entity.sprite);
     }
+    
+    onDraw() {}
 };
 
