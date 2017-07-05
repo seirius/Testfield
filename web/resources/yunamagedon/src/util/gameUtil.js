@@ -1,3 +1,5 @@
+/* global C_STATIC */
+
 class Vector {
     constructor(x, y) {
         var vector = this;
@@ -53,5 +55,28 @@ const VECTOR = {
     
     realDistance: function (vector1, vector2) {
         return Math.sqrt(VECTOR.distance(vector1, vector2));
+    },
+    
+    plus: function (vector1, vector2) {
+        return new Vector(vector1.x + vector2.x, vector1.y + vector2.y);
+    },
+    
+    minus: function (vector1, vector2) {
+        return VECTOR.plus(vector1, new Vector(-vector2.x, -vector2.y));
+    }
+};
+
+var U_STATIC = {
+    getAvgPosition: function (entities) {
+        var i = 0;
+        var tX = 0;
+        var tY = 0;
+        for (i; i < entities.length; i++) {
+            var entity = entities[i];
+            var pos = entity.getComponent(C_STATIC.type.POSITION);
+            tX += pos.position.x;
+            tY += pos.position.y;
+        }
+        return new Vector(tX / entities.length, tY / entities.length);
     }
 };

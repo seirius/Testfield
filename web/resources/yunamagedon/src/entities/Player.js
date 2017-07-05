@@ -8,6 +8,8 @@ class Player extends Entity {
         player.addComponent(player.c_pos);
         player.graphics = new C_Graphic();
         player.addComponent(player.graphics);
+        player.body = new C_Body(new Vector(x, y), 2);
+        player.addComponent(player.body);
         
         player.startRubber = null;
         player.rubber = null;
@@ -29,21 +31,31 @@ class Player extends Entity {
         graphics.endFill();
     }
     
+    bodyUpdate (body) {
+        var player = this;
+        body.body.position = [player.c_pos.position.x, player.c_pos.position.y];
+    }
+    
+    beginContact(otherBody) {
+        console.log(otherBody);
+    }
+    
     update () {
         var player = this;
         super.update();
         
         if (game.mouse.isRightDown) {
             player.lastDirection = new Vector(game.mouse.position);
+            player.c_pos.destination = new Vector(game.mouse.position);
             player.c_pos.setCourse(VECTOR.directionVector(player.c_pos.position, game.mouse.position, 2));
         }
         
-        if (player.c_pos.moving) {
-            var distance = VECTOR.distance(player.c_pos.position, player.lastDirection);
-            if (distance < player.c_pos.v * player.c_pos.v) {
-                player.c_pos.stop();
-            }
-        }
+//        if (player.c_pos.moving) {
+//            var distance = VECTOR.distance(player.c_pos.position, player.lastDirection);
+//            if (distance < player.c_pos.v * player.c_pos.v) {
+//                player.c_pos.stop();
+//            }
+//        }
     }
 }
 

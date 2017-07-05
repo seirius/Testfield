@@ -6,6 +6,8 @@ class Unit extends Entity {
         unit.addComponent(unit.c_pos);
         unit.graphics = new C_Graphic();
         unit.addComponent(unit.graphics);
+        unit.body = new C_Body(new Vector(x, y), 2);
+        unit.addComponent(unit.body);
         unit.originalColor = 0xD2F95B;
         unit.currentColor = unit.originalColor;
         unit.selectedColor = 0xFF3B3B;
@@ -18,10 +20,14 @@ class Unit extends Entity {
         graphics.endFill();
     }
     
+    bodyUpdate (body) {
+        var unit = this;
+        body.body.position = [unit.c_pos.position.x, unit.c_pos.position.y];
+    }
+    
     onSelect () {
         var unit = this;
         unit.currentColor = unit.selectedColor;
-        console.log(unit);
     }
     
     unSelect () {

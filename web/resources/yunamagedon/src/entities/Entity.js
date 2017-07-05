@@ -1,4 +1,4 @@
-/* global PIXI, stage, entities, game, Component */
+/* global PIXI, stage, entities, game, Component, C_Body */
 
 class Entity {
     
@@ -15,6 +15,9 @@ class Entity {
             var entity = this;
             entity.components.push(component);
             component.entity = entity;
+            if (component instanceof C_Body) {
+                component.body.entity = entity;
+            }
         }
     }
     

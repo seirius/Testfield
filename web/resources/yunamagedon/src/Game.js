@@ -1,4 +1,4 @@
-/* global PIXI, C_STATIC */
+/* global PIXI, C_STATIC, U_STATIC, VECTOR, p2 */
 
 class Game {
     constructor(w, h) {
@@ -8,6 +8,9 @@ class Game {
         game.renderer = PIXI.autoDetectRenderer(game.w, game.h);
         game.backgroundColor = 0xf0f0f0;
         game.stage = new PIXI.Container();
+        game.world = new p2.World({
+            gravity: [0, 0]
+        });
         game.entities = [];
         game.ratio = game.w / game.h;
         game.mouse = {
@@ -21,6 +24,10 @@ class Game {
         game.startRubber = null;
         game.lastLoop = new Date();
         game.fpss = 0;
+        game.selectedEntities = [];
+        game.fixedTimeStep = 1 / 60;
+        game.maxSubSteps = 10;
+        game.deltaTime = 0;
         game.init();
     }
     
@@ -50,6 +57,15 @@ class Game {
         setInterval(function () {
             console.log("fps", game.fpss);
         }, 5000);
+        
+        game.world.on("beginContact", function (e) {
+            if (e.bodyA.entity && e.bodyA.entity.beginContact) {
+                e.bodyA.entity.beginContact(e.bodyB);
+            }
+            if (e.bodyB.entity && e.bodyB.entity.beginContact) {
+                e.bodyB.entity.beginContact(e.bodyA);
+            }
+        });
     }
     
     keyboard (keyCode) {
@@ -114,6 +130,7 @@ class Game {
         }
         
         game.rubberBand();
+        game.command();
         
         game.renderer.render(game.stage);
         
@@ -121,6 +138,9 @@ class Game {
         
         var thisLoop = new Date();
         game.fpss = 1000 / (thisLoop - game.lastLoop);
+        game.deltaTime = (thisLoop - game.lastLoop) / 1000;
+        game.world.step(game.fixedTimeStep, game.deltaTime, game.maxSubSteps);
+        
         game.lastLoop = thisLoop;
     }
     
@@ -161,17 +181,37 @@ class Game {
                     && pos.position.y < eY
                     && entity.onSelect) {
                 entity.onSelect();
+                game.selectedEntities.push(entity);
             }
         }
     }
     
     unselectUnits() {
         var game = this;
+        game.selectedEntities = [];
         var i = 0;
         for (i; i < game.entities.length; i++) {
             var entity = game.entities[i];
             if (entity.unSelect) {
                 entity.unSelect();
+            }
+        }
+    }
+    
+    command () {
+        var game = this;
+        if (game.mouse.isRightDown && game.selectedEntities.length > 0) {
+            var avgVector = U_STATIC.getAvgPosition(game.selectedEntities);
+            var dif = VECTOR.minus(avgVector, game.mouse.position);
+            var i = 0;
+            for (i; i < game.selectedEntities.length; i++) {
+                var entity = game.selectedEntities[i];
+                var pos = entity.getComponent(C_STATIC.type.POSITION);
+                if (pos) {
+                    var dest = VECTOR.minus(pos.position, dif);
+                    pos.destination = dest;
+                    pos.setCourse(VECTOR.directionVector(pos.position, dest, pos.v));
+                }
             }
         }
     }

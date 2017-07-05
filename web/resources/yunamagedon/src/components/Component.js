@@ -1,10 +1,11 @@
-/* global Vector, game, PIXI */
+/* global Vector, game, PIXI, VECTOR, p2 */
 
 const C_STATIC = {
     id: 0,
     type: {
         POSITION: 1,
-        GRAPHIC: 2
+        GRAPHIC: 2,
+        BODY: 3
     }
 };
 
@@ -35,6 +36,7 @@ class C_Position extends Component {
         }
         pos.type = C_STATIC.type.POSITION;
         pos.course = null;
+        pos.destination = null;
         pos.moving = false;
         pos.v = 1;
     }
@@ -43,6 +45,12 @@ class C_Position extends Component {
         var pos = this;
         if (pos.course) {
             pos.move(pos.course);
+        }
+        if (pos.moving) {
+            var distance = VECTOR.distance(pos.position, pos.destination);
+            if (distance < pos.v * pos.v) {
+                pos.stop();
+            }
         }
     }
     
@@ -84,6 +92,36 @@ class C_Graphic extends Component {
         game.stage.removeChild(this.graphics);
     }
 }
+
+class C_Body extends Component {
+    constructor (position, radius) {
+        super();
+        var b = this;
+        b.type = C_STATIC.type.BODY;
+        b.body = new p2.Body({
+            mass: 1,
+            position: [position.x, position.y]
+        });
+        b.shape = new p2.Circle({
+            radius: radius
+        });
+        b.body.addShape(b.shape);
+        game.world.addBody(b.body);
+    }
+    
+    update () {
+        super.update();
+        var b = this;
+        if (b.entity.bodyUpdate) {
+            b.entity.bodyUpdate(b);
+        }
+    }
+    
+    die () {
+        var b = this;
+        game.world.removeBody(b.body);
+    }
+};
 
 
 
