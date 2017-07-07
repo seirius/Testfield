@@ -16,6 +16,11 @@ class Component {
         component.entity = null;
     }
     
+    added(entity) {
+        var component = this;
+        component.entity = entity;
+    }
+    
     update () {
         
     }
@@ -23,10 +28,14 @@ class Component {
     die () {
         
     }
+    
+    beginContact(shape) {}
+    
+    endContact(shape) {}
 }
 
 class C_Position extends Component {
-    constructor(x, y) {
+    constructor(x, y, radius) {
         super();
         var pos = this;
         if (x instanceof Vector) {
@@ -39,19 +48,47 @@ class C_Position extends Component {
         pos.destination = null;
         pos.moving = false;
         pos.v = 1;
+        pos.body = new p2.Body({
+            mass: 1,
+            position: [x, y]
+        });
+        pos.shape = new p2.Circle({
+            radius: radius
+        });
+        pos.shape.component = pos;
+        pos.body.addShape(pos.shape);
+        pos.updateCourse = 0;
+        game.world.addBody(pos.body);
+    }
+    
+    added(entity) {
+        super.added(entity);
+        var pos = this;
+        pos.body.entity = entity;
     }
     
     update () {
         var pos = this;
+        pos.updateCourse += 1;
+        if (pos.entity.bodyUpdate) {
+            pos.entity.bodyUpdate(pos);
+        } 
         if (pos.course) {
-            pos.move(pos.course);
-        }
-        if (pos.moving) {
-            var distance = VECTOR.distance(pos.position, pos.destination);
-            if (distance < pos.v * pos.v) {
-                pos.stop();
+            if (pos.updateCourse % 10 === 0) {
+                pos.course = VECTOR.directionVector(pos.position, pos.destination, pos.v);
+                pos.updateCourse = 0;
             }
+            var distance = VECTOR.distance(pos.position, pos.destination);
+            if (distance < pos.v) {
+                pos.stop();
+            } else {
+                pos.move(pos.course);
+            }
+        } else {
+            pos.stop();
         }
+        pos.position = new Vector(pos.body.position[0], pos.body.position[1]);
+        pos.entity._position = new Vector(pos.position);
     }
     
     setCourse(course) {
@@ -60,13 +97,22 @@ class C_Position extends Component {
     }
     
     stop () {
-        this.course = null;
-        this.moving = false;
+        var pos = this;
+        pos.course = null;
+        pos.moving = false;
+        pos.body.velocity = [0, 0];
     }
     
     move(vector) {
         var pos = this;
-        pos.position.plus(vector);
+        if (pos.entity) {
+            pos.body.velocity = [vector.x, vector.y];
+        }
+    }
+    
+    die () {
+        var pos = this;
+        game.world.removeBody(pos.body);
     }
 }
 
@@ -77,6 +123,10 @@ class C_Graphic extends Component {
         g.type = C_STATIC.type.GRAPHIC;
         g.graphics = new PIXI.Graphics();
         game.stage.addChild(g.graphics);
+    }
+    
+    added(entity) {
+        super.added(entity);
     }
     
     update () {
@@ -93,36 +143,26 @@ class C_Graphic extends Component {
     }
 }
 
-class C_Body extends Component {
-    constructor (position, radius) {
+class C_Sensor extends Component {
+    constructor (radius, body) {
         super();
-        var b = this;
-        b.type = C_STATIC.type.BODY;
-        b.body = new p2.Body({
-            mass: 1,
-            position: [position.x, position.y]
+        var sensor = this;
+        body.c_sensor = sensor;
+        sensor.shape = new p2.Circle({
+            radius: radius,
+            sensor: true
         });
-        b.shape = new p2.Circle({
-            radius: radius
-        });
-        b.body.addShape(b.shape);
-        game.world.addBody(b.body);
+        sensor.shape.component = sensor;
+        body.addShape(sensor.shape);
+    }
+    
+    added(entity) {
+        super.added(entity);
     }
     
     update () {
         super.update();
-        var b = this;
-        if (b.entity.bodyUpdate) {
-            b.entity.bodyUpdate(b);
-        }
     }
     
-    die () {
-        var b = this;
-        game.world.removeBody(b.body);
-    }
-};
-
-
-
-
+    sensorDetected() {}
+}

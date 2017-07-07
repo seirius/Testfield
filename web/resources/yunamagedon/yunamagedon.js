@@ -9,8 +9,9 @@ PIXI.utils.sayHello(type);
 
 var game = new Game(1000, 1000);
 
-var player = new Player(500, 500);
-
-for (var i = 0; i < 4; i++) {
-    new Unit(i * 100 + 100, 200);
+var player = new Player(100, 100);
+for (var i = 0; i < 10; i++) {
+    for (var j = 0; j < 10; j++) {
+        new Unit(200 + i * 20, 200 + j * 20);
+    }
 }

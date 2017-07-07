@@ -11,7 +11,7 @@ public class MainController {
     
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String indexRequest(ModelMap model) {
-        return "/static/index.html";
+        return "/static/indexM.html";
     }
     
     @RequestMapping(value = "/indexM", method = RequestMethod.GET)

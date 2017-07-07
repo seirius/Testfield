@@ -1,4 +1,4 @@
-/* global PIXI, C_STATIC, U_STATIC, VECTOR, p2 */
+/* global PIXI, C_STATIC, U_STATIC, VECTOR, p2, Unit, STATIC_UNIT */
 
 class Game {
     constructor(w, h) {
@@ -28,11 +28,16 @@ class Game {
         game.fixedTimeStep = 1 / 60;
         game.maxSubSteps = 10;
         game.deltaTime = 0;
+        game.commands = {
+            isGeneral: true,
+            isUnits: false
+        };
         game.init();
     }
     
     init () {
         var game = this;
+        game.keyboardCB();
         game.renderer.render(game.stage);
         document.body.appendChild(game.renderer.view);
         game.gameLoop();
@@ -56,16 +61,25 @@ class Game {
         });
         setInterval(function () {
             console.log("fps", game.fpss);
-        }, 5000);
+        }, 10000);
         
         game.world.on("beginContact", function (e) {
-            if (e.bodyA.entity && e.bodyA.entity.beginContact) {
-                e.bodyA.entity.beginContact(e.bodyB);
-            }
-            if (e.bodyB.entity && e.bodyB.entity.beginContact) {
-                e.bodyB.entity.beginContact(e.bodyA);
-            }
+            e.shapeA.component.beginContact(e.shapeB);
+            e.shapeB.component.beginContact(e.shapeA);
         });
+        
+        game.world.on("endContact", function (e) {
+            e.shapeA.component.endContact(e.shapeB);
+            e.shapeB.component.endContact(e.shapeA);
+        });
+    }
+    
+    keyboardCB () {
+        var game = this;
+        game.keys = {
+            one: game.keyboard(49),
+            two: game.keyboard(50)
+        };
     }
     
     keyboard (keyCode) {
@@ -99,6 +113,18 @@ class Game {
         window.addEventListener("keyup", key.upHandler.bind(key), false);
         return key;
     }
+    
+    modeGeneral() {
+        var game = this;
+        game.commands.isGeneral = true;
+        game.commands.isUnits = false;
+    }
+    
+    modeUnits() {
+        var game = this;
+        game.commands.isGeneral = false;
+        game.commands.isUnits = true;
+    }
 
     
     updateHitArea() {
@@ -125,14 +151,18 @@ class Game {
             }
         }
         
-        if (game.mouse.isRightDown) {
-            console.log("move!");
-        }
-        
         game.rubberBand();
         game.command();
         
         game.renderer.render(game.stage);
+        
+        if (game.keys.one.isDown) {
+            game.modeGeneral();
+        }
+        
+        if (game.keys.two.isDown) {
+            game.modeUnits();
+        }
         
         game.mouse.isRightDown = false;
         
@@ -173,16 +203,23 @@ class Game {
         var i = 0;
         for (i; i < game.entities.length; i++) {
             var entity = game.entities[i];
-            var pos = entity.getComponent(C_STATIC.type.POSITION);
-            if (pos 
-                    && pos.position.x > oX 
-                    && pos.position.x < eX
-                    && pos.position.y > oY 
-                    && pos.position.y < eY
-                    && entity.onSelect) {
-                entity.onSelect();
-                game.selectedEntities.push(entity);
+            if (entity instanceof Unit 
+                    && entity.isSelectable) {
+                var pos = entity.getComponent(C_STATIC.type.POSITION);
+                if (pos && pos.position.x > oX 
+                        && pos.position.x < eX
+                        && pos.position.y > oY 
+                        && pos.position.y < eY
+                        && entity.onSelect) {
+                    entity.onSelect();
+                    game.selectedEntities.push(entity);
+                }
             }
+        }
+        if (game.selectedEntities.length > 0) {
+            game.modeUnits();
+        } else {
+            game.modeGeneral();
         }
     }
     
@@ -192,7 +229,7 @@ class Game {
         var i = 0;
         for (i; i < game.entities.length; i++) {
             var entity = game.entities[i];
-            if (entity.unSelect) {
+            if (entity.unSelect && entity.isSelected) {
                 entity.unSelect();
             }
         }
@@ -200,14 +237,16 @@ class Game {
     
     command () {
         var game = this;
-        if (game.mouse.isRightDown && game.selectedEntities.length > 0) {
+        if (game.mouse.isRightDown 
+                && game.selectedEntities.length > 0
+                && game.commands.isUnits) {
             var avgVector = U_STATIC.getAvgPosition(game.selectedEntities);
             var dif = VECTOR.minus(avgVector, game.mouse.position);
             var i = 0;
             for (i; i < game.selectedEntities.length; i++) {
                 var entity = game.selectedEntities[i];
                 var pos = entity.getComponent(C_STATIC.type.POSITION);
-                if (pos) {
+                if (pos && entity.isSelected) {
                     var dest = VECTOR.minus(pos.position, dif);
                     pos.destination = dest;
                     pos.setCourse(VECTOR.directionVector(pos.position, dest, pos.v));

@@ -1,10 +1,16 @@
-/* global PIXI, stage, entities, game, Component, C_Body */
+/* global PIXI, stage, entities, game, Component, C_Position */
+
+const E_STATIC = {
+    id: 0
+};
 
 class Entity {
     
     constructor () {
         var entity = this;
         entity.components = [];
+        entity._position = new Vector(0, 0);
+        entity.id = ++E_STATIC.id;
         entity.init();
     }
     
@@ -14,10 +20,7 @@ class Entity {
         } else {
             var entity = this;
             entity.components.push(component);
-            component.entity = entity;
-            if (component instanceof C_Body) {
-                component.body.entity = entity;
-            }
+            component.added(entity);
         }
     }
     
@@ -80,8 +83,7 @@ class Entity {
         }
     }
     
-    remove() {
-    }
+    remove() {}
     
     onDraw() {}
 };

@@ -2,27 +2,15 @@
 var loginModule = angular.module("loginModule", ["ngRoute", "generalTestfield"]);
 
 loginModule.config(function ($routeProvider) {
-    if (window.location.href.indexOf("indexM") > 0) {
-        $routeProvider
-        .when("/", {
-            templateUrl: "static/htmlParts/login/loginPartM.html",
-            controller: "loginCtrl"
-        })
-        .when("/register", {
-            templateUrl: "static/htmlParts/login/registerPartM.html",
-            controller: "registerCtrl"
-        });
-    } else {
-        $routeProvider
-        .when("/", {
-            templateUrl: "static/htmlParts/login/loginPart.html",
-            controller: "loginCtrl"
-        })
-        .when("/register", {
-            templateUrl: "static/htmlParts/login/registerPart.html",
-            controller: "registerCtrl"
-        });
-    }
+    $routeProvider
+    .when("/", {
+        templateUrl: "static/htmlParts/login/loginPartM.html",
+        controller: "loginCtrl"
+    })
+    .when("/register", {
+        templateUrl: "static/htmlParts/login/registerPartM.html",
+        controller: "registerCtrl"
+    });
 });
 
 loginModule.controller("loginCtrl", function ($scope, $window, $location, FormService) {
