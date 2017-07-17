@@ -4,6 +4,7 @@ class Player extends Entity {
     constructor(x, y) {
         super();
         var player = this;
+        player.unitsUnderInfluence = [];
         player.radius = 4;
         player.c_pos = new C_Position(x, y, player.radius);
         player.c_pos.v = 40;
@@ -12,12 +13,14 @@ class Player extends Entity {
         player.addComponent(player.graphics);
         player.generalSensor = new C_Sensor(50, player.c_pos.body);
         player.generalSensor.beginContact = function (shape) {
-            if (shape.component.entity instanceof Unit) {
-                shape.component.entity.selectableInArea();
+            if (shape.component.entity instanceof Unit
+                    && player.side === shape.component.entity.side) {
+                shape.component.entity.selectableInArea(player);
             }
         };
         player.generalSensor.endContact = function (shape) {
-            if (shape.component.entity instanceof Unit) {
+            if (shape.component.entity instanceof Unit
+                    && player.side === shape.component.entity.side) {
                 shape.component.entity.unSelectableInArea();
             }
         };
@@ -37,10 +40,6 @@ class Player extends Entity {
         graphics.lineStyle(1, 0xFFFFFF);
         graphics.drawCircle(player.c_pos.position.x, player.c_pos.position.y, player.radius);
         graphics.endFill();
-    }
-    
-    bodyUpdate (body) {
-        var player = this;
     }
     
     update () {

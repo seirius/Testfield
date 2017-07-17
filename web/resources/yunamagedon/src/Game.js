@@ -7,10 +7,12 @@ class Game {
         game.h = h;
         game.renderer = PIXI.autoDetectRenderer(game.w, game.h);
         game.backgroundColor = 0xf0f0f0;
-        game.stage = new PIXI.Container();
+        game.stage = new PIXI.Container(true);
         game.world = new p2.World({
             gravity: [0, 0]
         });
+        game.wrScale = 1000;
+        game.iwrScale = 1 / game.wrScale;
         game.entities = [];
         game.ratio = game.w / game.h;
         game.mouse = {
@@ -32,6 +34,7 @@ class Game {
             isGeneral: true,
             isUnits: false
         };
+        game.player = null;
         game.init();
     }
     
@@ -61,7 +64,7 @@ class Game {
         });
         setInterval(function () {
             console.log("fps", game.fpss);
-        }, 10000);
+        }, 5000);
         
         game.world.on("beginContact", function (e) {
             e.shapeA.component.beginContact(e.shapeB);
@@ -177,18 +180,20 @@ class Game {
     rubberBand() {
         var game = this;
         game.rubber.clear();
-        if (game.mouse.isDown) {
-            if (!game.startRubber) {
-                game.startRubber = new Vector(game.mouse.position);
-                game.unselectUnits();
+        if (game.player) {
+            if (game.mouse.isDown) {
+                if (!game.startRubber) {
+                    game.startRubber = new Vector(game.mouse.position);
+                    game.unselectUnits();
+                }
+                game.rubber.lineStyle(1, 0xFF3300);
+                var width = game.mouse.position.x - game.startRubber.x;
+                var height = game.mouse.position.y - game.startRubber.y;
+                game.rubber.drawRect(game.startRubber.x, game.startRubber.y, width, height);
+            } else if (game.startRubber) {
+                game.selectUnits();
+                game.startRubber = null;
             }
-            game.rubber.lineStyle(1, 0xFF3300);
-            var width = game.mouse.position.x - game.startRubber.x;
-            var height = game.mouse.position.y - game.startRubber.y;
-            game.rubber.drawRect(game.startRubber.x, game.startRubber.y, width, height);
-        } else if (game.startRubber) {
-            game.selectUnits();
-            game.startRubber = null;
         }
     }
     
@@ -204,12 +209,12 @@ class Game {
         for (i; i < game.entities.length; i++) {
             var entity = game.entities[i];
             if (entity instanceof Unit 
-                    && entity.isSelectable) {
-                var pos = entity.getComponent(C_STATIC.type.POSITION);
-                if (pos && pos.position.x > oX 
-                        && pos.position.x < eX
-                        && pos.position.y > oY 
-                        && pos.position.y < eY
+                    && entity.isSelectable && game.player.side === entity.side) {
+                var position = entity._position;
+                if (position.x > oX 
+                        && position.x < eX
+                        && position.y > oY 
+                        && position.y < eY
                         && entity.onSelect) {
                     entity.onSelect();
                     game.selectedEntities.push(entity);
@@ -229,7 +234,7 @@ class Game {
         var i = 0;
         for (i; i < game.entities.length; i++) {
             var entity = game.entities[i];
-            if (entity.unSelect && entity.isSelected) {
+            if (entity.unSelect && entity.isSelected && game.player.side === entity.side) {
                 entity.unSelect();
             }
         }
@@ -248,11 +253,20 @@ class Game {
                 var pos = entity.getComponent(C_STATIC.type.POSITION);
                 if (pos && entity.isSelected) {
                     var dest = VECTOR.minus(pos.position, dif);
-                    pos.destination = dest;
-                    pos.setCourse(VECTOR.directionVector(pos.position, dest, pos.v));
+                    entity.orderMove(VECTOR.directionVector(pos.position, dest, pos.v), dest);
                 }
             }
         }
+    }
+    
+    worldToRender(size) {
+        var game = this;
+        return size * game.wrScale;
+    }
+    
+    renderToWorld(size) {
+        var game = this;
+        return size * game.iwrScale;
     }
     
     

@@ -1,17 +1,60 @@
 /* global PIXI, p2 */
 
-var type = "WebGL";
+const type = "WebGL";
 if (!PIXI.utils.isWebGLSupported()) {
     type = "canvas";
 }
 
 PIXI.utils.sayHello(type);
 
-var game = new Game(1000, 1000);
+const playerSide = 1;
+const enemySide = 2;
 
-var player = new Player(100, 100);
-for (var i = 0; i < 10; i++) {
-    for (var j = 0; j < 10; j++) {
-        new Unit(200 + i * 20, 200 + j * 20);
+const game = new Game(1000, 1000);
+
+const player = new Player(100, 100);
+player.side = playerSide;
+game.player = player;
+const sUnit = new Unit(120, 120);
+sUnit.side = playerSide;
+
+for (var i = 0; i < 5; i++) {
+    for (var j = 0; j < 5; j++) {
+        var unit = new Unit(200 + i * 10, 200 + j * 10);
+        unit.side = playerSide;
+    }
+}
+
+for (var i = 0; i < 5; i++) {
+    for (var j = 0; j < 5; j++) {
+        var unit = new Unit(260 + i * 10, 200 + j * 10);
+        unit.side = playerSide;
+    }
+}
+
+for (var i = 0; i < 5; i++) {
+    for (var j = 0; j < 5; j++) {
+        var unit = new Unit(200 + i * 10, 350 + j * 10);
+        unit.originalColor = 0xFF0000;
+        unit.currentColor = 0xFF0000;
+        unit.side = enemySide;
+    }
+}
+
+for (var i = 0; i < 5; i++) {
+    for (var j = 0; j < 5; j++) {
+        var unit = new Unit(260 + i * 10, 350 + j * 10);
+        unit.originalColor = 0xFF0000;
+        unit.currentColor = 0xFF0000;
+        unit.side = enemySide;
+    }
+}
+
+for (var i = 0; i < 5; i++) {
+    for (var j = 0; j < 5; j++) {
+        var unit = new Unit(320 + i * 10, 350 + j * 10);
+        unit.originalColor = 0xFF0000;
+        unit.currentColor = 0xFF0000;
+        unit.side = enemySide;
     }
 }

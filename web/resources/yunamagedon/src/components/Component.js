@@ -50,10 +50,10 @@ class C_Position extends Component {
         pos.v = 1;
         pos.body = new p2.Body({
             mass: 1,
-            position: [x, y]
+            position: [game.renderToWorld(x), game.renderToWorld(y)]
         });
         pos.shape = new p2.Circle({
-            radius: radius
+            radius: game.renderToWorld(radius)
         });
         pos.shape.component = pos;
         pos.body.addShape(pos.shape);
@@ -70,9 +70,6 @@ class C_Position extends Component {
     update () {
         var pos = this;
         pos.updateCourse += 1;
-        if (pos.entity.bodyUpdate) {
-            pos.entity.bodyUpdate(pos);
-        } 
         if (pos.course) {
             if (pos.updateCourse % 10 === 0) {
                 pos.course = VECTOR.directionVector(pos.position, pos.destination, pos.v);
@@ -87,7 +84,8 @@ class C_Position extends Component {
         } else {
             pos.stop();
         }
-        pos.position = new Vector(pos.body.position[0], pos.body.position[1]);
+        pos.position = new Vector(game.worldToRender(pos.body.position[0]), 
+            game.worldToRender(pos.body.position[1]));
         pos.entity._position = new Vector(pos.position);
     }
     
@@ -106,7 +104,7 @@ class C_Position extends Component {
     move(vector) {
         var pos = this;
         if (pos.entity) {
-            pos.body.velocity = [vector.x, vector.y];
+            pos.body.velocity = [game.renderToWorld(vector.x), game.renderToWorld(vector.y)];
         }
     }
     
@@ -148,8 +146,9 @@ class C_Sensor extends Component {
         super();
         var sensor = this;
         body.c_sensor = sensor;
+        var wRadius = game.renderToWorld(radius);
         sensor.shape = new p2.Circle({
-            radius: radius,
+            radius: wRadius,
             sensor: true
         });
         sensor.shape.component = sensor;
@@ -165,4 +164,64 @@ class C_Sensor extends Component {
     }
     
     sensorDetected() {}
+}
+
+class C_Stats extends Component {
+    constructor () {
+        super();
+        var stats = this;
+        stats.hp = 10;
+        stats.at = 1;
+    }
+    
+    added(entity) {
+        super.added(entity);
+        var stats = this;
+        entity._stats = stats;
+    }
+    
+    update() {
+        super.update();
+        var stats = this;
+        if (stats.hp <= 0) {
+            stats.entity.die();
+        }
+    }
+    
+    takeDmg (dmgDealer, dmg) {
+        var stats = this;
+        if (stats.onTakeDmg) {
+            stats.onTakeDmg(dmgDealer, dmg);
+        }
+        stats.hp -= dmg;
+    }
+}
+
+class C_InteractiveClick extends Component {
+    constructor (graphic, w, h, click) {
+        super();
+        var int = this;
+        int.graphic = graphic;
+        int.hw = w / 2;
+        int.hh = h / 2;
+        int.w = w;
+        int.h = h;
+        int.graphic.interactive = true;
+        if (click) {
+            int.graphic.on("pointerdown", click);
+        }
+    }
+    
+    added(entity) {
+        super.added(entity);
+        var int = this;
+    }
+    
+    update() {
+        super.update();
+        var int = this;
+        int.graphic.hitArea = 
+                new PIXI.Rectangle(int.entity._position.x - int.hw, 
+                                   int.entity._position.y - int.hh, int.w, int.h);
+    }
 }

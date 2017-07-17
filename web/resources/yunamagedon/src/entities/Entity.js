@@ -10,6 +10,7 @@ class Entity {
         var entity = this;
         entity.components = [];
         entity._position = new Vector(0, 0);
+        entity._side = 0;
         entity.id = ++E_STATIC.id;
         entity.init();
     }
