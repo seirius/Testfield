@@ -18,11 +18,36 @@ class Vector {
             vec.x += vector.x;
             vec.y += vector.y;
         }
+        return vec;
     }
     
     minus(vector) {
         var vec = this;
         vec.plus(new Vector(-vector.x, -vector.y));
+        return vec;
+    }
+    
+    addMagnitude (magnitude) {
+        var vec = this;
+        var magX = vec.x > 0 ? magnitude : magnitude * -1;
+        var magY = vec.y > 0 ? magnitude : magnitude * -1;
+        vec.plus(new Vector(magX, magY));
+        return vec;
+    }
+    
+    angle() {
+        var vec = this;
+        return Math.atan2(vec.y, vec.x);
+    }
+    
+    angleD() {
+        var vec = this;
+        return vec.angle() * 180 / Math.PI;
+    }
+    
+    isZero() {
+        var vec = this;
+        return vec.x === 0 && vec.y === 0;
     }
     
 }
@@ -78,5 +103,21 @@ var U_STATIC = {
             tY += pos.position.y;
         }
         return new Vector(tX / entities.length, tY / entities.length);
+    },
+    
+    pntCircle: function (point, circlePosition, sRadius) {
+        var dist = VECTOR.distance(point, circlePosition);
+        return dist < sRadius;
     }
+};
+
+Array.prototype.move = function (old_index, new_index) {
+    if (new_index >= this.length) {
+        var k = new_index - this.length;
+        while ((k--) + 1) {
+            this.push(undefined);
+        }
+    }
+    this.splice(new_index, 0, this.splice(old_index, 1)[0]);
+    return this; // for testing purposes
 };

@@ -34,7 +34,7 @@ require.config({
     },
     "shim": {
         "yunamagedon": {
-            deps: [ "jQuery", "pixi", "p2", "Game" ]
+            deps: [ "jQuery", "pixi", "Game" ]
         },
         "Game": {
             deps: [

@@ -1,4 +1,4 @@
-/* global Vector, game, PIXI, VECTOR, p2 */
+/* global Vector, game, PIXI, VECTOR, p2, U_STATIC */
 
 const C_STATIC = {
     id: 0,
@@ -47,30 +47,22 @@ class C_Position extends Component {
         pos.course = null;
         pos.destination = null;
         pos.moving = false;
+        pos.cantMove = false;
         pos.v = 1;
-        pos.body = new p2.Body({
-            mass: 1,
-            position: [game.renderToWorld(x), game.renderToWorld(y)]
-        });
-        pos.shape = new p2.Circle({
-            radius: game.renderToWorld(radius)
-        });
-        pos.shape.component = pos;
-        pos.body.addShape(pos.shape);
         pos.updateCourse = 0;
-        game.world.addBody(pos.body);
+        pos.outsideForce = new Vector(0, 0);
     }
     
     added(entity) {
         super.added(entity);
         var pos = this;
-        pos.body.entity = entity;
+        entity.c_pos = pos;
     }
     
     update () {
         var pos = this;
         pos.updateCourse += 1;
-        if (pos.course) {
+        if (pos.course && !pos.cantMove) {
             if (pos.updateCourse % 10 === 0) {
                 pos.course = VECTOR.directionVector(pos.position, pos.destination, pos.v);
                 pos.updateCourse = 0;
@@ -79,13 +71,19 @@ class C_Position extends Component {
             if (distance < pos.v) {
                 pos.stop();
             } else {
-                pos.move(pos.course);
+                var movement = new Vector(pos.course);
+                if (!pos.outsideForce.isZero()) {
+                    movement.plus(pos.outsideForce);
+                    pos.outsideForce = new Vector(0, 0);
+                }
+                pos.move(VECTOR.plus(pos.course, pos.outsideForce));
             }
-        } else {
+        } else if (!pos.outsideForce.isZero()) {
+            pos.move(pos.outsideForce);
+            pos.outsideForce = new Vector(0, 0);
+        } else if (!pos.cantMove) {
             pos.stop();
         }
-        pos.position = new Vector(game.worldToRender(pos.body.position[0]), 
-            game.worldToRender(pos.body.position[1]));
         pos.entity._position = new Vector(pos.position);
     }
     
@@ -94,17 +92,31 @@ class C_Position extends Component {
         this.moving = true;
     }
     
+    applyForce(force) {
+        var pos = this;
+        pos.outsideForce = force;
+    }
+    
+    pause() {
+        var pos = this;
+        pos.cantMove = true;
+    }
+    
+    resume() {
+        var pos = this;
+        pos.cantMove = false;
+    }
+    
     stop () {
         var pos = this;
         pos.course = null;
         pos.moving = false;
-        pos.body.velocity = [0, 0];
     }
     
     move(vector) {
         var pos = this;
         if (pos.entity) {
-            pos.body.velocity = [game.renderToWorld(vector.x), game.renderToWorld(vector.y)];
+            pos.position.plus(vector);
         }
     }
     
@@ -145,14 +157,6 @@ class C_Sensor extends Component {
     constructor (radius, body) {
         super();
         var sensor = this;
-        body.c_sensor = sensor;
-        var wRadius = game.renderToWorld(radius);
-        sensor.shape = new p2.Circle({
-            radius: wRadius,
-            sensor: true
-        });
-        sensor.shape.component = sensor;
-        body.addShape(sensor.shape);
     }
     
     added(entity) {
@@ -223,5 +227,108 @@ class C_InteractiveClick extends Component {
         int.graphic.hitArea = 
                 new PIXI.Rectangle(int.entity._position.x - int.hw, 
                                    int.entity._position.y - int.hh, int.w, int.h);
+    }
+}
+
+class C_Body extends Component {
+    constructor(position, radius) {
+        super();
+        var body = this;
+        body.position = position;
+        body.radius = radius;
+        body.sRadius = radius * radius;
+    }
+    
+    added(entity) {
+        super.added(entity);
+        var body = this;
+        entity.body = body;
+        if (entity.c_pos) {
+            var indexPos = 0;
+            var indexBody = 0;
+            entity.components.forEach(function (component, index) {
+                if (component instanceof C_Position) {
+                    indexPos = index;
+                } else if (component instanceof C_Body) {
+                    indexBody = index;
+                }
+            });
+            
+            entity.components.move(indexPos, indexBody);
+        }
+    }
+    
+    collide(entity) {
+        var body = this;
+        if (entity.id === body.entity.id || !entity.body 
+                || !body.entity.c_pos
+                || !entity.c_pos ) {
+            return false;
+        }
+        
+        var force;
+        if (body.entity.c_pos.course) {
+            force = VECTOR.plus(body.entity.c_pos.course, body.entity.c_pos.outsideForce);
+        } else if (body.entity.c_pos.outsideForce) {
+            force = new Vector(body.entity.c_pos.outsideForce);
+        } else {
+            return false;
+        }
+        
+        var dirAngle = force.angle();
+        var pntLeft = VECTOR.toVector(dirAngle - 1.5708, body.radius)
+                .plus(body.position).plus(force);
+        var pntRight = VECTOR.toVector(dirAngle + 1.5708, body.radius)
+                .plus(body.position).plus(force);
+        var pntForward = new Vector(VECTOR.toVector(dirAngle, body.radius))
+                .plus(body.position).plus(force);
+        
+        var collision = U_STATIC.pntCircle(pntForward, entity.body.position, 
+            entity.body.sRadius)
+                || U_STATIC.pntCircle(pntLeft, entity.body.position, 
+            entity.body.sRadius)
+                || U_STATIC.pntCircle(pntRight, entity.body.position, 
+            entity.body.sRadius);
+        
+        if (collision) {
+            var angleForce = VECTOR.angleR(body.position, entity.body.position);
+            var outsideForce = VECTOR.toVector(angleForce, body.entity.c_pos.v / 2);
+            entity.c_pos.applyForce(outsideForce);
+        }
+        
+        return collision;
+    }
+    
+    update() {
+        super.update();
+        var body = this;
+        body.position = new Vector(body.entity._position);
+        
+        if (!body.entity.c_pos) {
+            return;
+        }
+        
+        var collision = false;
+        game.entities.forEach(function (entity) {
+            var collAux = body.collide(entity);
+            if (collAux) {
+                collision = true;
+            }
+        });
+        
+        if (body.entity instanceof Player) {
+            if (collision) {
+                body.entity.c_pos.pause();
+            } else {
+                body.entity.c_pos.resume();
+            }
+        } else {
+            if (collision) {
+                body.entity.c_pos.pause();
+            } else if (body.entity.c_pos.cantMove) {
+                body.entity.c_pos.resume();
+            }
+        }
+        
     }
 }

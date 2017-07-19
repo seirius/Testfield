@@ -5,31 +5,15 @@ class Unit extends Entity {
         super();
         var unit = this;
         unit.radius = 4;
+        unit.sRadius = unit.radius * unit.radius;
         unit.c_pos = new C_Position(x, y, unit.radius);
-        unit.c_pos.v = 10;
+        unit.c_pos.v = 1;
         unit.addComponent(unit.c_pos);
         unit.graphics = new C_Graphic();
         unit.addComponent(unit.graphics);
-        unit.surroundingArea = new C_Sensor(10, unit.c_pos.body);
         unit.surroundingUnits = [];
         unit.surroundingEnemies = [];
-        unit.surroundingArea.beginContact = function (shape) {
-            unit.addSurroundingUnit(shape);
-        };
-        unit.surroundingArea.endContact = function (shape) {
-            unit.removeSurroundingUnit(shape);
-        };
-        unit.addComponent(unit.surroundingArea);
 
-        unit.enemyRadar = new C_Sensor(20, unit.c_pos.body);
-        unit.enemyRadar.beginContact = function (shape) {
-            unit.addSurroundingEnemy(shape);
-        };
-        unit.enemyRadar.endContact = function (shape) {
-            unit.removeSurroundingEnemy(shape);
-        };
-        unit.addComponent(unit.enemyRadar);
-        
         unit.int = new C_InteractiveClick(unit.graphics.graphics, 8, 8, function () {
             console.log(unit);
         });
@@ -38,6 +22,7 @@ class Unit extends Entity {
         unit.enemyTarget = null;
         
         unit.addComponent(new C_Stats());
+        unit.addComponent(new C_Body(unit._position, 4));
         unit.atCd = 0;
         
         unit.upd = 0;
@@ -62,69 +47,6 @@ class Unit extends Entity {
         graphics.lineStyle(1, unit.currentColor);
         graphics.drawCircle(unit.c_pos.position.x, unit.c_pos.position.y, unit.radius);
         graphics.endFill();
-    }
-    
-    addSurroundingUnit(unitShape) {
-        var unit = this;
-        if (unitShape.component.entity instanceof Unit 
-                && unitShape.component.entity.id !== unit.id
-                && unitShape.component.entity.side !== unit.side) {
-            var i = 0;
-            var isAlreadyIn = false;
-            for (i; i < unit.surroundingUnits.length && !isAlreadyIn; i++) {
-                var surUnit = unit.surroundingUnits[i];
-                isAlreadyIn = surUnit.id === unitShape.component.entity.id;
-            }
-            if (!isAlreadyIn) {
-                unit.surroundingUnits.push(unitShape.component.entity);
-            }
-        }
-    }
-    
-    addSurroundingEnemy(unitShape) {
-        var unit = this;
-        if (unitShape.component.entity instanceof Unit 
-                && unit.side !== unitShape.component.entity.side
-                && unitShape.component.entity.id !== unit.id) {
-            var i = 0;
-            var isAlreadyIn = false;
-            for (i; i < unit.surroundingEnemies.length && !isAlreadyIn; i++) {
-                var surUnit = unit.surroundingEnemies[i];
-                isAlreadyIn = surUnit.id === unitShape.component.entity.id;
-            }
-            if (!isAlreadyIn) {
-                unit.surroundingEnemies.push(unitShape.component.entity);
-            }
-        }
-    }
-    
-    removeSurroundingUnit(unitShape) {
-        var unit = this;
-        if (unitShape.component.entity instanceof Unit) {
-            var i = unit.surroundingUnits.length;
-            for (i; i > 0; i--) {
-                var surUnit = unit.surroundingUnits[i - 1];
-                if (surUnit.id === unitShape.component.entity.id) {
-                    unit.surroundingUnits.splice(i - 1, 1);
-                    i = 0;
-                }
-            }
-        }
-    }
-    
-    removeSurroundingEnemy(unitShape) {
-        var unit = this;
-        if (unitShape.component.entity instanceof Unit 
-                && unitShape.component.entity.side !== unit.side) {
-            var i = unit.surroundingEnemies.length;
-            for (i; i > 0; i--) {
-                var surUnit = unit.surroundingEnemies[i - 1];
-                if (surUnit.id === unitShape.component.entity.id) {
-                    unit.surroundingEnemies.splice(i - 1, 1);
-                    i = 0;
-                }
-            }
-        }
     }
     
     update() {

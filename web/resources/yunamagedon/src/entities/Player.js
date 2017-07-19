@@ -6,25 +6,13 @@ class Player extends Entity {
         var player = this;
         player.unitsUnderInfluence = [];
         player.radius = 4;
-        player.c_pos = new C_Position(x, y, player.radius);
-        player.c_pos.v = 40;
-        player.addComponent(player.c_pos);
+        player.sRadius = player.radius * player.radius;
+        var pos = new C_Position(x, y, player.radius);
+        pos.v = 3;
+        player.addComponent(pos);
         player.graphics = new C_Graphic();
         player.addComponent(player.graphics);
-        player.generalSensor = new C_Sensor(50, player.c_pos.body);
-        player.generalSensor.beginContact = function (shape) {
-            if (shape.component.entity instanceof Unit
-                    && player.side === shape.component.entity.side) {
-                shape.component.entity.selectableInArea(player);
-            }
-        };
-        player.generalSensor.endContact = function (shape) {
-            if (shape.component.entity instanceof Unit
-                    && player.side === shape.component.entity.side) {
-                shape.component.entity.unSelectableInArea();
-            }
-        };
-        player.addComponent(player.generalSensor);
+        player.addComponent(new C_Body(player._position, 4));
         
         player.startRubber = null;
         player.rubber = null;

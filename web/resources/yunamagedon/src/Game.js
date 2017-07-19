@@ -8,11 +8,6 @@ class Game {
         game.renderer = PIXI.autoDetectRenderer(game.w, game.h);
         game.backgroundColor = 0xf0f0f0;
         game.stage = new PIXI.Container(true);
-        game.world = new p2.World({
-            gravity: [0, 0]
-        });
-        game.wrScale = 1000;
-        game.iwrScale = 1 / game.wrScale;
         game.entities = [];
         game.ratio = game.w / game.h;
         game.mouse = {
@@ -65,16 +60,6 @@ class Game {
         setInterval(function () {
             console.log("fps", game.fpss);
         }, 5000);
-        
-        game.world.on("beginContact", function (e) {
-            e.shapeA.component.beginContact(e.shapeB);
-            e.shapeB.component.beginContact(e.shapeA);
-        });
-        
-        game.world.on("endContact", function (e) {
-            e.shapeA.component.endContact(e.shapeB);
-            e.shapeB.component.endContact(e.shapeA);
-        });
     }
     
     keyboardCB () {
@@ -172,8 +157,6 @@ class Game {
         var thisLoop = new Date();
         game.fpss = 1000 / (thisLoop - game.lastLoop);
         game.deltaTime = (thisLoop - game.lastLoop) / 1000;
-        game.world.step(game.fixedTimeStep, game.deltaTime, game.maxSubSteps);
-        
         game.lastLoop = thisLoop;
     }
     
