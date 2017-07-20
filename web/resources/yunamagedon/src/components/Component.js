@@ -19,110 +19,60 @@ class Component {
     added(entity) {
         var component = this;
         component.entity = entity;
+        entity[component.constructor.name] = component;
     }
     
-    update () {
-        
-    }
+    update () {}
     
-    die () {
-        
-    }
-    
-    beginContact(shape) {}
-    
-    endContact(shape) {}
+    die () {}
 }
 
-class C_Position extends Component {
-    constructor(x, y, radius) {
+class C_Course extends Component {
+    constructor() {
         super();
-        var pos = this;
-        if (x instanceof Vector) {
-            pos.position = new Vector(x);
-        } else {
-            pos.position = new Vector(x, y);
+        var course = this;
+        course.goal = null;
+        course.moveForce = new Vector(0, 0);
+        course.updateGoal = .5;
+        course.count = 0;
+    }
+    
+    update() {
+        super.update();
+        var course = this;
+        if (!course.goal || !course.entity.C_Body || !course.entity.C_Stats) {
+            return;
         }
-        pos.type = C_STATIC.type.POSITION;
-        pos.course = null;
-        pos.destination = null;
-        pos.moving = false;
-        pos.cantMove = false;
-        pos.v = 1;
-        pos.updateCourse = 0;
-        pos.outsideForce = new Vector(0, 0);
-    }
-    
-    added(entity) {
-        super.added(entity);
-        var pos = this;
-        entity.c_pos = pos;
-    }
-    
-    update () {
-        var pos = this;
-        pos.updateCourse += 1;
-        if (pos.course && !pos.cantMove) {
-            if (pos.updateCourse % 10 === 0) {
-                pos.course = VECTOR.directionVector(pos.position, pos.destination, pos.v);
-                pos.updateCourse = 0;
-            }
-            var distance = VECTOR.distance(pos.position, pos.destination);
-            if (distance < pos.v) {
-                pos.stop();
-            } else {
-                var movement = new Vector(pos.course);
-                if (!pos.outsideForce.isZero()) {
-                    movement.plus(pos.outsideForce);
-                    pos.outsideForce = new Vector(0, 0);
-                }
-                pos.move(VECTOR.plus(pos.course, pos.outsideForce));
-            }
-        } else if (!pos.outsideForce.isZero()) {
-            pos.move(pos.outsideForce);
-            pos.outsideForce = new Vector(0, 0);
-        } else if (!pos.cantMove) {
-            pos.stop();
+        if (course.reachedGoal()) {
+            course.goal = null;
+            return;
         }
-        pos.entity._position = new Vector(pos.position);
-    }
-    
-    setCourse(course) {
-        this.course = course;
-        this.moving = true;
-    }
-    
-    applyForce(force) {
-        var pos = this;
-        pos.outsideForce = force;
-    }
-    
-    pause() {
-        var pos = this;
-        pos.cantMove = true;
-    }
-    
-    resume() {
-        var pos = this;
-        pos.cantMove = false;
-    }
-    
-    stop () {
-        var pos = this;
-        pos.course = null;
-        pos.moving = false;
-    }
-    
-    move(vector) {
-        var pos = this;
-        if (pos.entity) {
-            pos.position.plus(vector);
+        
+        course.count += game.deltaTime;
+        if (course.count >= course.updateGoal) {
+            course.count = 0;
+            course.calcMoveForce();
         }
+        course.entity.C_Body.applyForce(course.moveForce);
     }
     
-    die () {
-        var pos = this;
-        game.world.removeBody(pos.body);
+    reachedGoal() {
+        var course = this;
+        var entity = course.entity;
+        return VECTOR
+                .distance(entity._position, course.goal) < entity.C_Stats.velocity;
+    }
+    
+    calcMoveForce() {
+        var course = this;
+        course.moveForce = VECTOR.directionVector(course.entity._position, 
+                course.goal, course.entity.C_Stats.velocity);
+    }
+    
+    setGoal(goal) {
+        var course = this;
+        course.goal = goal;
+        course.calcMoveForce();
     }
 }
 
@@ -176,12 +126,11 @@ class C_Stats extends Component {
         var stats = this;
         stats.hp = 10;
         stats.at = 1;
+        stats.velocity = 1;
     }
     
     added(entity) {
         super.added(entity);
-        var stats = this;
-        entity._stats = stats;
     }
     
     update() {
@@ -218,7 +167,6 @@ class C_InteractiveClick extends Component {
     
     added(entity) {
         super.added(entity);
-        var int = this;
     }
     
     update() {
@@ -237,63 +185,62 @@ class C_Body extends Component {
         body.position = position;
         body.radius = radius;
         body.sRadius = radius * radius;
+        body.force = new Vector(0, 0);
+        body.isMain = true;
     }
     
     added(entity) {
         super.added(entity);
+        entity.components.move(entity.components.length - 1, 0);
+    }
+    
+    applyForce(extra) {
         var body = this;
-        entity.body = body;
-        if (entity.c_pos) {
-            var indexPos = 0;
-            var indexBody = 0;
-            entity.components.forEach(function (component, index) {
-                if (component instanceof C_Position) {
-                    indexPos = index;
-                } else if (component instanceof C_Body) {
-                    indexBody = index;
+        body.force.plus(extra);
+    }
+    
+    moveLast() {
+        var body = this;
+        var components = body.entity.components;
+        if (body.isMain && components[components.length - 1].id !== body.id) {
+            var bodyIndex = 0;
+            components.some(function (comp, index) {
+                if (comp.id === body.id) {
+                    bodyIndex = index;
+                    return true;
                 }
+                
+                return false;
             });
-            
-            entity.components.move(indexPos, indexBody);
+            components.move(components.length - 1, bodyIndex);
         }
     }
     
     collide(entity) {
         var body = this;
-        if (entity.id === body.entity.id || !entity.body 
-                || !body.entity.c_pos
-                || !entity.c_pos ) {
+        if (entity.id === body.entity.id || !entity.C_Body) {
             return false;
         }
         
-        var force;
-        if (body.entity.c_pos.course) {
-            force = VECTOR.plus(body.entity.c_pos.course, body.entity.c_pos.outsideForce);
-        } else if (body.entity.c_pos.outsideForce) {
-            force = new Vector(body.entity.c_pos.outsideForce);
-        } else {
-            return false;
-        }
-        
-        var dirAngle = force.angle();
+        var dirAngle = body.force.angle();
         var pntLeft = VECTOR.toVector(dirAngle - 1.5708, body.radius)
-                .plus(body.position).plus(force);
+                .plus(body.position).plus(body.force);
         var pntRight = VECTOR.toVector(dirAngle + 1.5708, body.radius)
-                .plus(body.position).plus(force);
+                .plus(body.position).plus(body.force);
         var pntForward = new Vector(VECTOR.toVector(dirAngle, body.radius))
-                .plus(body.position).plus(force);
+                .plus(body.position).plus(body.force);
         
-        var collision = U_STATIC.pntCircle(pntForward, entity.body.position, 
-            entity.body.sRadius)
-                || U_STATIC.pntCircle(pntLeft, entity.body.position, 
-            entity.body.sRadius)
-                || U_STATIC.pntCircle(pntRight, entity.body.position, 
-            entity.body.sRadius);
+        var collision = U_STATIC.pntCircle(pntForward, entity.C_Body.position, 
+            entity.C_Body.sRadius)
+                || U_STATIC.pntCircle(pntLeft, entity.C_Body.position, 
+            entity.C_Body.sRadius)
+                || U_STATIC.pntCircle(pntRight, entity.C_Body.position, 
+            entity.C_Body.sRadius);
         
         if (collision) {
-            var angleForce = VECTOR.angleR(body.position, entity.body.position);
-            var outsideForce = VECTOR.toVector(angleForce, body.entity.c_pos.v / 2);
-            entity.c_pos.applyForce(outsideForce);
+            var angleForce = VECTOR.angleR(body.position, entity.C_Body.position);
+            var outsideForce = VECTOR.toVector(angleForce, body.entity.C_Stats.velocity / 2);
+            entity.C_Body.applyForce(outsideForce);
         }
         
         return collision;
@@ -302,11 +249,11 @@ class C_Body extends Component {
     update() {
         super.update();
         var body = this;
-        body.position = new Vector(body.entity._position);
-        
-        if (!body.entity.c_pos) {
+        if (body.force.isZero()) {
             return;
         }
+        
+        body.moveLast();
         
         var collision = false;
         game.entities.forEach(function (entity) {
@@ -315,20 +262,13 @@ class C_Body extends Component {
                 collision = true;
             }
         });
-        
-        if (body.entity instanceof Player) {
-            if (collision) {
-                body.entity.c_pos.pause();
-            } else {
-                body.entity.c_pos.resume();
-            }
-        } else {
-            if (collision) {
-                body.entity.c_pos.pause();
-            } else if (body.entity.c_pos.cantMove) {
-                body.entity.c_pos.resume();
+        if (!collision) {
+            body.position.plus(body.force);
+            if (body.isMain) {
+                body.entity._position = new Vector(body.position);
             }
         }
         
+        body.force.reset();
     }
 }

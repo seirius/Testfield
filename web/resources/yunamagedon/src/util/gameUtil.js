@@ -50,6 +50,13 @@ class Vector {
         return vec.x === 0 && vec.y === 0;
     }
     
+    reset() {
+        var vec = this;
+        vec.x = 0;
+        vec.y = 0;
+        return vec;
+    }
+    
 }
 
 const VECTOR = {
@@ -98,9 +105,8 @@ var U_STATIC = {
         var tY = 0;
         for (i; i < entities.length; i++) {
             var entity = entities[i];
-            var pos = entity.getComponent(C_STATIC.type.POSITION);
-            tX += pos.position.x;
-            tY += pos.position.y;
+            tX += entity._position.x;
+            tY += entity._position.y;
         }
         return new Vector(tX / entities.length, tY / entities.length);
     },

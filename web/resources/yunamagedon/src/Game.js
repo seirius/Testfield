@@ -30,6 +30,7 @@ class Game {
             isUnits: false
         };
         game.player = null;
+        game.stopError = false;
         game.init();
     }
     
@@ -124,40 +125,49 @@ class Game {
     
     gameLoop() {
         var game = this;
+        if (game.stopError) {
+            return;
+        }
         requestAnimationFrame(function () {
             game.gameLoop();
         });
+        
+        try {
+            var i = game.entities.length;
+            for (i; i > 0; i--) {
+                var entity = game.entities[i - 1];
+                entity.update();
 
-        var i = game.entities.length;
-        for (i; i > 0; i--) {
-            var entity = game.entities[i - 1];
-            entity.update();
-            
-            if (entity.dead) {
-                entity.remove();
-                game.entities.splice(i - 1, 1);
+                if (entity.dead) {
+                    entity.remove();
+                    game.entities.splice(i - 1, 1);
+                }
             }
+
+            game.rubberBand();
+            game.command();
+
+            game.renderer.render(game.stage);
+
+            if (game.keys.one.isDown) {
+                game.modeGeneral();
+            }
+
+            if (game.keys.two.isDown) {
+                game.modeUnits();
+            }
+
+            game.mouse.isRightDown = false;
+
+            var thisLoop = new Date();
+            game.fpss = 1000 / (thisLoop - game.lastLoop);
+            game.deltaTime = (thisLoop - game.lastLoop) / 1000;
+            game.lastLoop = thisLoop;
+        } catch(e) {
+            game.stopError = true;
+            console.log(e);
         }
-        
-        game.rubberBand();
-        game.command();
-        
-        game.renderer.render(game.stage);
-        
-        if (game.keys.one.isDown) {
-            game.modeGeneral();
-        }
-        
-        if (game.keys.two.isDown) {
-            game.modeUnits();
-        }
-        
-        game.mouse.isRightDown = false;
-        
-        var thisLoop = new Date();
-        game.fpss = 1000 / (thisLoop - game.lastLoop);
-        game.deltaTime = (thisLoop - game.lastLoop) / 1000;
-        game.lastLoop = thisLoop;
+
     }
     
     rubberBand() {
@@ -191,8 +201,7 @@ class Game {
         var i = 0;
         for (i; i < game.entities.length; i++) {
             var entity = game.entities[i];
-            if (entity instanceof Unit 
-                    && entity.isSelectable && game.player.side === entity.side) {
+            if (entity instanceof Unit && game.player.side === entity.side) {
                 var position = entity._position;
                 if (position.x > oX 
                         && position.x < eX
@@ -233,10 +242,11 @@ class Game {
             var i = 0;
             for (i; i < game.selectedEntities.length; i++) {
                 var entity = game.selectedEntities[i];
-                var pos = entity.getComponent(C_STATIC.type.POSITION);
-                if (pos && entity.isSelected) {
-                    var dest = VECTOR.minus(pos.position, dif);
-                    entity.orderMove(VECTOR.directionVector(pos.position, dest, pos.v), dest);
+                if (entity.C_Stats && entity.isSelected) {
+                    var dest = VECTOR.minus(entity._position, dif);
+                    var aux = VECTOR.directionVector(entity._position, 
+                        dest, entity.C_Stats.velocity);
+                    entity.orderMove(aux, dest);
                 }
             }
         }

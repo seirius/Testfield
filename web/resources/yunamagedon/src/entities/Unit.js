@@ -4,30 +4,27 @@ class Unit extends Entity {
     constructor (x, y) {
         super();
         var unit = this;
+        unit._position = new Vector(x, y);
         unit.radius = 4;
         unit.sRadius = unit.radius * unit.radius;
-        unit.c_pos = new C_Position(x, y, unit.radius);
-        unit.c_pos.v = 1;
-        unit.addComponent(unit.c_pos);
-        unit.graphics = new C_Graphic();
-        unit.addComponent(unit.graphics);
         unit.surroundingUnits = [];
         unit.surroundingEnemies = [];
 
-        unit.int = new C_InteractiveClick(unit.graphics.graphics, 8, 8, function () {
-            console.log(unit);
-        });
-        unit.addComponent(unit.int);
         
         unit.enemyTarget = null;
+        var stats = new C_Stats();
+        stats.velocity = 1;
         
-        unit.addComponent(new C_Stats());
-        unit.addComponent(new C_Body(unit._position, 4));
+        unit.addComponent(new C_Graphic())
+                .addComponent(new C_Course())
+                .addComponent(stats)
+                .addComponent(new C_InteractiveClick(unit.C_Graphic.graphics, 8, 8, function () {
+                    console.log(unit);
+                }))
+                .addComponent(new C_Body(unit._position, 4));
+        
         unit.atCd = 0;
-        
         unit.upd = 0;
-        
-        
         unit.originalColor = 0xD2F95B;
         unit.currentColor = unit.originalColor;
         unit.selectedColor = 0xA66FA6;
@@ -45,7 +42,7 @@ class Unit extends Entity {
     onDraw (graphics) {
         var unit = this;
         graphics.lineStyle(1, unit.currentColor);
-        graphics.drawCircle(unit.c_pos.position.x, unit.c_pos.position.y, unit.radius);
+        graphics.drawCircle(unit._position.x, unit._position.y, unit.radius);
         graphics.endFill();
     }
     
@@ -53,23 +50,20 @@ class Unit extends Entity {
         super.update();
         var unit = this;
         unit.upd += 1;
-        if (!unit.isSelectable) {
-            unit.isSelected = false;
-        }
+//        if (!unit.isSelectable) {
+//            unit.isSelected = false;
+//        }
         unit.atCd += 1;
         if (unit.enemyTarget && !unit.enemyTarget.dead && unit.atCd % 60 === 0) {
-            unit.enemyTarget._stats.takeDmg(unit, unit._stats.at);
+            unit.enemyTarget._stats.takeDmg(unit, unit.C_Stats.at);
             unit.atCd = 0;
         } else if ( (!unit.enemyTarget || unit.enemyTarget.dead)) {
             if (unit.surroundingEnemies.length > 0) {
                 unit.enemyTarget = unit.surroundingEnemies[0];
-                unit.c_pos.destination = unit.enemyTarget._position;
-                unit.c_pos.setCourse(VECTOR.directionVector(unit.c_pos.position, 
-                    unit.enemyTarget._position, unit.c_pos.v));
+                unit.C_Course.setGoal(unit.enemyTarget._position);
             } else if (unit.enemyTarget) {
                 unit.enemyTarget = null;
-                unit.c_pos.destination = unit.command.destination;
-                unit.c_pos.setCourse(unit.command.course);
+                unit.C_Course.setGoal(unit.command.destination);
             }
         }
         
@@ -123,8 +117,7 @@ class Unit extends Entity {
             course: course,
             destination: destination
         };
-        unit.c_pos.destination = destination;
-        unit.c_pos.setCourse(course);
+        unit.C_Course.setGoal(destination);
     }
 };
 

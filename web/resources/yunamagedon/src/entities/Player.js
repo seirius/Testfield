@@ -4,15 +4,16 @@ class Player extends Entity {
     constructor(x, y) {
         super();
         var player = this;
+        player._position = new Vector(x, y);
         player.unitsUnderInfluence = [];
         player.radius = 4;
         player.sRadius = player.radius * player.radius;
-        var pos = new C_Position(x, y, player.radius);
-        pos.v = 3;
-        player.addComponent(pos);
-        player.graphics = new C_Graphic();
-        player.addComponent(player.graphics);
-        player.addComponent(new C_Body(player._position, 4));
+        var stats = new C_Stats();
+        stats.velocity = 3;
+        player.addComponent(stats)
+                .addComponent(new C_Graphic())
+                .addComponent(new C_Course())
+                .addComponent(new C_Body(player._position, 4));
         
         player.startRubber = null;
         player.rubber = null;
@@ -26,7 +27,7 @@ class Player extends Entity {
     onDraw (graphics) {
         var player = this;
         graphics.lineStyle(1, 0xFFFFFF);
-        graphics.drawCircle(player.c_pos.position.x, player.c_pos.position.y, player.radius);
+        graphics.drawCircle(player._position.x, player._position.y, player.radius);
         graphics.endFill();
     }
     
@@ -37,10 +38,7 @@ class Player extends Entity {
         if (game.mouse.isRightDown 
                 && game.commands.isGeneral) {
             player.lastDirection = new Vector(game.mouse.position);
-            player.c_pos.destination = new Vector(game.mouse.position);
-            player.c_pos
-                    .setCourse(VECTOR.directionVector(player.c_pos.position, 
-                        game.mouse.position, player.c_pos.v));
+            player.C_Course.setGoal(new Vector(game.mouse.position));
         }
     }
 }

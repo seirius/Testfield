@@ -16,13 +16,14 @@ class Entity {
     }
     
     addComponent (component) {
+        var entity = this;
         if (! (component instanceof Component)) {
             console.log("addComponent", "component is not a Component");
         } else {
-            var entity = this;
-            entity.components.push(component);
+            entity.components.unshift(component);
             component.added(entity);
         }
+        return entity;
     }
     
     removeComponent (component) {

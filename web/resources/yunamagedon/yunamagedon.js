@@ -15,8 +15,9 @@ const game = new Game(1000, 1000);
 const player = new Player(100, 100);
 player.side = playerSide;
 game.player = player;
-const sUnit = new Unit(120, 120);
+var sUnit = new Unit(120, 120);
 sUnit.side = playerSide;
+sUnit.C_Course.setGoal(new Vector(600, 120));
 
 for (var i = 0; i < 5; i++) {
     for (var j = 0; j < 5; j++) {
