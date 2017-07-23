@@ -57,6 +57,11 @@ class Vector {
         return vec;
     }
     
+    equals(vector) {
+        var vec = this;
+        return vec.x === vector.x && vec.y === vector.y;
+    }
+    
 }
 
 const VECTOR = {

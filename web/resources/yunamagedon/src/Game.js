@@ -58,16 +58,22 @@ class Game {
             game.mouse.isRightDown = true;
             return false;
         });
+        game.fpsDisplay = new PIXI.Text(game.fpss.toString().substring(0, 4), {
+            font: "20px Arial", 
+            fill: "white"
+        });
         setInterval(function () {
-            console.log("fps", game.fpss);
-        }, 5000);
+            game.fpsDisplay.text = game.fpss.toString().substring(0, 4);
+        }, 500);
+        game.stage.addChild(game.fpsDisplay);
     }
     
     keyboardCB () {
         var game = this;
         game.keys = {
             one: game.keyboard(49),
-            two: game.keyboard(50)
+            two: game.keyboard(50),
+            q: game.keyboard(81)
         };
     }
     
@@ -156,6 +162,17 @@ class Game {
             if (game.keys.two.isDown) {
                 game.modeUnits();
             }
+            
+            game.keys.q.press = function () {
+                if (game.player) {
+                    var prj = new Arrow({
+                        parent: game.player,
+                        velocity: 100,
+                        target: new Vector(game.mouse.position)
+                    });
+                    console.log(prj);
+                }
+            };
 
             game.mouse.isRightDown = false;
 
@@ -207,6 +224,7 @@ class Game {
                         && position.x < eX
                         && position.y > oY 
                         && position.y < eY
+                        && entity.isSelectable
                         && entity.onSelect) {
                     entity.onSelect();
                     game.selectedEntities.push(entity);
@@ -244,9 +262,7 @@ class Game {
                 var entity = game.selectedEntities[i];
                 if (entity.C_Stats && entity.isSelected) {
                     var dest = VECTOR.minus(entity._position, dif);
-                    var aux = VECTOR.directionVector(entity._position, 
-                        dest, entity.C_Stats.velocity);
-                    entity.orderMove(aux, dest);
+                    entity.orderMove(dest, true);
                 }
             }
         }

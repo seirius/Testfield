@@ -22,6 +22,15 @@ require.config({
         "Unit": [
             "/Testfield/resources/yunamagedon/src/entities/Unit"
         ],
+        "Soldier": [
+            "/Testfield/resources/yunamagedon/src/entities/Soldier"
+        ],
+        "Archer": [
+            "/Testfield/resources/yunamagedon/src/entities/Archer"
+        ],
+        "Projectile": [
+            "/Testfield/resources/yunamagedon/src/entities/projectiles/Projectile"
+        ],
         "Game": [
             "/Testfield/resources/yunamagedon/src/Game"
         ],
@@ -38,8 +47,21 @@ require.config({
         },
         "Game": {
             deps: [
-                "Player", "Unit", "gameUtil"
+                "Player", "Soldier", "Archer", "gameUtil", "Projectile"
             ]
+        },
+        "Soldier": {
+            deps: [
+                "Unit"
+            ]
+        },
+        "Archer": {
+            deps: [
+                "Unit"
+            ]
+        },
+        "Projectile": {
+            deps: ["Entity"]
         },
         "Entity": {
             deps: [ "Component" ]
