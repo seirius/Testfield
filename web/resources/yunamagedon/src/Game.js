@@ -31,6 +31,8 @@ class Game {
         };
         game.player = null;
         game.stopError = false;
+        game.stop = false;
+        game.grid = [];
         game.init();
     }
     
@@ -73,7 +75,23 @@ class Game {
         game.keys = {
             one: game.keyboard(49),
             two: game.keyboard(50),
-            q: game.keyboard(81)
+            q: game.keyboard(81),
+            w: game.keyboard(87)
+        };
+        
+        game.keys.q.press = function () {
+            if (game.player) {
+                var prj = new Arrow({
+                    parent: game.player,
+                    velocity: 200,
+                    target: new Vector(game.mouse.position),
+                    onHit: function () {}
+                });
+            }
+        };
+        
+        game.keys.w.press = function () {
+            game.stop = !game.stop;
         };
     }
     
@@ -139,19 +157,23 @@ class Game {
         });
         
         try {
-            var i = game.entities.length;
-            for (i; i > 0; i--) {
-                var entity = game.entities[i - 1];
-                entity.update();
+            
+            if (!game.stop) {
+                var i = game.entities.length;
+                for (i; i > 0; i--) {
+                    var entity = game.entities[i - 1];
+                    entity.update();
 
-                if (entity.dead) {
-                    entity.remove();
-                    game.entities.splice(i - 1, 1);
+                    if (entity.dead) {
+                        entity.remove();
+                        game.entities.splice(i - 1, 1);
+                    }
                 }
-            }
 
-            game.rubberBand();
-            game.command();
+                game.rubberBand();
+                game.command();
+            }
+            
 
             game.renderer.render(game.stage);
 
@@ -163,17 +185,6 @@ class Game {
                 game.modeUnits();
             }
             
-            game.keys.q.press = function () {
-                if (game.player) {
-                    var prj = new Arrow({
-                        parent: game.player,
-                        velocity: 100,
-                        target: new Vector(game.mouse.position)
-                    });
-                    console.log(prj);
-                }
-            };
-
             game.mouse.isRightDown = false;
 
             var thisLoop = new Date();
@@ -276,6 +287,18 @@ class Game {
     renderToWorld(size) {
         var game = this;
         return size * game.iwrScale;
+    }
+    
+    gameover() {
+        var game = this;
+        var gameover = new PIXI.Text("GAME OVER", {
+            font: "20px Arial",
+            fill: "red"
+        });
+        gameover.x = game.w / 2 - gameover.width / 2;
+        gameover.y = game.h / 2 - gameover.height / 2;
+        game.stage.addChild(gameover);
+        game.stop = true;
     }
     
     

@@ -1,4 +1,4 @@
-/* global Unit */
+/* global Unit, King */
 
 class Soldier extends Unit {
     constructor(x, y) {
@@ -19,7 +19,7 @@ class Soldier extends Unit {
             console.log(soldier);
         }));
         soldier.C_Sensor.filter = function (entity) {
-            return entity instanceof Unit
+            return (entity instanceof Unit || entity instanceof King)
                     && entity.side !== soldier.side;
         };
         soldier.C_Stats.velocity = 10;

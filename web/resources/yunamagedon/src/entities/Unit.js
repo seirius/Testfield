@@ -10,7 +10,7 @@ class Unit extends Entity {
         
         unit.addComponent(new C_Course())
         .addComponent(new C_Stats())
-        .addComponent(new C_Body(unit._position, 4));
+        .addComponent(new C_Body(unit._position, unit.radius));
                 
         unit.isSelectable = false;
         unit.isSelected = false;

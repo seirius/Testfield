@@ -1,4 +1,4 @@
-/* global Entity, VECTOR, Unit */
+/* global Entity, VECTOR, Unit, LAYERS, King */
 
 class Projectile extends Entity {
     constructor(args) {
@@ -43,14 +43,19 @@ class Arrow extends Projectile {
         super(args);
         var arrow = this;
         arrow.C_Body.isPhysic = false;
+        arrow.C_Body.layer = LAYERS.B;
         arrow.startPosition = new Vector(arrow._position);
         arrow.lastPosition = new Vector(arrow._position);
+        if (!args.onHit) {
+            throw "onHit not defined";
+        }
+        arrow.onHit = args.onHit;
         
         arrow.distance = VECTOR.realDistance(arrow._position, arrow.target);
         arrow.hDistance = arrow.distance / 2;
         arrow.perTick = arrow.velocity / 2 / arrow.hDistance;
         arrow.dPerTick = arrow.perTick * 2;
-        arrow.landDistance = arrow.distance / 10;
+        arrow.landDistance = arrow.distance / 5;
         var acc = arrow.distance / 7;
         var rnd = Math.random();
         var random = rnd < 0.5 ? -1 * rnd : 1 * rnd;
@@ -61,14 +66,14 @@ class Arrow extends Projectile {
         arrow.count = 0;
         
         
-        arrow.C_Course.onReach = function () {
+        arrow.C_Course.onReach = function (entity) {
             arrow.die();
         };
         
         arrow.C_Body.onCollision = function (entity) {
             if (arrow.C_Body.isPhysic) {
-                if (entity instanceof Unit) {
-                    entity.C_Stats.takeDmg(arrow.parent, arrow.parent.C_Stats.at);
+                if (entity instanceof Unit || entity instanceof King) {
+                    args.onHit(entity);
                 }
                 arrow.die();
             }

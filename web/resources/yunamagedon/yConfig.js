@@ -28,6 +28,9 @@ require.config({
         "Archer": [
             "/Testfield/resources/yunamagedon/src/entities/Archer"
         ],
+        "King": [
+            "/Testfield/resources/yunamagedon/src/entities/King"
+        ],
         "Projectile": [
             "/Testfield/resources/yunamagedon/src/entities/projectiles/Projectile"
         ],
@@ -39,15 +42,27 @@ require.config({
         ],
         "Component": [
             "/Testfield/resources/yunamagedon/src/components/Component"
+        ],
+        "Body": [
+            "/Testfield/resources/yunamagedon/src/components/Body"
+        ],
+        "Sensor": [
+            "/Testfield/resources/yunamagedon/src/components/Sensor"
+        ],
+        "Skill": [
+            "/Testfield/resources/yunamagedon/src/components/Skill"
+        ],
+        "grid": [
+            "/Testfield/resources/yunamagedon/src/grid/grid"
         ]
     },
     "shim": {
         "yunamagedon": {
-            deps: [ "jQuery", "pixi", "Game" ]
+            deps: [ "jQuery", "pixi", "Game", "grid" ]
         },
         "Game": {
             deps: [
-                "Player", "Soldier", "Archer", "gameUtil", "Projectile"
+                "Player", "Soldier", "Archer", "gameUtil", "Projectile", "King"
             ]
         },
         "Soldier": {
@@ -60,10 +75,24 @@ require.config({
                 "Unit"
             ]
         },
+        "King": {
+            deps: [
+                "Entity"
+            ]
+        },
         "Projectile": {
             deps: ["Entity"]
         },
         "Entity": {
+            deps: [ "Component", "Body", "Sensor", "Skill" ]
+        },
+        "Body": {
+            deps: [ "Component" ]
+        },
+        "Sensor": {
+            deps: [ "Component" ]
+        },
+        "Skill": {
             deps: [ "Component" ]
         },
         "Player": {
