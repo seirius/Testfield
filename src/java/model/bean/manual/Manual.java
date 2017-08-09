@@ -39,7 +39,7 @@ import util.interfaces.WebBean;
  */
 
 @Entity
-@Table(name = "Manual", catalog = "testfield")
+@Table(name = "manual", catalog = "testfield")
 public class Manual implements Serializable, WebBean {
     
     @Id

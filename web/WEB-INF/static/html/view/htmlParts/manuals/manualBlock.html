@@ -9,10 +9,16 @@
     tabindex="-1">
     <div ng-include="'static/htmlParts/manuals/blockOptions.html'"></div>
     <div 
-        editable 
-        sn-keyup="saveBlock" 
-        sn-close="saveBlock" 
-        sn-trigger="30" 
-        ng-bind-html="manualBlock.manualBlockTrustedHtml">
+        editable
+        ng-bind="manualBlock.content"
+        ng-show="!editing">
     </div>
+    <textarea 
+        ng-model="manualBlock.content" 
+        textarea-height
+        ng-show="editing"
+        ng-model-options="{ debounce: 500 }"
+        ng-change="saveBlock()">
+        
+    </textarea>
 </div>

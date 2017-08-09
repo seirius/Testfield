@@ -276,6 +276,7 @@ function ($scope, $rootScope, ManualService, $sce, FormService, ModalService) {
         showModify: false
     };
     $scope.$sce = $sce;
+    $scope.editing = false;
     $scope.manualBlock.manualBlockTrustedHtml = $sce.trustAsHtml($scope.manualBlock.content);
     
     var keyups = 0;
@@ -287,8 +288,8 @@ function ($scope, $rootScope, ManualService, $sce, FormService, ModalService) {
         }
     };
     
-    $scope.saveBlock = function (content) {
-        ManualService.saveBlock($scope.block.id, content);
+    $scope.saveBlock = function () {
+        ManualService.saveBlock($scope.manualBlock.id, $scope.manualBlock.content);
     };
 
     $scope.blockSelected = function () {

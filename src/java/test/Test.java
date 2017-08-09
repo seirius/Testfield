@@ -14,18 +14,27 @@ public class Test {
     
 
     public static void main(String[] args) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-            Session session = HibernateUtil.getSessionFactory().openSession();
             String hql = ""
+                    + "from UserTestfield "
+                    + "where userNick = :user"
+                    + "";
+            Query query = session.createQuery(hql);
+            query.setString("user", "andriy");
+            System.out.println(query.list().get(0));
+            
+            hql = ""
                     + "from Manual "
                     + "where id = :id"
                     + "";
-            Query query = session.createQuery(hql);
+            query = session.createQuery(hql);
             query.setInteger("id", 69);
-            Manual manual = (Manual) query.list().get(0);
-            System.out.println(manual);
+            System.out.println(query.list().get(0));
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            session.close();
         }
     } 
 

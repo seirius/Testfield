@@ -40,6 +40,9 @@ require.config({
         "gameUtil": [
             "/Testfield/resources/yunamagedon/src/util/gameUtil"
         ],
+        "astar": [
+            "/Testfield/resources/yunamagedon/src/util/astar"
+        ],
         "Component": [
             "/Testfield/resources/yunamagedon/src/components/Component"
         ],
@@ -58,7 +61,7 @@ require.config({
     },
     "shim": {
         "yunamagedon": {
-            deps: [ "jQuery", "pixi", "Game", "grid" ]
+            deps: [ "jQuery", "pixi", "Game", "grid", "astar" ]
         },
         "Game": {
             deps: [

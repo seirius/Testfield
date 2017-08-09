@@ -1,3 +1,5 @@
+/* global UTIL */
+
 var generalTestfield = angular.module("generalTestfield", ["ui.materialize"]);
 
 generalTestfield.service("tfHttp", function ($http) {
@@ -357,6 +359,19 @@ generalTestfield.directive("logout", function (UserService, Testfield) {
                         alert("Coldnt't logout.");
                     }
                 });
+            });
+        }
+    };
+});
+
+generalTestfield.directive("textareaHeight", function () {
+    return {
+        restrict: "A",
+        link: function (scope, element, attrs) {
+            element.addClass("textarea-height");
+            UTIL.autoExpand(element);
+            element.keyup(function () {
+                UTIL.autoExpand(element);
             });
         }
     };

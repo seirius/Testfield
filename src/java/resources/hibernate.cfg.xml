@@ -4,12 +4,13 @@
   <session-factory>
     <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
     <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/testfield</property>
+    <property name="hibernate.connection.url">jdbc:mysql://192.168.1.217:3306/testfield</property>
     <property name="hibernate.connection.username">andriy</property>
     <property name="hibernate.connection.password">andriy</property>
 <!--    <property name="hibernate.show_sql">true</property>
     <property name="format_sql">true</property>-->
     <property name="current_session_context_class">thread</property>
+    <property name="hibernate.hbm2ddl.auto">update</property>
     <mapping class="model.bean.user.UserTestfield"/>
     <mapping class="model.bean.user.UserInfo"/>
     <mapping class="model.bean.user.UserConf"/>

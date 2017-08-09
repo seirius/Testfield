@@ -26,6 +26,10 @@ var UTIL = (function () {
     };
     
     return {
-        WIDTH_TYPES: WIDTH_TYPES
+        WIDTH_TYPES: WIDTH_TYPES,
+        autoExpand: function ($element) {
+            var scrollHeight = $element[0].scrollHeight;
+            $element.css("height", scrollHeight + "px");
+        }
     };
 })();

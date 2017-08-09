@@ -120,6 +120,19 @@ a[ng-click] {
     }
 }
 
+.textarea-height {
+    height:auto;
+    width:100%;
+    border:none;
+    outline:none;
+    outline-width: 0px;
+/*    -webkit-transition: height 1s ease;
+    -moz-transition: height 1s ease;
+    -ms-transition: height 1s ease;
+    -o-transition: height 1s ease;
+    transition: height 1s ease;*/
+}
+
 /*------------------------------------------------------*/
 
 /*---FORM VALIDATION-----------*/
