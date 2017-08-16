@@ -1,0 +1,17 @@
+<div ng-class="{
+    'text-center': form.buttons.place === 'center'
+}">
+    <div ng-class="{
+        'btn-group': form.buttons.buttons.length > 0,
+        'pull-right': form.buttons.place === 'right',
+        'pull-left': form.buttons.place === 'left'
+    }">
+        <button 
+            ng-repeat="button in form.buttons.buttons" 
+            type="{{button.type}}" 
+            class="btn {{button.class}}"
+            ng-click="buttonClick(button.type, this[button.click])">
+            {{button.text}}
+        </button>
+    </div>
+</div>

@@ -1,0 +1,112 @@
+{
+    "name": "manualOptionsForm",
+    "service": "MANUAL.updateManualsStyle",
+    "inputs": [
+        {
+            "@type": "InputText",
+            "label": "R",
+            "name": "r",
+            "value": "",
+            "typeName": "number",
+            "placeholder": "",
+            "controller": "CH_STYLE.loadFontColor",
+            "showLabel": true,
+            "validation": {
+                "required": true,
+                "minLength": 0,
+                "maxLength": 255
+            }
+        },
+        {
+            "@type": "InputText",
+            "label": "G",
+            "name": "g",
+            "value": "",
+            "typeName": "number",
+            "placeholder": "",
+            "controller": "CH_STYLE.loadFontColor",
+            "showLabel": true,
+            "validation": {
+                "required": true,
+                "minLength": 0,
+                "maxLength": 255
+            }
+        },
+        {
+            "@type": "InputText",
+            "label": "B",
+            "name": "b",
+            "value": "",
+            "typeName": "number",
+            "placeholder": "",
+            "controller": "CH_STYLE.loadFontColor",
+            "showLabel": true,
+            "validation": {
+                "required": true,
+                "minLength": 0,
+                "maxLength": 255
+            }
+        },
+        {
+            "@type": "InputSelect",
+            "label": "Font Family",
+            "name": "fontFamily",
+            "value": "2",
+            "controller": "CH_STYLE.loadFontFamilies",
+            "validation": {
+                "required": true
+            }
+        },
+        {
+            "@type": "InputTextarea",
+            "label": "Textarea",
+            "name": "textarea",
+            "value": "Hola amigosss",
+            "rows": "10",
+            "validation": {
+                "required": true,
+                "minLength": 2,
+                "maxLength": 3
+            }
+        },
+        {
+            "@type": "InputRadio",
+            "label": "Best moba",
+            "name": "mobas",
+            "radios": [
+                {
+                    "value": "Dota",
+                    "text": "Dota"
+                },
+                {
+                    "value": "LoL",
+                    "text": "LoL"
+                },
+                {
+                    "value": "HoN",
+                    "text": "HoN"
+                }
+            ]
+        },
+        {
+            "@type": "InputCheckbox",
+            "label": "Checkbox",
+            "name": "checkbox",
+            "value": false,
+            "validation": {
+                "required": true
+            }
+        }
+    ],
+    "buttons": {
+        "buttons": [
+            {
+                "type": "submit",
+                "class": "btn-default",
+                "text": "Submit changes",
+                "click": "submitStyles"
+            }
+        ],
+        "place": "center"
+    }
+}

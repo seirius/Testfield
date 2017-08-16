@@ -1,0 +1,25 @@
+<div 
+    class="manual-block manual-block-style" 
+    block-options
+    ng-class="{
+        'last': manualBlock.isLast, 
+        'first': manualBlock.isFirst,
+        'is-editing': isEditing
+    }"
+    tabindex="-1">
+    <div ng-include="'static/htmlParts/manuals/blockOptions.html'"></div>
+    <div 
+        editable
+        ng-bind="manualBlock.content"
+        ng-show="!editing"
+        class="manual-block-content">
+    </div>
+    <textarea 
+        ng-model="manualBlock.content" 
+        textarea-height
+        ng-show="editing"
+        ng-model-options="{ debounce: 500 }"
+        ng-change="saveBlock()">
+        
+    </textarea>
+</div>

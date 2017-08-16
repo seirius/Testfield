@@ -1,0 +1,14 @@
+{
+    "inputs": [
+        {
+            "name": "test1",
+            "value": "",
+            "type": "text"
+        },
+        {
+            "name": "test2",
+            "value": "hola",
+            "type": "text"
+        }
+    ]
+}

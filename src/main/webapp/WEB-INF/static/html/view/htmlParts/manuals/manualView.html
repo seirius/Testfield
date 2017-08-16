@@ -1,0 +1,27 @@
+<div class="container manualContainer">
+    
+    <div class="row">
+        <div class="col-xs-12">
+            <h2 ng-click="hola()">{{manual.title}}</h2>
+        </div>
+    </div>
+    
+    <!--PAGES-->
+    <div class="row" ng-repeat="page in manual.pages">
+        <div class="col-xs-12">
+            
+            <!--ROWS-->
+            <div class="row" ng-repeat="row in page.rows">
+                
+                <div 
+                    block-classes
+                    ng-repeat="block in row.blocks"
+                    ng-bind-html="getTrustedHtml(block.content)">
+                </div>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+</div>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+    <property name="hibernate.connection.url">jdbc:mysql://192.168.1.217:3306/testfield</property>
+    <property name="hibernate.connection.username">andriy</property>
+    <property name="hibernate.connection.password">andriy</property>
+<!--    <property name="hibernate.show_sql">true</property>
+    <property name="format_sql">true</property>-->
+    <property name="current_session_context_class">thread</property>
+    <property name="hibernate.hbm2ddl.auto">update</property>
+    <mapping class="com.testfield.model.bean.user.UserTestfield"/>
+    <mapping class="com.testfield.model.bean.user.UserInfo"/>
+    <mapping class="com.testfield.model.bean.user.UserConf"/>
+    <mapping class="com.testfield.model.bean.tag.Tag"/>
+    <mapping class="com.testfield.model.bean.tag.RelTagManual"/>
+    <mapping class="com.testfield.model.bean.tag.RelTagManualId"/>
+    <mapping class="com.testfield.model.bean.manual.Manual"/>
+    <mapping class="com.testfield.model.bean.manual.ManualConf"/>
+    <mapping class="com.testfield.model.bean.manual.ManualPage"/>
+    <mapping class="com.testfield.model.bean.manual.ManualRow"/>
+    <mapping class="com.testfield.model.bean.manual.ManualBlock"/>
+    <mapping class="com.testfield.model.bean.widthtype.WidthType"/>
+    <mapping class="com.testfield.model.bean.widthtype.RelBlockWidthType"/>
+    <mapping class="com.testfield.model.bean.widthtype.RelBlockWidthTypeId"/>
+    <mapping class="com.testfield.model.bean.style.FontFamily"/>
+    <mapping class="com.testfield.model.bean.style.FontColor"/>
+    <mapping class="com.testfield.model.bean.file.File"/>
+    <mapping class="com.testfield.model.bean.file.FileUser"/>
+    <mapping class="com.testfield.model.bean.file.FileUserId"/>
+    <mapping class="com.testfield.model.bean.file.FileManual"/>
+    <mapping class="com.testfield.model.bean.file.FileManualId"/>
+    <mapping class="com.testfield.model.bean.menu.Menu"/>
+    <mapping class="com.testfield.model.bean.menu.MenuList"/>
+    <mapping class="com.testfield.model.bean.menu.RelMenuMenuList"/>
+    <mapping class="com.testfield.model.bean.menu.RelMenuMenuListId"/>
+  </session-factory>
+</hibernate-configuration>

@@ -1,0 +1,72 @@
+{
+    "name": "manualOptionsForm",
+    "service": "SB_MANUAL.updateManualsStyle",
+    "inputs": [
+        {
+            "@type": "InputText",
+            "label": "R",
+            "name": "r",
+            "value": "",
+            "typeName": "number",
+            "placeholder": "",
+            "controller": "CH_STYLE.loadFontColor",
+            "showLabel": true,
+            "validation": {
+                "required": true,
+                "minLength": 0,
+                "maxLength": 255
+            }
+        },
+        {
+            "@type": "InputText",
+            "label": "G",
+            "name": "g",
+            "value": "",
+            "typeName": "number",
+            "placeholder": "",
+            "controller": "CH_STYLE.loadFontColor",
+            "showLabel": true,
+            "validation": {
+                "required": true,
+                "minLength": 0,
+                "maxLength": 255
+            }
+        },
+        {
+            "@type": "InputText",
+            "label": "B",
+            "name": "b",
+            "value": "",
+            "typeName": "number",
+            "placeholder": "",
+            "controller": "CH_STYLE.loadFontColor",
+            "showLabel": true,
+            "validation": {
+                "required": true,
+                "minLength": 0,
+                "maxLength": 255
+            }
+        },
+        {
+            "@type": "InputSelect",
+            "label": "Font Family",
+            "name": "fontFamily",
+            "value": "2",
+            "controller": "CH_STYLE.loadFontFamilies",
+            "validation": {
+                "required": true
+            }
+        }
+    ],
+    "buttons": {
+        "buttons": [
+            {
+                "type": "submit",
+                "class": "btn-default",
+                "text": "Submit changes",
+                "click": "submitStyles"
+            }
+        ],
+        "place": "center"
+    }
+}

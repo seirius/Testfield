@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h3 class="pull-right">All images</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="files-block-container">
+                        <div class="row">
+                            <div class="file-item col-xs-12 col-sm-6 col-md-4 text-center" ng-repeat="file in files">
+                                <img 
+                                     ng-src="{{domainUrl + file.path}}" class="img-thumbnail">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

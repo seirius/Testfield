@@ -1,0 +1,36 @@
+<div 
+    class="row" 
+    ng-controller="manualOptionsController">
+    <div class="col-xs-12">
+        <form name="optionsForm" ng-submit="submitOptions()">
+            <div class="row">
+                <div class="col-xs-6">
+                    <label>Manual's visibility </label>
+                </div>
+                <div class="col-xs-6 text-center">
+                    <div class="btn-group" role="toolbar">
+                        <div 
+                            class="btn" 
+                            ng-class="{
+                                'btn-success': isPublic(),
+                                'btn-default': !isPublic()
+                            }"
+                            ng-click="changeVisibility()">
+                            Public
+                        </div>
+                        <div 
+                            class="btn" 
+                            ng-class="{
+                                'btn-success': isPrivate(),
+                                'btn-default': !isPrivate()
+                            }"
+                            ng-click="changeVisibility()">
+                            Private
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        
+    </div>
+</div>

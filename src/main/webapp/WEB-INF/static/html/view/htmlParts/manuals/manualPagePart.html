@@ -1,0 +1,57 @@
+<div class="container manualContainer">
+    <div class="row">
+        <div class="col s12">
+            <h2 ng-dblclick="editTitle()">{{manual.title}}</h2>
+        </div>
+    </div>
+
+    <div class="row" ng-repeat="manualPage in manual.pages">
+        <div class="col s12">
+
+            <div 
+                ng-class="{'last': manualPage.isLast, 'first': manualPage.isFirst}"
+                class="manual-page manual-page-style" 
+                ng-controller="pageCtrl"
+                ng-init="initPage(manualPage)"
+                >
+                <div 
+                    class="row" 
+                    ng-repeat="manualRow in manualPage.rows"
+                    ng-controller="rowCtrl"
+                    ng-init="initRow(manualRow)"
+                    >
+                    
+                    <div class="col s12">
+                        
+                        <div 
+                            class="manual-row manual-row-style" 
+                            ng-class="{'last': manualRow.isLast, 'first': manualRow.isFirst}">
+                            
+                            <div class="row">
+                                <div
+                                    ng-repeat="manualBlock in manualRow.blocks" 
+                                    ng-controller="manualBlockCtrl"
+                                    ng-init="initBlock(manualBlock)"
+                                    block-classes
+                                    >
+                                    <div 
+                                        ng-include="'static/htmlParts/manuals/manualBlock.html'">
+                                    </div>
+                                    
+
+                                </div> <!-- END LOOP BLOCKS -->
+                            </div>
+
+                        </div>
+                        
+                    </div>
+                    
+                    
+                </div> <!-- END LOOP ROWS, TEST-ROW -->
+
+            </div>  <!--END TEST-PAGE -->
+
+        </div> <!-- END PAGE COL -->
+
+    </div> <!-- END LOOP PAGES -->
+</div>

@@ -1,0 +1,21 @@
+<label>{{input.label}}</label>
+<div 
+    ng-repeat="value in input.values track by $index"
+    class="checkbox">
+    <label>
+        <input 
+            type="checkbox"
+            ng-model="form.inputs[$parent.$index].values[$index]"
+            name="{{input.names[$index]}}"
+            ng-required="form.validation[input.names[$index]].required">
+        {{input.texts[$index]}}
+    </label>
+    <p 
+        class="form-text text-muted"
+        ng-show="this[form.name][input.names[$index]].$error.required 
+                && (!this[form.name][input.names[$index]].$pristine 
+                || this[form.name].$submitted)"
+        >
+        {{input.texts[$index]}} is required
+    </p>
+</div>

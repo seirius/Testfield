@@ -1,0 +1,87 @@
+<div 
+    class="form-group"
+    ng-class="{
+        'has-error': !this[form.name][input.name].$valid && (!this[form.name][input.name].$pristine || this[form.name].$submitted)
+    }">
+    <label ng-hide="input.showLabel === false">{{input.label}}</label>
+    <input 
+        ng-if="input.typeName === 'text' || input.typeName === 'password' || input.typeName === 'email'" 
+        class="form-control" 
+        type="{{input.typeName}}" 
+        name="{{input.name}}"
+        ng-model="input.value"
+        ng-required="input.validation.required"
+        ng-minlength="input.validation.minLength"
+        ng-maxlength="input.validation.maxLength"
+        ng-model-options="input.validation.ngModelOptions"
+        input-verify="{{input.validation.inputVerify}}"
+        server="{{input.validation.server}}"
+        placeholder="{{input.placeholder}}">
+    <input ng-if="input.typeName === 'number'" class="form-control" 
+        type="{{input.typeName}}" 
+        name="{{input.name}}"
+        ng-model="input.value"
+        ng-required="input.validation.required"
+        ng-min="input.validation.minLength"
+        ng-max="input.validation.maxLength"
+        ng-model-options="input.validation.ngModelOptions"
+        input-verify="{{input.validation.inputVerify}}"
+        server="{{input.validation.server}}"
+        placeholder="{{input.placeholder}}">
+    <p 
+        class="form-text text-muted"
+        ng-show="this[form.name][input.name].$error.required 
+                && (!this[form.name][input.name].$pristine || this[form.name].$submitted)"
+        >
+        {{input.label}} is required
+    </p>
+    <p 
+        class="form-text text-muted"
+        ng-show="this[form.name][input.name].$error.minlength
+                && (!this[form.name][input.name].$pristine || this[form.name].$submitted)"
+        >
+        Minimum length is {{input.validation.minLength}}
+    </p>
+    <p 
+        class="form-text text-muted"
+        ng-show="this[form.name][input.name].$error.maxlength
+                && (!this[form.name][input.name].$pristine || this[form.name].$submitted)"
+        >
+        Maximum length is {{input.validation.maxLength}}
+    </p>
+    <p 
+        class="form-text text-muted"
+        ng-show="this[form.name][input.name].$error.max
+                && (!this[form.name][input.name].$pristine || this[form.name].$submitted)"
+        >
+        Maximum length is {{input.validation.maxLength}}
+    </p>
+    <p 
+        class="form-text text-muted"
+        ng-show="this[form.name][input.name].$error.min
+                && (!this[form.name][input.name].$pristine || this[form.name].$submitted)"
+        >
+        Minimum length is {{input.validation.maxLength}}
+    </p>
+    <p 
+        class="form-text text-muted"
+        ng-show="this[form.name][input.name].$error.email
+                && (!this[form.name][input.name].$pristine || this[form.name].$submitted)"
+        >
+        Email not valid
+    </p>
+    <p 
+        class="form-text text-muted"
+        ng-show="this[form.name][input.name].$error.inputVerify
+                && (!this[form.name][input.name].$pristine || this[form.name].$submitted)"
+        >
+        Doesn't match
+    </p>
+    <p 
+        class="form-text text-muted"
+        ng-show="this[form.name][input.name].$error.server
+                && (!this[form.name][input.name].$pristine || this[form.name].$submitted)"
+        >
+        Duplicated input
+    </p>
+</div>

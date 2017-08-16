@@ -1,0 +1,19 @@
+<div ng-controller="formController">
+    <form 
+        name="{{form.name}}" 
+        novalidate 
+        ng-submit="submit()">
+        <div 
+            class="row" 
+            ng-repeat="input in form.inputs" on-repeat-end="formRepeatEnd">
+            <div class="col-xs-12">
+                <ng-include src="getInputHtml(input)" onload="inputLoaded(input)"></ng-include>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <ng-include src="'static/htmlParts/forms/buttons/buttons.html'"></ng-include>
+            </div>
+        </div>
+    </form>
+</div>

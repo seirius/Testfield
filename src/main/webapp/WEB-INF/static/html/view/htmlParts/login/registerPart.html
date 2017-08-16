@@ -1,0 +1,44 @@
+<div ng-show="showRegister" class="row margin-top-3">
+    <div class="col-xs-12 col-sm-6 col-sm-offset-3 col-lg-4 col-lg-offset-4">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <span class="pull-right font-size-2">New user</span>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+
+                <div class="row" ng-show="showSuccess">
+                    <div class="col-xs-12">
+
+                        <div class="alert alert-success text-center">
+                            <strong>Success!</strong> Registration complete.
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="row" ng-show="!showSuccess">
+                    <div class="col-xs-12">
+                        <ng-include src="'static/htmlParts/forms/formBuilder.html'"></ng-include>
+                    </div>
+                </div>
+
+            </div>
+
+            <div 
+                class="panel-footer hover-dodgerblue cursor-pointer" 
+                ng-click="goLogin()">
+                <div class="row">
+                    <div class="col-xs-12 text-center">
+                        <span>
+                            Return to login
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

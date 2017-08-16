@@ -1,0 +1,51 @@
+{
+    "name": "loginForm",
+    "service": "SB_USER.login",
+    "inputs": [
+        {
+            "@type": "InputText",
+            "label": "User",
+            "name": "user",
+            "value": "",
+            "typeName": "text",
+            "placeholder": "User",
+            "showLabel": false,
+            "validation": {
+                "required": true,
+                "maxLength": 30,
+                "minLength": 3,
+                "ngModelOptions": {
+                    "updateOn": "submit"
+                }
+            }
+        },
+        {
+            "@type": "InputText",
+            "label": "Password",
+            "name": "password",
+            "value": "",
+            "typeName": "password",
+            "placeholder": "Password",
+            "showLabel": false,
+            "validation": {
+                "required": true,
+                "maxLength": 50,
+                "minLength": 5,
+                "ngModelOptions": {
+                    "updateOn": "submit"
+                }
+            }
+        }
+    ],
+    "buttons": {
+        "buttons": [
+            {
+                "type": "submit",
+                "class": "btn-default",
+                "text": "Enter",
+                "click": "submitLogin"
+            }
+        ],
+        "place": "center"
+    }
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html ng-app="mainApp">
+    <head>
+        <title>Testfield</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
+
+        <link rel="stylesheet" href="/Testfield/resources/bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="/Testfield/resources/bootstrap/css/bootstrap-theme.css">
+        <link rel="stylesheet" href="/Testfield/resources/testfield_general/style/testfield-general.css">
+        <link href="/Testfield/resources/testfield_general/style/index.css" rel="stylesheet" type="text/css"/>
+        <script src="/Testfield/resources/js/jquery/jquery.js"></script>
+        <script src="/Testfield/resources/bootstrap/js/bootstrap.js"></script>
+        <script src="/Testfield/resources/testfield_general/js/plugins.js"></script>
+        <script src="/Testfield/resources/js/jquery/jquery-form.js"></script>
+        <script src="/Testfield/resources/js/jqueryValidation/jquery.validate.min.js"></script>
+        <script src="/Testfield/resources/testfield_general/js/navbarTestfield.js"></script>
+        <script src="/Testfield/resources/js/angularjs/angular.js"></script>
+        <script src="/Testfield/resources/js/angularjs/uiBootstrap.js"></script>
+        <script src="/Testfield/resources/testfield_general/js/defaultControllers.js"></script>
+        <script src="/Testfield/resources/testfield_general/js/testfield-general.js" type="text/javascript"></script>
+        <script src="/Testfield/resources/testfield_general/js/testfield-files.js" type="text/javascript"></script>
+        <script src="/Testfield/resources/testfield_general/js/login.js"></script>
+        
+    </head>
+    <body class="background-congruent">
+        <div class="container orbitron-font">
+            
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                    <h2>Testfield</h2>
+                </div>
+            </div>
+            
+            <div class="mainLoginContainer" ng-init="loginView = 'part/login'">
+                <div ng-include="loginView"></div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,99 @@
+<div class="row" ng-controller="manualStyleCtrl">
+    <div class="col-xs-12">
+        <form name="manualStyleForm" novalidate ng-submit="submitStyles()">
+            <div class="row">
+                <div class="col-xs-12">
+                    <span><strong>Font color</strong></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-4">
+                    <div 
+                        class="form-group"
+                        ng-class="{
+                            'has-error': manualStyleForm.R.$invalid
+                        }">
+                        <label class="">
+                            <span>
+                                R
+                            </span>
+                        </label>
+                        <input type="number" class="form-control" 
+                               name="R" ng-min="0" ng-max="255" 
+                               min="0" max="255"
+                               ng-model="style.R" required>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div 
+                        class="form-group"
+                        ng-class="{
+                            'has-error': manualStyleForm.G.$invalid
+                        }">
+                        <label class="">G</label>
+                        <input type="number" class="form-control" 
+                               name="G" ng-min="0" ng-max="255" 
+                               min="0" max="255" maxlength="3"
+                               ng-model="style.G" required>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div 
+                        class="form-group"
+                        ng-class="{
+                            'has-error': manualStyleForm.B.$invalid
+                        }">
+                        <label class="">B</label>
+                        <input type="number" class="form-control" 
+                               name="B" ng-min="0" ng-max="255" 
+                               min="0" max="255"
+                               ng-model="style.B" required>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="form-group"
+                         ng-class="{
+                            'has-error': manualStyleForm.fontFamily.$invalid &&
+                                    manualStyleForm.fontFamily.$dirty
+                         }">
+                        <label>Font family</label>
+                        <select 
+                            class="form-control" 
+                            name="fontFamily"
+                            ng-model="style.fontFamily" 
+                            required
+                            >
+                            <option value="" class="hidden">Select</option>
+                            <option 
+                                value="{{fontFamily.id}}"
+                                ng-repeat="fontFamily in fontFamilies">
+                                {{fontFamily.fontName}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <p  class="color-red" 
+                        ng-show="manualStyleForm.R.$invalid">
+                        R -> 0-255
+                    </p>
+                    <p  class="color-red" 
+                        ng-show="manualStyleForm.G.$invalid">
+                        G -> 0-255
+                    </p>
+                    <p  class="color-red" 
+                        ng-show="manualStyleForm.B.$invalid">
+                        B -> 0-255
+                    </p>
+                    <button type="submit" class="btn btn-primary pull-right">
+                        Submit changes
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

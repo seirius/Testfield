@@ -1,0 +1,37 @@
+<div 
+    class="form-group"
+    ng-class="{
+        'has-error': !this[form.name][input.name].$valid && (!this[form.name][input.name].$pristine || this[form.name].$submitted)
+    }">
+    <label ng-hide="input.showLabel === false">{{input.label}}</label>
+    <textarea 
+        class="form-control"
+        name="{{input.name}}"
+        rows="{{input.rows}}"
+        ng-model="input.value"
+        ng-required="input.validation.required"
+        ng-maxLength="input.validation.maxLength"
+        ng-minLength="input.validation.minLength"
+        placeholder="{{input.placeholder}}">{{input.value}}</textarea>
+    <p 
+        class="form-text text-muted"
+        ng-show="this[form.name][input.name].$error.required 
+                && (!this[form.name][input.name].$pristine || this[form.name].$submitted)"
+        >
+        {{input.label}} is required
+    </p>
+    <p 
+        class="form-text text-muted"
+        ng-show="this[form.name][input.name].$error.minlength
+                && (!this[form.name][input.name].$pristine || this[form.name].$submitted)"
+        >
+        Minimum length is {{input.validation.minLength}}
+    </p>
+    <p 
+        class="form-text text-muted"
+        ng-show="this[form.name][input.name].$error.maxlength
+                && (!this[form.name][input.name].$pristine || this[form.name].$submitted)"
+        >
+        Maximum length is {{input.validation.maxLength}}
+    </p>
+</div>

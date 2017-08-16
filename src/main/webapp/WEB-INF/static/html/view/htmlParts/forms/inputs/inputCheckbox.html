@@ -1,0 +1,16 @@
+<div class="checkbox">
+    <label>
+        <input type="checkbox"
+               name="{{input.name}}"
+               ng-model="input.value"
+               ng-required="input.validation.required">
+        {{input.label}}
+    </label>
+    <p 
+        class="form-text text-muted"
+        ng-show="this[form.name][input.name].$error.required 
+                && (!this[form.name][input.name].$pristine || this[form.name].$submitted)"
+        >
+        {{input.label}} is required
+    </p>
+</div>
