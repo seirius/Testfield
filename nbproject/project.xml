@@ -40,7 +40,6 @@
                 </library>
                 <library dirs="200">
                     <file>${file.reference.org-apache-commons-lang3-6.5.0.Final-tests.jar}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
             </web-module-libraries>
             <web-module-additional-libraries/>

@@ -1,52 +1,52 @@
 <div ng-controller="navbarManualsCtrl">
-    <ul id="manualActions" class="dropdown-content">
-        <li>
-            <a ng-click="createManual()">Create</a>
-        </li>
-        <li>
-            <a ng-click="manualsList()">Open</a>
-        </li>
-        <li ng-show="!editing && manualLoaded">
-            <a ng-click="edit()">Edit</a>
-        </li>
-        <li ng-show="!editing && manualLoaded">
-            <a ng-click="visualize()">Visualize</a>
-        </li>
-        <li>
-            <a ng-click="requestForm()">From</a>
-        </li>
-    </ul>
-    <ul id="manualOptions" class="dropdown-content">
-        <li ng-show="editing">
-            <a ng-click="addPage()">Add page</a>
-        </li>
-        <li>
-            <a ng-click="manualsStyle()">Set style</a>
-        </li>
-        <li>
-            <a ng-click="openOptions()">Options</a>
-        </li>
-        <li ng-show="!editing && manualLoaded">
-            <a ng-click="visualize()">Visualize</a>
-        </li>
-        <li>
-            <a ng-click="requestForm()">From</a>
-        </li>
-    </ul>
-    <ul id="manualExport" class="dropdown-content">
-        <li>
-            <a ng-click="getJsonManual()">Get Manual as JSON</a>
-        </li>
-        <li>
-            <a ng-click="getHtmlManual()">Get Manual as HTML</a>
-        </li>
-    </ul>
-    <ul id="apps" class="dropdown-content">
-        <li><a ng-click="goToManuals()">Manuals</a></li>
-        <li><a ng-click="goToForum()">Forum</a></li>
-        <li><a ng-click="goToFiles()">Files</a></li>
-    </ul>
     <div class="navbar-fixed">
+        <ul id="manualActions" class="dropdown-content">
+            <li>
+                <a ng-click="createManual()">Create</a>
+            </li>
+            <li>
+                <a ng-click="manualsList()">Open</a>
+            </li>
+            <li ng-show="!editing && manualLoaded">
+                <a ng-click="edit()">Edit</a>
+            </li>
+            <li ng-show="!editing && manualLoaded">
+                <a ng-click="visualize()">Visualize</a>
+            </li>
+            <li>
+                <a ng-click="requestForm()">From</a>
+            </li>
+        </ul>
+        <ul id="manualOptions" class="dropdown-content">
+            <li ng-show="editing">
+                <a ng-click="addPage()">Add page</a>
+            </li>
+            <li>
+                <a ng-click="manualsStyle()">Set style</a>
+            </li>
+            <li>
+                <a ng-click="openOptions()">Options</a>
+            </li>
+            <li ng-show="!editing && manualLoaded">
+                <a ng-click="visualize()">Visualize</a>
+            </li>
+            <li>
+                <a ng-click="requestForm()">From</a>
+            </li>
+        </ul>
+        <ul id="manualExport" class="dropdown-content">
+            <li>
+                <a ng-click="getJsonManual()">Get Manual as JSON</a>
+            </li>
+            <li>
+                <a ng-click="getHtmlManual()">Get Manual as HTML</a>
+            </li>
+        </ul>
+        <ul id="apps" class="dropdown-content">
+            <li><a ng-click="goToManuals()">Manuals</a></li>
+            <li><a ng-click="goToForum()">Forum</a></li>
+            <li><a ng-click="goToFiles()">Files</a></li>
+        </ul>
         <nav>
             <div class="nav-wrapper">
                 <a 
@@ -62,7 +62,7 @@
                         <a 
                             class="dropdown-button" href 
                             data-activates="manualActions" 
-                            dropdown data-hover="true">
+                            dropdown>
                             Actions
                             <i class="material-icons right">
                                 arrow_drop_down
@@ -72,7 +72,7 @@
                     <li ng-show="manualLoaded">
                         <a class="dropdown-button" href
                            data-activates="manualOptions"
-                           dropdown data-hover="true" >
+                           dropdown>
                             Options
                             <i class="material-icons right">
                                 arrow_drop_down
@@ -82,7 +82,7 @@
                     <li ng-show="manualLoaded">
                         <a class="dropdown-button" href
                            data-activates="manualExport"
-                           dropdown data-hover="true" >
+                           dropdown>
                             Export
                             <i class="material-icons right">
                                 arrow_drop_down
@@ -92,7 +92,7 @@
                     <li>
                         <a class="dropdown-button" href
                            data-activates="apps"
-                           dropdown data-hover="true" >
+                           dropdown>
                             Apps
                             <i class="material-icons right">
                                 arrow_drop_down
@@ -107,12 +107,12 @@
                         </a>
                     </li>
                 </ul>
-    <!--            <ul class="side-nav" id="mobile">
+                <ul class="side-nav" id="mobile">
                     <li>
                         <a 
                             class="dropdown-button" href 
                             data-activates="manualActions" 
-                            dropdown data-hover="true">
+                            dropdown>
                             Actions
                             <i class="material-icons right">
                                 arrow_drop_down
@@ -122,7 +122,7 @@
                     <li ng-show="manualLoaded">
                         <a class="dropdown-button" href
                            data-activates="manualOptions"
-                           dropdown data-hover="true" >
+                           dropdown>
                             Options
                             <i class="material-icons right">
                                 arrow_drop_down
@@ -132,7 +132,7 @@
                     <li ng-show="manualLoaded">
                         <a class="dropdown-button" href
                            data-activates="manualExport"
-                           dropdown data-hover="true" >
+                           dropdown>
                             Export
                             <i class="material-icons right">
                                 arrow_drop_down
@@ -142,7 +142,7 @@
                     <li>
                         <a class="dropdown-button" href
                            data-activates="apps"
-                           dropdown data-hover="true" >
+                           dropdown>
                             Apps
                             <i class="material-icons right">
                                 arrow_drop_down
@@ -156,7 +156,7 @@
                             </i>
                         </a>
                     </li>
-                </ul>-->
+                </ul>
             </div>
         </nav>
     </div>

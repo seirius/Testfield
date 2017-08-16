@@ -32,5 +32,9 @@
     <mapping class="model.bean.file.FileUserId"/>
     <mapping class="model.bean.file.FileManual"/>
     <mapping class="model.bean.file.FileManualId"/>
+    <mapping class="model.bean.menu.Menu"/>
+    <mapping class="model.bean.menu.MenuList"/>
+    <mapping class="model.bean.menu.RelMenuMenuList"/>
+    <mapping class="model.bean.menu.RelMenuMenuListId"/>
   </session-factory>
 </hibernate-configuration>

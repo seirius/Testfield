@@ -144,6 +144,10 @@ body {
     border-radius: 5px;
 }
 
+.manual-block-content {
+    white-space: pre-wrap;
+}
+
 .manual-block-editing {
     padding: 0px;
 }

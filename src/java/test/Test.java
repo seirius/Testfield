@@ -17,20 +17,10 @@ public class Test {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
             String hql = ""
-                    + "from UserTestfield "
-                    + "where userNick = :user"
+                    + "from RelMenuMenuList "
                     + "";
             Query query = session.createQuery(hql);
-            query.setString("user", "andriy");
-            System.out.println(query.list().get(0));
-            
-            hql = ""
-                    + "from Manual "
-                    + "where id = :id"
-                    + "";
-            query = session.createQuery(hql);
-            query.setInteger("id", 69);
-            System.out.println(query.list().get(0));
+            System.out.println(query.list().size());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
